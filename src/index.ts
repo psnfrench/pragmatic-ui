@@ -1,1 +1,2 @@
-export const Greeter = (name: string) => `Hello ${name}`;
+import { PTextField } from './components/PTextField';
+export { PTextField };
