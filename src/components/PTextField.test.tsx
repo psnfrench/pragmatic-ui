@@ -10,12 +10,12 @@ import { PTextField } from './PTextField';
 
 describe('Editing the text field', () => {
   it('Changes the value correctly when typing and submitting form', async () => {
-    const handleSubmit = jest.fn();
+    const handleSubmitMock = jest.fn();
     const initialFirstName = 'Bobby';
     const updatedFirstName = 'Sue';
     const fieldLabel = 'First Name';
     render(
-      <Formik initialValues={{ firstName: initialFirstName }} onSubmit={handleSubmit}>
+      <Formik initialValues={{ firstName: initialFirstName }} onSubmit={handleSubmitMock}>
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <PTextField name="firstName" label={fieldLabel} />
@@ -33,8 +33,8 @@ describe('Editing the text field', () => {
     userEvent.click(screen.getByRole('button', { name: 'Submit' }));
     await waitFor(() => {
       expect(textField).toHaveDisplayValue(updatedFirstName);
-      expect(handleSubmit).toHaveBeenCalledTimes(1);
-      const values = handleSubmit.mock.calls[0][0]; // forst argument of the first call
+      expect(handleSubmitMock).toHaveBeenCalledTimes(1);
+      const values = handleSubmitMock.mock.calls[0][0]; // forst argument of the first call
       expect(values).toEqual({ firstName: updatedFirstName });
     });
   });
