@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { Colors } from 'pragmatic-ui';
+import { Colors } from './Colors';
 
 /**
  * Pegasus Typograpy Has three Categories: Display, Text and Link
