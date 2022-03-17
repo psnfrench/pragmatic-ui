@@ -21,6 +21,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "./jest-setup.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "src/**/*.test.ts"]
 }

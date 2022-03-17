@@ -1,2 +1,2 @@
-import { PTextField } from './components/PTextField';
-export { PTextField };
+export * from './components/PTextField';
+export * from './components/Colors';
