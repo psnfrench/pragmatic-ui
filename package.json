@@ -11,8 +11,8 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-    "build_eas": "tsc",
-    "build": "tsc --emitDeclarationOnly && ./node_modules/.bin/esbuild ./src/index.js --format=esm --bundle --outfile=./dist/index.js --target=es6 --minify",
+    "build": "tsc",
+    "build_eas": "tsc --emitDeclarationOnly && ./node_modules/.bin/esbuild ./src/index.js --format=esm --bundle --outfile=./dist/index.js --target=es6 --minify",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
