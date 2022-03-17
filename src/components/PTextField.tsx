@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { ErrorLabel } from './ErrorLabel';
-import { Colors } from './Colors';
+import { Colors } from '../constants/Colors';
 
 export type ThemedTextFieldProps = TextFieldProps & { containerClass?: string; enableClear?: boolean } & Required<
     Pick<TextFieldProps, 'name'>

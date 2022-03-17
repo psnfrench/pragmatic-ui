@@ -1,2 +1,3 @@
 export * from './components/PTextField';
-export * from './components/Colors';
+export * from './constants/Colors';
+export * from './constants/theme';
