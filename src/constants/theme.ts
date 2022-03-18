@@ -1,92 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { Colors } from './Colors';
 
-/**
- * Pegasus Typograpy Has three Categories: Display, Text and Link
- * Each Category can be in any Of the following sizes: Large, Medium, Small
- * Display has the additional size option of Huge
- * Text and Link have the additional size option of X-Small
- */
-
-declare module '@mui/material/styles' {
-  // Pegasus Variants
-  interface TypographyVariants {
-    displayHuge: React.CSSProperties;
-    displayLarge: React.CSSProperties;
-    displayMedium: React.CSSProperties;
-    displaySmall: React.CSSProperties;
-    displayHugeBold: React.CSSProperties;
-    displayLargeBold: React.CSSProperties;
-    displayMediumBold: React.CSSProperties;
-    displaySmallBold: React.CSSProperties;
-    displayXSmallBold: React.CSSProperties;
-    textLarge: React.CSSProperties;
-    textMedium: React.CSSProperties;
-    textSmall: React.CSSProperties;
-    textXSmall: React.CSSProperties;
-    linkLarge: React.CSSProperties;
-    linkMedium: React.CSSProperties;
-    linkSmall: React.CSSProperties;
-    linkXSmall: React.CSSProperties;
-  }
-  // allow configuration using `createTheme`
-  interface TypographyVariantsOptions {
-    displayHuge?: React.CSSProperties;
-    displayLarge?: React.CSSProperties;
-    displayMedium?: React.CSSProperties;
-    displaySmall?: React.CSSProperties;
-    displayHugeBold?: React.CSSProperties;
-    displayLargeBold?: React.CSSProperties;
-    displayMediumBold?: React.CSSProperties;
-    displaySmallBold?: React.CSSProperties;
-    displayXSmallBold?: React.CSSProperties;
-    textLarge?: React.CSSProperties;
-    textMedium?: React.CSSProperties;
-    textSmall?: React.CSSProperties;
-    textXSmall?: React.CSSProperties;
-    linkLarge?: React.CSSProperties;
-    linkMedium?: React.CSSProperties;
-    linkSmall?: React.CSSProperties;
-    linkXSmall?: React.CSSProperties;
-  }
-}
-
-// Update the Typography's variant prop options
-declare module '@mui/material/Typography' {
-  interface TypographyPropsVariantOverrides {
-    displayHuge: true;
-    displayLarge: true;
-    displayMedium: true;
-    displaySmall: true;
-    displayHugeBold: true;
-    displayLargeBold: true;
-    displayMediumBold: true;
-    displaySmallBold: true;
-    displayXSmallBold: true;
-    textLarge: true;
-    textMedium: true;
-    textSmall: true;
-    textXSmall: true;
-    linkLarge: true;
-    linkMedium: true;
-    linkSmall: true;
-    linkXSmall: true;
-    h1: false;
-    h2: false;
-    h3: false;
-    h4: false;
-    h5: false;
-    h6: false;
-    subtitle1: false;
-    subtitle2: false;
-    body1: false;
-    body2: false;
-    button: false;
-    caption: false;
-    overline: false;
-  }
-}
-
 export const theme = createTheme({
   palette: {
     primary: Colors.primary,
@@ -107,100 +21,11 @@ export const theme = createTheme({
     allVariants: {
       color: Colors.greyscale.body,
     },
-    displayHuge: {
-      fontSize: 34,
-      lineHeight: '48px',
-      letterSpacing: 1,
-    },
-    displayLarge: {
-      fontSize: 28,
-      lineHeight: '40px',
-      letterSpacing: 1,
-    },
-    displayMedium: {
-      fontSize: 24,
-      lineHeight: '34px',
-      letterSpacing: 1,
-    },
-    displaySmall: {
-      fontSize: 20,
-      lineHeight: '32px',
-      letterSpacing: 1,
-    },
-    displayHugeBold: {
+    h6: {
       fontWeight: 'bold',
-      fontSize: 34,
-      lineHeight: '48px',
-      letterSpacing: 1,
-    },
-    displayLargeBold: {
-      fontWeight: 'bold',
-      fontSize: 28,
-      lineHeight: '40px',
-      letterSpacing: 1,
-    },
-    displayMediumBold: {
-      fontWeight: 'bold',
-      fontSize: 24,
-      lineHeight: '34px',
-      letterSpacing: 1,
-    },
-    displaySmallBold: {
-      fontWeight: 'bold',
-      fontSize: 20,
-      lineHeight: '32px',
-      letterSpacing: 1,
-    },
-    displayXSmallBold: {
-      fontWeight: 700,
-      fontSize: 20,
-      lineHeight: '24px',
-      letterSpacing: 1,
-    },
-    textLarge: {
-      fontSize: 20,
-      lineHeight: '32px',
-      letterSpacing: 0.75,
-    },
-    textMedium: {
-      fontSize: 17,
-      lineHeight: '28px',
-      letterSpacing: 0.75,
-    },
-    textSmall: {
-      fontSize: 15,
-      lineHeight: '24px',
-      letterSpacing: 0.75,
-    },
-    textXSmall: {
-      fontSize: 13,
-      lineHeight: '22px',
-      letterSpacing: 0.25,
-    },
-    linkLarge: {
-      fontWeight: 'bold',
-      fontSize: 20,
-      lineHeight: '32px',
-      letterSpacing: 0.75,
-      color: Colors.primary.main,
-    },
-    linkMedium: {
-      fontWeight: 'bold',
-      fontSize: 17,
-      lineHeight: '28px',
-      letterSpacing: 0.75,
-    },
-    linkSmall: {
-      fontWeight: 'bold',
-      fontSize: 15,
-      lineHeight: '24px',
-      letterSpacing: 0.75,
-    },
-    linkXSmall: {
-      fontWeight: 600,
-      fontSize: 13,
-      lineHeight: '22px',
-      letterSpacing: 0.25,
+      fontSize: 26,
+      lineHeight: 32,
+      letterSpacing: 0.15,
     },
   },
   components: {
@@ -209,9 +34,6 @@ export const theme = createTheme({
         indicator: {
           height: 3,
         },
-        // flexContainer: {
-        //   height: '100%',
-        // },
       },
     },
     MuiTab: {
@@ -223,51 +45,6 @@ export const theme = createTheme({
           fontWeight: 600,
           letterSpacing: 0.75,
           lineHeight: '24px',
-        },
-      },
-    },
-    // MuiButton: {
-    //   styleOverrides: {
-    //     root: {
-    //       borderRadius: '30px',
-    //       textTransform: 'none',
-    //     },
-    //     outlined: {
-    //       backgroundColor: white,
-    //       borderWidth: '2px',
-    //       '&:hover': {
-    //         borderWidth: '2px',
-    //       },
-    //     },
-    //   },
-    // },
-    // MuiDivider: {
-    //   styleOverrides: {
-    //     root: {
-    //       backgroundColor: primaryMain,
-    //       marginBottom: '24px',
-    //     },
-    //   },
-    // },
-    // MuiTableCell: {
-    //   styleOverrides: {
-    //     root: {
-    //       borderBottom: 'none',
-    //     },
-    //   },
-    // },
-    MuiTypography: {
-      defaultProps: {
-        variantMapping: {
-          displayHuge: 'h1',
-          displayHugeBold: 'h1',
-          displayLarge: 'h2',
-          displayLargeBold: 'h2',
-          displayMedium: 'h3',
-          displayMediumBold: 'h3',
-          displaySmall: 'h4',
-          displaySmallBold: 'h4',
-          displayXSmallBold: 'h4',
         },
       },
     },
