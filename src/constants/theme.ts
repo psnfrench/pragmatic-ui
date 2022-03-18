@@ -24,7 +24,7 @@ export const theme = createTheme({
     h6: {
       fontWeight: 'bold',
       fontSize: 26,
-      lineHeight: 32,
+      lineHeight: '32px',
       letterSpacing: 0.15,
     },
   },
