@@ -41,7 +41,7 @@ export const Colors = {
     background: '#FFDBBD',
   },
   text: {
-    primary: 'rgba(48, 48, 48, 1)',
+    primary: '#102A43',
     secondary: 'rgba(97, 97, 97, 0.9)',
     disabled: 'rgba(170, 170, 170, 0.8)',
   },

@@ -19,7 +19,7 @@ export const theme = createTheme({
   typography: {
     fontFamily: 'Inter',
     allVariants: {
-      color: Colors.greyscale.body,
+      color: Colors.text.primary,
     },
     h6: {
       fontWeight: 'bold',
@@ -107,18 +107,37 @@ export const theme = createTheme({
     MuiFormControl: {
       styleOverrides: {
         root: {
+          paddingTop: '32px',
           '.MuiFilledInput-root': {
             backgroundColor: Colors.primary.background,
             borderColor: Colors.primary.background,
             paddingRight: '0px', // for select drop downs to be will width
           },
           '.MuiInputLabel-shrink': {
-            left: '12px', // added 12px
-            transform: 'translate(14px, 7px) scale(0.75)', // reduce the transform height to be within the box
+            // left: '12px', // added 12px,
+            fontWeight: 700,
+            fontSize: 16,
+            letterSpacing: 0.15,
+            transform: 'translate(-12px, 0px)', // reduce the transform height to be within the box
           },
         },
       },
     },
+    // MuiFormControl: {
+    //   styleOverrides: {
+    //     root: {
+    //       '.MuiFilledInput-root': {
+    //         backgroundColor: Colors.primary.background,
+    //         borderColor: Colors.primary.background,
+    //         paddingRight: '0px', // for select drop downs to be will width
+    //       },
+    //       '.MuiInputLabel-shrink': {
+    //         left: '12px', // added 12px
+    //         transform: 'translate(14px, 7px) scale(0.75)', // reduce the transform height to be within the box
+    //       },
+    //     },
+    //   },
+    // },
     MuiIconButton: {
       styleOverrides: {
         edgeEnd: {
