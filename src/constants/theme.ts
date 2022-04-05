@@ -98,7 +98,7 @@ export const theme = createTheme({
           fontWeight: 700,
           fontSize: 16,
           letterSpacing: 0.15,
-          transform: 'translate(0px, 0px)', //override the shrink behaviour
+          transform: 'translate(0px, 0px)', // override the shrink behaviour
           '&.Mui-focused': {
             color: Colors.greyscale.label,
           },
