@@ -103,9 +103,6 @@ export const theme = createTheme({
             color: Colors.greyscale.label,
           },
         },
-        filled: {
-          left: '12px', // added 12px
-        },
       },
     },
     MuiFormControl: {
