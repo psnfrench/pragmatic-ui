@@ -84,8 +84,8 @@ export const theme = createTheme({
           },
         },
         input: {
-          paddingLeft: '24px', // added 12px
-          paddingRight: '24px', // added 12px
+          paddingTop: 16,
+          paddingBottom: 16,
           '&.MuiInputBase-inputAdornedStart': {
             paddingLeft: '0px',
           },
