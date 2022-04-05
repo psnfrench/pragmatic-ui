@@ -43,7 +43,7 @@ const PTextFieldWithFormikComp = (
   props: ThemedTextFieldProps & RequiredFormikTextFields & Required<Pick<TextFieldProps, 'value'>>,
 ) => {
   const {
-    BoxProps,
+    BoxProps: _BoxProps,
     name,
     enableClear = true,
     value,
@@ -69,7 +69,7 @@ const PTextFieldWithFormikComp = (
     formikHandleBlur(e);
   };
   return name ? (
-    <Box marginBottom={2.5} {...BoxProps}>
+    <Box marginBottom={2.5} {..._BoxProps}>
       <TextField
         name={name}
         value={value || defaultValue}
@@ -107,12 +107,12 @@ export type ThemedTextFieldReadOnlyProps = TextFieldProps & { BoxProps?: BoxProp
   >;
 
 export const PTextFieldReadOnly = ({
-  BoxProps,
+  BoxProps: _BoxProps,
   value,
   ...otherProps
 }: ThemedTextFieldReadOnlyProps & { value: string }) => {
   return (
-    <Box marginBottom={2.5} {...BoxProps}>
+    <Box marginBottom={2.5} {..._BoxProps}>
       <TextField
         value={value}
         variant="filled"
