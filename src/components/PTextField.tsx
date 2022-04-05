@@ -1,4 +1,4 @@
-import { Box, IconButton, TextField, TextFieldProps } from '@mui/material';
+import { Box, IconButton, TextField, TextFieldProps, BoxProps } from '@mui/material';
 import { FormikContextType, FormikProps, useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React, { useState } from 'react';
@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ErrorLabel } from './ErrorLabel';
 import { Colors } from '../constants/Colors';
 
-export type ThemedTextFieldProps = TextFieldProps & { containerClass?: string; enableClear?: boolean } & Required<
+export type ThemedTextFieldProps = TextFieldProps & { BoxProps?: BoxProps; enableClear?: boolean } & Required<
     Pick<TextFieldProps, 'name'>
   >;
 export const PTextField = (props: ThemedTextFieldProps) => {
@@ -43,7 +43,7 @@ const PTextFieldWithFormikComp = (
   props: ThemedTextFieldProps & RequiredFormikTextFields & Required<Pick<TextFieldProps, 'value'>>,
 ) => {
   const {
-    containerClass,
+    BoxProps,
     name,
     enableClear = true,
     value,
@@ -69,7 +69,7 @@ const PTextFieldWithFormikComp = (
     formikHandleBlur(e);
   };
   return name ? (
-    <Box className={containerClass} marginBottom={2.5}>
+    <Box marginBottom={2.5} {...BoxProps}>
       <TextField
         name={name}
         value={value || defaultValue}
@@ -102,17 +102,17 @@ const PTextFieldWithFormikComp = (
 
 export const PTextFieldMemo = React.memo(PTextFieldWithFormikComp);
 
-export type ThemedTextFieldReadOnlyProps = TextFieldProps & { containerClass?: string } & Required<
+export type ThemedTextFieldReadOnlyProps = TextFieldProps & { BoxProps?: BoxProps } & Required<
     Pick<TextFieldProps, 'value'>
   >;
 
 export const PTextFieldReadOnly = ({
-  containerClass,
+  BoxProps,
   value,
   ...otherProps
 }: ThemedTextFieldReadOnlyProps & { value: string }) => {
   return (
-    <Box className={containerClass} marginBottom={2.5}>
+    <Box marginBottom={2.5} {...BoxProps}>
       <TextField
         value={value}
         variant="filled"
