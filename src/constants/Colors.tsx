@@ -15,7 +15,6 @@ export const Colors = {
   error: {
     main: '#E61B00',
     dark: '#AB1400',
-    darkMode: '#FD6150',
     light: '#FFF2F1',
   },
   success: {
@@ -25,18 +24,17 @@ export const Colors = {
     background: '#CBFFAE',
   },
   primary: {
-    main: '#00285D',
-    dark: '#0041AC',
-    darkMode: '#0576F0',
-    light: '#50C8FC',
+    main: '#DB3757',
+    dark: '#DB3757',
+    light: '#DB3757',
     contrastText: '#FFFFFF',
     background: '#EFF0F6',
     lightBackground: '#A6D4FA',
   },
   secondary: {
-    main: '#F99D28',
-    dark: '#EE6D00',
-    light: '#1DE9B6',
+    main: '#757EF2',
+    dark: '#757EF2',
+    light: '#757EF2',
     contrastText: '#FFFFFF',
     background: '#FFDBBD',
   },
