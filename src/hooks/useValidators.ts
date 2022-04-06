@@ -17,7 +17,7 @@ export default function useValidators() {
       }
       return errors;
     },
-    [isEmailValid]
+    [isEmailValid],
   );
 
   return { isEmailValid, validateEmail };
