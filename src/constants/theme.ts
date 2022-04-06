@@ -14,7 +14,7 @@ export const theme = createTheme({
     success: Colors.success,
   },
   shape: {
-    borderRadius: 32,
+    borderRadius: 12,
   },
   typography: {
     fontFamily: 'Inter',
