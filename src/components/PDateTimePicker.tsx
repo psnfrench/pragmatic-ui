@@ -17,12 +17,14 @@ export const PDateTimePicker = (props: ThemedTextFieldProps) => {
 const PDateTimePickerWithFormikComp = (
   props: ThemedTextFieldProps & RequiredFormikTextFields & Required<Pick<TextFieldProps, 'value'>>,
 ) => {
-  const { name, value, handleChange, ...otherProps } = props;
-  const defaultValue = props.select && props.SelectProps?.multiple ? [] : '';
+  const { name, value, handleChange, setFieldValue, ...otherProps } = props;
+  const handleDateChange = (dateValue: Date | null) => {
+    setFieldValue(name, dateValue);
+  };
   return name ? (
     <DateTimePicker
-      value={value || defaultValue}
-      onChange={handleChange}
+      value={value as Date}
+      onChange={handleDateChange}
       renderInput={(params) => <PTextField name={name} {...params} {...otherProps} />}
     />
   ) : null;
