@@ -3,11 +3,8 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
-import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
+import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export type ThemedTextFieldProps = TextFieldProps & { BoxProps?: BoxProps; enableClear?: boolean } & Required<
-    Pick<TextFieldProps, 'name'>
-  >;
 export const PDateTimePicker = (props: ThemedTextFieldProps) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
