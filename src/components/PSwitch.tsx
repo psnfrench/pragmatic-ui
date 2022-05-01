@@ -16,8 +16,8 @@ export const PSwitch = (props: ThemedSwitchProps) => {
 
 const PSwitchWithFormikComp = (props: ThemedSwitchProps & RequiredFormikSwitchFields & { checked: boolean }) => {
   const { name, checked, setFieldValue, ...otherProps } = props;
-  const handleSwitchChange = ({ target: { checked, name } }: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(name, checked);
+  const handleSwitchChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setFieldValue(target.name, target.checked);
   };
 
   return name ? <Switch checked={checked} onChange={handleSwitchChange} /> : null;
