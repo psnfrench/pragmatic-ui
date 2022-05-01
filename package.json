@@ -1,6 +1,6 @@
 {
   "name": "pragmatic-ui",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "A set of themed React components for building beautiful projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
