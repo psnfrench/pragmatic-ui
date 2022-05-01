@@ -1,4 +1,4 @@
-import { TextFieldProps, BoxProps } from '@mui/material';
+import { TextFieldProps } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
