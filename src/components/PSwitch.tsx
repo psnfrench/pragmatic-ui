@@ -20,7 +20,7 @@ const PSwitchWithFormikComp = (props: ThemedSwitchProps & RequiredFormikSwitchFi
     setFieldValue(target.name, target.checked);
   };
 
-  return name ? <Switch checked={checked} onChange={handleSwitchChange} /> : null;
+  return name ? <Switch name={name} checked={checked} onChange={handleSwitchChange} /> : null;
 };
 
 export const PSwitchMemo = React.memo(PSwitchWithFormikComp);
