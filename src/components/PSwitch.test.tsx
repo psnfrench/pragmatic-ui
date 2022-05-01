@@ -35,4 +35,33 @@ describe('Togggling the switch', () => {
       expect(values).toEqual({ active: !initialValue });
     });
   });
+
+  it('Changes the value correctly when a label is clicked', async () => {
+    const handleSubmitMock = jest.fn();
+    const initialValue = true;
+    const labelText = 'My Nice label';
+    render(
+      <Formik initialValues={{ active: initialValue }} onSubmit={handleSubmitMock}>
+        {({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <PSwitch name="active" label={labelText} />
+            <button type="submit">Submit</button>
+          </form>
+        )}
+      </Formik>,
+    );
+
+    const label: HTMLElement = screen.getByLabelText(labelText);
+    const checkbox: HTMLElement = screen.getAllByRole('checkbox')[0];
+    expect(label).toBeInTheDocument();
+    expect(checkbox).toBeChecked();
+    userEvent.click(label);
+    userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+    await waitFor(() => {
+      expect(checkbox).not.toBeChecked();
+      expect(handleSubmitMock).toHaveBeenCalledTimes(1);
+      const values = handleSubmitMock.mock.calls[0][0]; // forst argument of the first call
+      expect(values).toEqual({ active: !initialValue });
+    });
+  });
 });
