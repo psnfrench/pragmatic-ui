@@ -4,7 +4,7 @@
 
 import { Formik } from 'formik';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PasswordInput from './PasswordInput';
 
@@ -29,6 +29,8 @@ describe('Editing the text field', () => {
     expect(textField).toHaveProperty('value', initialPassword);
     expect(textField).toHaveProperty('type', 'password');
     userEvent.click(screen.getByRole('button', { name: 'toggle visibility' }));
-    expect(textField).toHaveProperty('type', 'text');
+    await waitFor(() => {
+      expect(textField).toHaveProperty('type', 'text');
+    });
   });
 });

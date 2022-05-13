@@ -28,7 +28,7 @@ describe('Editing the text field', () => {
     const textField: HTMLInputElement = screen.getByLabelText(fieldLabel);
     expect(textField).toBeInTheDocument();
     expect(textField).toHaveProperty('value', initialFirstName);
-    textField.setSelectionRange(0, textField.value.length);
+    userEvent.clear(textField);
     userEvent.type(textField, updatedFirstName);
     userEvent.click(screen.getByRole('button', { name: 'Submit' }));
     await waitFor(() => {

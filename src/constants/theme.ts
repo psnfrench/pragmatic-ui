@@ -108,7 +108,9 @@ export const theme = createTheme({
     MuiFormControl: {
       styleOverrides: {
         root: {
-          paddingTop: '32px',
+          '&.MuiTextField-root': {
+            paddingTop: '32px', // allow for label
+          },
           '.MuiFilledInput-root': {
             backgroundColor: Colors.primary.background,
             borderColor: Colors.primary.background,
