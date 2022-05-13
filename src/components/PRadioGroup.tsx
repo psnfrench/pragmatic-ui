@@ -32,8 +32,8 @@ const PRadioGroupWithFormikComp = ({
     <FormControl>
       {formLabel && <FormLabel>{formLabel}</FormLabel>}
       <RadioGroup row name={name} value={value} onChange={handleChange} {...otherProps}>
-        {radioButtons.map((radioButton) => (
-          <FormControlLabel key={radioButton.value.toString()} control={<Radio />} {...radioButton} />
+        {radioButtons.map((radioButton, index) => (
+          <FormControlLabel key={index} control={<Radio />} {...radioButton} />
         ))}
       </RadioGroup>
     </FormControl>
