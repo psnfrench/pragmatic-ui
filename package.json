@@ -3,7 +3,7 @@
   "version": "1.0.29",
   "description": "A set of themed React components for building beautiful projects",
   "main": "dist/pragmatic-ui.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/pragmatic-ui.d.ts",
   "files": [
     "dist/**/*"
   ],
