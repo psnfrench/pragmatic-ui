@@ -21,7 +21,7 @@ const PSwitchWithFormikComp = (props: ThemedSwitchProps & RequiredFormikSwitchFi
   };
 
   const renderSwitch = useCallback(() => {
-    return <Switch name={name} checked={checked} onChange={handleSwitchChange} />;
+    return <Switch name={name} checked={checked} onChange={handleSwitchChange} {...otherProps} />;
   }, [name, checked, handleSwitchChange]);
 
   return name ? label ? <FormControlLabel control={renderSwitch()} label={label} /> : renderSwitch() : null;
