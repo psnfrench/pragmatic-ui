@@ -146,7 +146,7 @@ export const theme = createTheme({
         root: {
           textTransform: 'none',
         },
-        sizeMedium: {
+        sizeLarge: {
           paddingTop: 16,
           paddingBottom: 16,
           paddingLeft: 24,
