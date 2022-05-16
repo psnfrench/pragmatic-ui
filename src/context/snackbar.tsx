@@ -27,7 +27,7 @@ export const SnackBarProvider = ({ children }: { children: React.ReactNode }) =>
       textMessage = JSON.stringify(message);
     }
 
-    setSnackStatus({ message: textMessage, severity: severity, ...options });
+    setSnackStatus({ message: textMessage, severity, ...options });
     setSnackOpen(true);
   }, []);
 
