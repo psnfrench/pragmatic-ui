@@ -3,5 +3,7 @@ export * from './components/PTextField';
 export * from './components/PDateTimePicker';
 export * from './components/PSwitch';
 export * from './components/PRadioGroup';
+export * from './components/SimpleSnackbar';
+export * from './context/snackbar';
 export * from './constants/Colors';
 export * from './constants/theme';

@@ -9,6 +9,8 @@ import { theme } from './constants/theme';
 import TextDemo from './demo-components/TextDemo';
 import RadioDemo from './demo-components/RadioDemo';
 import SignUpDemo from './demo-components/SignUpDemo';
+import { SnackBarProvider } from './context/snackbar';
+import SnackBarDemo from './demo-components/SnackBarDemo';
 
 const initialValues = {
   firstName: 'Sally',
@@ -22,21 +24,25 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box p={3}>
-          <Typography variant="h3">Pragmatic UI Demo</Typography>
+        <SnackBarProvider>
+          <Box p={3}>
+            <Typography variant="h3">Pragmatic UI Demo</Typography>
 
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-            {({ handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
-                <TextDemo />
-                <RadioDemo />
-                <button type="submit">Submit</button>
-              </form>
-            )}
-          </Formik>
+            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+              {({ handleSubmit }) => (
+                <form onSubmit={handleSubmit}>
+                  <TextDemo />
+                  <RadioDemo />
+                  <button type="submit">Submit</button>
+                </form>
+              )}
+            </Formik>
 
-          <SignUpDemo />
-        </Box>
+            <SignUpDemo />
+
+            <SnackBarDemo />
+          </Box>
+        </SnackBarProvider>
       </LocalizationProvider>
     </ThemeProvider>
   );
