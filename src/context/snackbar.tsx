@@ -17,7 +17,6 @@ export const SnackBarProvider = ({ children }: { children: React.ReactNode }) =>
     message: '',
   });
 
-  //eslint-disable-next-line
   const showSnack = useCallback((message: string | any, severity: AlertColor, options: SnackbarProps = {}) => {
     let textMessage = '';
     if (typeof message === 'string') {
