@@ -44,8 +44,8 @@ export const ConfirmationServiceProvider = ({ children }: { children: React.Reac
     });
   };
 
-  const showConfirmationModal = (confirmationOptions: ConfirmationOptions) => {
-    setConfirmationOptions(confirmationOptions);
+  const showConfirmationModal = (_confirmationOptions: ConfirmationOptions) => {
+    setConfirmationOptions(_confirmationOptions);
     setOpenId('confirmation-modal');
     return new Promise<{ confirmed: boolean } | void>((resolve, reject) => {
       awaitingPromiseRef.current = { resolve, reject };

@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { ConfirmationServiceContext } from '../context/confirmation';
 
 type Props = DialogProps & {
-  id: string; //unique id to identify for open/closing
+  id: string; // unique id to identify for open/closing
 };
 /**
  * To use this Component you must use the ConfirmationServiceContext and call `showBockingModal('my-id')`
