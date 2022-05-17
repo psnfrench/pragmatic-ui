@@ -16,6 +16,7 @@ import ConfirmationDemo from './demo-components/ConfirmationDemo';
 
 const initialValues = {
   firstName: 'Sally',
+  description: 'Works in accounts\nHas the nice office',
   gender: 'female',
 };
 function App() {

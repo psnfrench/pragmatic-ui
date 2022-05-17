@@ -90,6 +90,10 @@ export const theme = createTheme({
             paddingLeft: '0px',
           },
         },
+        multiline: {
+          paddingTop: 0,
+          paddingBottom: 0,
+        },
       },
     },
     MuiInputLabel: {
