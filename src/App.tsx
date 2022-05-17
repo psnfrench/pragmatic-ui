@@ -11,6 +11,8 @@ import RadioDemo from './demo-components/RadioDemo';
 import SignUpDemo from './demo-components/SignUpDemo';
 import { SnackBarProvider } from './context/snackbar';
 import SnackBarDemo from './demo-components/SnackBarDemo';
+import { ConfirmationServiceProvider } from './context/confirmation';
+import ConfirmationDemo from './demo-components/ConfirmationDemo';
 
 const initialValues = {
   firstName: 'Sally',
@@ -25,23 +27,27 @@ function App() {
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <SnackBarProvider>
-          <Box p={3}>
-            <Typography variant="h3">Pragmatic UI Demo</Typography>
+          <ConfirmationServiceProvider>
+            <Box p={3}>
+              <Typography variant="h3">Pragmatic UI Demo</Typography>
 
-            <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-              {({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                  <TextDemo />
-                  <RadioDemo />
-                  <button type="submit">Submit</button>
-                </form>
-              )}
-            </Formik>
+              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                {({ handleSubmit }) => (
+                  <form onSubmit={handleSubmit}>
+                    <TextDemo />
+                    <RadioDemo />
+                    <button type="submit">Submit</button>
+                  </form>
+                )}
+              </Formik>
 
-            <SignUpDemo />
+              <SignUpDemo />
 
-            <SnackBarDemo />
-          </Box>
+              <SnackBarDemo />
+
+              <ConfirmationDemo />
+            </Box>
+          </ConfirmationServiceProvider>
         </SnackBarProvider>
       </LocalizationProvider>
     </ThemeProvider>
