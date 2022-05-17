@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BlockingDialog from '../components/BlockingDialog';
 import { Button, DialogActions, DialogContent, DialogTitle, Theme, Typography } from '@mui/material';
 import { Colors } from '../constants/Colors';
@@ -37,26 +37,26 @@ export const ConfirmationServiceProvider = ({ children }: { children: React.Reac
     }
   }, [openId]);
 
-  const showBockingModal = (id: string) => {
+  const showBockingModal = useCallback((id: string) => {
     setOpenId(id);
     return new Promise<void>((resolve, reject) => {
       awaitingPromiseRef.current = { resolve, reject };
     });
-  };
+  }, []);
 
-  const showConfirmationModal = (_confirmationOptions: ConfirmationOptions) => {
+  const showConfirmationModal = useCallback((_confirmationOptions: ConfirmationOptions) => {
     setConfirmationOptions(_confirmationOptions);
     setOpenId('confirmation-modal');
     return new Promise<{ confirmed: boolean } | void>((resolve, reject) => {
       awaitingPromiseRef.current = { resolve, reject };
     });
-  };
+  }, []);
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     if (awaitingPromiseRef.current) {
       awaitingPromiseRef.current.resolve({ confirmed: true });
     }
-  };
+  }, []);
 
   return (
     <ConfirmationServiceContext.Provider value={{ showBockingModal, openId, setOpenId, showConfirmationModal }}>
