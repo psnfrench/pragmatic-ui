@@ -15,7 +15,7 @@ export const createPragmaticTheme = ({ borderRadius }: { borderRadius: number })
       success: Colors.success,
     },
     shape: {
-      borderRadius: borderRadius,
+      borderRadius,
     },
     typography: {
       fontFamily: 'Inter',
