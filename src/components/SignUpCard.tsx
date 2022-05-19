@@ -3,7 +3,7 @@ import { Box, Button, styled, Grid } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import useValidators from '../hooks/useValidators';
 import { PTextField } from './PTextField';
-import PasswordInput from './PasswordInput';
+import { PasswordInput } from './PasswordInput';
 import RightLink from './RightLink';
 
 export interface SignUpFormValues {

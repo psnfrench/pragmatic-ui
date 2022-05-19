@@ -4,7 +4,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { PTextField, ThemedTextFieldProps } from './PTextField';
 
-function PasswordInput(props: ThemedTextFieldProps) {
+export function PasswordInput(props: ThemedTextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisible = () => {
@@ -26,5 +26,3 @@ function PasswordInput(props: ThemedTextFieldProps) {
     />
   );
 }
-
-export default PasswordInput;
