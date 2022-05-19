@@ -14,7 +14,7 @@ export interface SignUpFormValues {
   passwordConfirm: string;
 }
 
-const SignUpCard = ({
+export const SignUpCard = ({
   onSubmit,
   onGoToLogin,
 }: {
@@ -91,5 +91,3 @@ const Form = styled('form')(({ theme }) => ({
   paddingRight: theme.spacing(10),
   flex: 1,
 }));
-
-export default SignUpCard;

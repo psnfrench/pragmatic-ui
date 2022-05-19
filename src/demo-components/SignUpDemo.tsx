@@ -1,6 +1,6 @@
 import { Box, Divider, Typography, Grid } from '@mui/material';
 import React from 'react';
-import SignUpCard from '../components/SignUpCard';
+import { SignUpCard } from '../components/SignUpCard';
 import { Colors } from '../constants/Colors';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 
