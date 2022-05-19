@@ -4,7 +4,7 @@
 
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SignUpCard from './SignUpCard';
+import { SignUpCard } from './SignUpCard';
 
 describe('Filling out the sign up form', () => {
   const fieldsToUpdate = [
