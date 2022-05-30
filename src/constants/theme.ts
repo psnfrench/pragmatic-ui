@@ -65,6 +65,9 @@ export const createPragmaticTheme = ({ borderRadius }: { borderRadius: number })
       MuiTextField: {
         defaultProps: {
           variant: 'filled',
+          InputProps: {
+            disableUnderline: true,
+          },
         },
       },
       MuiFilledInput: {

@@ -3,9 +3,11 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { PTextField, ThemedTextFieldProps } from './PTextField';
+import { useTheme } from '@mui/material';
 
 export function PasswordInput(props: ThemedTextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const theme = useTheme();
 
   const togglePasswordVisible = () => {
     setShowPassword((visible) => !visible);
@@ -15,7 +17,7 @@ export function PasswordInput(props: ThemedTextFieldProps) {
       type={showPassword ? 'text' : 'password'}
       fullWidth
       InputProps={{
-        disableUnderline: true,
+        ...theme.components?.MuiTextField?.defaultProps?.InputProps,
         endAdornment: (
           <IconButton aria-label="toggle visibility" onClick={togglePasswordVisible}>
             {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}

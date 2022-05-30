@@ -25,7 +25,6 @@ const PDateTimePickerWithFormikComp = (
     <DateTimePicker
       value={value as Date}
       onChange={handleDateChange}
-      InputProps={{ disableUnderline: true }}
       renderInput={(params) => <PTextField name={name} {...params} {...otherProps} />}
     />
   ) : null;

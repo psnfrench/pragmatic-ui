@@ -1,4 +1,4 @@
-import { Box, IconButton, TextField, TextFieldProps, BoxProps } from '@mui/material';
+import { Box, IconButton, TextField, TextFieldProps, BoxProps, useTheme } from '@mui/material';
 import { FormikContextType, FormikProps, useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React, { useState } from 'react';
@@ -54,6 +54,7 @@ const PTextFieldWithFormikComp = (
     touched,
     ...otherProps
   } = props;
+  const theme = useTheme();
   const [showClear, setShowClear] = useState(false);
   const isTouched = get(touched, name);
   const error = name && isTouched ? get(errors, name) : undefined;
@@ -78,7 +79,7 @@ const PTextFieldWithFormikComp = (
         onFocus={handleFocus}
         hiddenLabel={!props.label}
         InputProps={{
-          disableUnderline: true,
+          ...theme.components?.MuiTextField?.defaultProps?.InputProps,
           endAdornment:
             enableClear && showClear ? (
               <IconButton
@@ -112,14 +113,7 @@ export const PTextFieldReadOnly = ({
 }: ThemedTextFieldReadOnlyProps & { value: string }) => {
   return (
     <Box marginBottom={2.5} {..._BoxProps}>
-      <TextField
-        value={value}
-        disabled={true}
-        InputProps={{
-          disableUnderline: true,
-        }}
-        {...otherProps}
-      />
+      <TextField value={value} disabled={true} {...otherProps} />
     </Box>
   );
 };
