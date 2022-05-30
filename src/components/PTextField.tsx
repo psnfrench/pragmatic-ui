@@ -73,7 +73,6 @@ const PTextFieldWithFormikComp = (
       <TextField
         name={name}
         value={value || defaultValue}
-        variant="filled"
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -115,7 +114,6 @@ export const PTextFieldReadOnly = ({
     <Box marginBottom={2.5} {..._BoxProps}>
       <TextField
         value={value}
-        variant="filled"
         disabled={true}
         InputProps={{
           disableUnderline: true,
