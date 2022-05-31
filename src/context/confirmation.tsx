@@ -19,6 +19,8 @@ type ConfirmationOptions = {
   title: string;
   contentText: string;
   hideOk?: boolean;
+  continueText?: string;
+  cancelText?: string;
 };
 export const ConfirmationServiceProvider = ({ children }: { children: React.ReactNode }) => {
   const [openId, setOpenId] = useState<string | undefined>(undefined);
@@ -71,7 +73,7 @@ export const ConfirmationServiceProvider = ({ children }: { children: React.Reac
 };
 
 const ConfirmationModal = ({
-  confirmationOptions,
+  confirmationOptions: { title, contentText, hideOk, continueText = 'Continue', cancelText = 'Cancel' },
   onConfirm,
   onCancel,
 }: {
@@ -86,21 +88,21 @@ const ConfirmationModal = ({
           color: Colors.greyscale.offBlack,
         }}
       >
-        {confirmationOptions.title}
+        {title}
       </DialogTitle>
       <DialogContent>
         <Typography align="center" variant="subtitle1" color="textSecondary" sx={{ whiteSpace: 'pre-line' }}>
-          {confirmationOptions.contentText}
+          {contentText}
         </Typography>
       </DialogContent>
       <DialogActions sx={{ paddingX: 3, mb: 2, justifyContent: 'flex-start' }}>
-        {confirmationOptions.hideOk ? null : (
+        {hideOk ? null : (
           <Button variant="contained" color="primary" autoFocus onClick={onConfirm}>
-            Continue
+            {continueText}
           </Button>
         )}
         <Button variant="outlined" color="primary" onClick={onCancel}>
-          Cancel
+          {cancelText}
         </Button>
       </DialogActions>
     </BlockingDialog>

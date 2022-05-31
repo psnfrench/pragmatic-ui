@@ -11,6 +11,8 @@ function ConfirmationDemo() {
     const confimedResponse = await showConfirmationModal({
       title: 'Confirm It',
       contentText: 'Do you ready want to continue?',
+      continueText: 'Yes, I am sure',
+      cancelText: 'No thanks',
     });
     if (confimedResponse && confimedResponse.confirmed) {
       setOpenId(undefined);
