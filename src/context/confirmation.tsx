@@ -60,14 +60,17 @@ export const ConfirmationServiceProvider = ({ children }: { children: React.Reac
     }
   }, []);
 
+  const handleCancel = useCallback(() => {
+    setOpenId(undefined);
+    if (awaitingPromiseRef.current) {
+      awaitingPromiseRef.current.resolve({ confirmed: false });
+    }
+  }, []);
+
   return (
     <ConfirmationServiceContext.Provider value={{ showBockingModal, openId, setOpenId, showConfirmationModal }}>
       {children}
-      <ConfirmationModal
-        confirmationOptions={confirmationOptions}
-        onConfirm={handleConfirm}
-        onCancel={() => setOpenId(undefined)}
-      />
+      <ConfirmationModal confirmationOptions={confirmationOptions} onConfirm={handleConfirm} onCancel={handleCancel} />
     </ConfirmationServiceContext.Provider>
   );
 };

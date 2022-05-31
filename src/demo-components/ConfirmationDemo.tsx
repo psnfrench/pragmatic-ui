@@ -14,11 +14,15 @@ function ConfirmationDemo() {
       continueText: 'Yes, I am sure',
       cancelText: 'No thanks',
     });
-    if (confimedResponse && confimedResponse.confirmed) {
-      setOpenId(undefined);
-      showSnack('User has confirmed it', 'success');
+    if (confimedResponse && confimedResponse.confirmed !== undefined) {
+      if (confimedResponse.confirmed) {
+        setOpenId(undefined);
+        showSnack('User has confirmed it', 'success');
+      } else {
+        showSnack('User has Canceled it', 'error');
+      }
     } else {
-      showSnack('User has Canceled it', 'error');
+      showSnack('User has clicked outside of modal or press escape', 'info');
     }
   };
   return (
