@@ -13,11 +13,14 @@ import { SnackBarProvider } from './context/snackbar';
 import SnackBarDemo from './demo-components/SnackBarDemo';
 import { ConfirmationServiceProvider } from './context/confirmation';
 import ConfirmationDemo from './demo-components/ConfirmationDemo';
+import DateDemo from './demo-components/DateDemo';
 
 const initialValues = {
   firstName: 'Sally',
   description: 'Works in accounts\nHas the nice office',
   gender: 'female',
+  date1: new Date(),
+  date2: new Date(),
 };
 function App() {
   const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
@@ -47,6 +50,7 @@ function App() {
                 {({ handleSubmit }) => (
                   <form onSubmit={handleSubmit}>
                     <TextDemo />
+                    <DateDemo />
                     <RadioDemo />
                     <button type="submit">Submit</button>
                   </form>

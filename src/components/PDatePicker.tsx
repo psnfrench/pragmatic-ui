@@ -1,20 +1,20 @@
 import { FilledInputProps, TextFieldProps } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export const PDateTimePicker = (props: ThemedTextFieldProps) => {
+export const PDatePicker = (props: ThemedTextFieldProps) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
   const formikProps = getFormikTextFields(_props);
   const value = get(_props.values, props.name);
 
-  return <PDateTimePickerMemo value={value} {...props} {...formikProps} />;
+  return <PDatePickerMemo value={value} {...props} {...formikProps} />;
 };
 
-const PDateTimePickerWithFormikComp = (
+const PDatePickerWithFormikComp = (
   props: ThemedTextFieldProps & RequiredFormikTextFields & Required<Pick<TextFieldProps, 'value'>>,
 ) => {
   const { name, value, handleChange, setFieldValue, ...otherProps } = props;
@@ -22,7 +22,7 @@ const PDateTimePickerWithFormikComp = (
     setFieldValue(name, dateValue);
   };
   return name ? (
-    <DateTimePicker
+    <DatePicker
       value={value as Date}
       onChange={handleDateChange}
       renderInput={({ InputProps, variant, ...params }) => {
@@ -35,4 +35,4 @@ const PDateTimePickerWithFormikComp = (
   ) : null;
 };
 
-export const PDateTimePickerMemo = React.memo(PDateTimePickerWithFormikComp);
+export const PDatePickerMemo = React.memo(PDatePickerWithFormikComp);
