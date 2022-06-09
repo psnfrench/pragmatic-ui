@@ -26,7 +26,7 @@ export const ConfirmationServiceContext = React.createContext<{
   setOpenId: () => undefined,
 });
 
-type ConfirmationOptions = {
+export type ConfirmationOptions = {
   DialogPaperProps?: PaperProps;
   title: string;
   contentText: string;
