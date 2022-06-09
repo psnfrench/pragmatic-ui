@@ -40,7 +40,7 @@ function ConfirmationDemo() {
 
   const showStyledMessage = async () => {
     const confimedResponse = await showConfirmationModal({
-      PaperProps: {
+      DialogPaperProps: {
         sx: { paddingX: 2 },
       },
       title: '',
