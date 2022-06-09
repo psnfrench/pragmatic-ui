@@ -1,7 +1,13 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
 import { Colors } from './Colors';
 
-export const createPragmaticTheme = ({ borderRadius }: { borderRadius: number }) =>
+export const createPragmaticTheme = ({
+  borderRadius,
+  options,
+}: {
+  borderRadius: number;
+  options?: ThemeOptions | undefined;
+}) =>
   createTheme({
     palette: {
       primary: Colors.primary,
@@ -205,6 +211,7 @@ export const createPragmaticTheme = ({ borderRadius }: { borderRadius: number })
         },
       },
     },
+    ...options,
   });
 
 export const theme = createPragmaticTheme({ borderRadius: 16 });
