@@ -12,23 +12,27 @@ export interface SignUpFormValues {
   email: string;
   password: string;
   passwordConfirm: string;
+  [otherField: string]: unknown;
 }
 
 export const SignUpCard = ({
   onSubmit,
   onGoToLogin,
-}: {
-  onSubmit: (values: SignUpFormValues, formikHelpers: FormikHelpers<SignUpFormValues>) => void;
-  onGoToLogin: () => void;
-}) => {
-  const { validateEmail } = useValidators();
-  const initialValues: SignUpFormValues = {
+  children,
+  initialValues = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     passwordConfirm: '',
-  };
+  },
+}: {
+  initialValues?: SignUpFormValues;
+  onSubmit: (values: SignUpFormValues, formikHelpers: FormikHelpers<SignUpFormValues>) => void;
+  onGoToLogin: () => void;
+  children?: React.ReactNode;
+}) => {
+  const { validateEmail } = useValidators();
 
   const validate = (values: SignUpFormValues) => {
     // eslint-disable-next-line no-unused-vars
@@ -58,6 +62,7 @@ export const SignUpCard = ({
               </Grid>
             </Grid>
             <PTextField label="Email Address" type="email" name="email" fullWidth />
+            {children}
             <PasswordInput label="Password" name="password" fullWidth />
             <PasswordInput label="Confirm Password" name="passwordConfirm" fullWidth />
 
