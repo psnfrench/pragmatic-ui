@@ -1,6 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import BlockingDialog from '../components/BlockingDialog';
-import { Button, DialogActions, DialogContent, DialogTitle, Theme, Typography } from '@mui/material';
+import {
+  Button,
+  ButtonProps,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  SxProps,
+  Theme,
+  Typography,
+  TypographyProps,
+} from '@mui/material';
 import { Colors } from '../constants/Colors';
 
 export const ConfirmationServiceContext = React.createContext<{
@@ -19,8 +29,13 @@ type ConfirmationOptions = {
   title: string;
   contentText: string;
   hideOk?: boolean;
-  continueText?: string;
-  cancelText?: string;
+  continueText?: React.ReactNode;
+  continueButtonProps?: ButtonProps;
+  cancelText?: React.ReactNode;
+  cancelButtonProps?: ButtonProps;
+  titleProps?: TypographyProps;
+  contentProps?: TypographyProps;
+  actionsSx?: SxProps<Theme>;
 };
 export const ConfirmationServiceProvider = ({ children }: { children: React.ReactNode }) => {
   const [openId, setOpenId] = useState<string | undefined>(undefined);
@@ -76,7 +91,18 @@ export const ConfirmationServiceProvider = ({ children }: { children: React.Reac
 };
 
 const ConfirmationModal = ({
-  confirmationOptions: { title, contentText, hideOk, continueText = 'Continue', cancelText = 'Cancel' },
+  confirmationOptions: {
+    title,
+    titleProps,
+    contentText,
+    contentProps,
+    hideOk,
+    continueText = 'Continue',
+    continueButtonProps,
+    cancelText = 'Cancel',
+    cancelButtonProps,
+    actionsSx,
+  },
   onConfirm,
   onCancel,
 }: {
@@ -86,25 +112,27 @@ const ConfirmationModal = ({
 }) => {
   return (
     <BlockingDialog id="confirmation-modal">
-      <DialogTitle
-        sx={{
-          color: Colors.greyscale.offBlack,
-        }}
-      >
+      <DialogTitle sx={{ color: Colors.greyscale.offBlack }} {...titleProps}>
         {title}
       </DialogTitle>
       <DialogContent>
-        <Typography align="center" variant="subtitle1" color="textSecondary" sx={{ whiteSpace: 'pre-line' }}>
+        <Typography
+          align="center"
+          variant="subtitle1"
+          color="textSecondary"
+          sx={{ whiteSpace: 'pre-line' }}
+          {...contentProps}
+        >
           {contentText}
         </Typography>
       </DialogContent>
-      <DialogActions sx={{ paddingX: 3, mb: 2, justifyContent: 'flex-start' }}>
+      <DialogActions sx={{ paddingX: 3, mb: 2, justifyContent: 'flex-start', ...actionsSx }}>
         {hideOk ? null : (
-          <Button variant="contained" color="primary" autoFocus onClick={onConfirm}>
+          <Button variant="contained" color="primary" autoFocus onClick={onConfirm} {...continueButtonProps}>
             {continueText}
           </Button>
         )}
-        <Button variant="outlined" color="primary" onClick={onCancel}>
+        <Button variant="outlined" color="primary" onClick={onCancel} {...cancelButtonProps}>
           {cancelText}
         </Button>
       </DialogActions>
