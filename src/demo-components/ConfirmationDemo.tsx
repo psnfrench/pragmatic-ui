@@ -40,6 +40,9 @@ function ConfirmationDemo() {
 
   const showStyledMessage = async () => {
     const confimedResponse = await showConfirmationModal({
+      PaperProps: {
+        sx: { paddingX: 2 },
+      },
       title: '',
       contentText: 'Do you want to notify the council of this new Staff Member?',
       contentProps: {

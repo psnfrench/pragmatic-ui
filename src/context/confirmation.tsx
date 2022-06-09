@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  PaperProps,
   SxProps,
   Theme,
   Typography,
@@ -26,6 +27,7 @@ export const ConfirmationServiceContext = React.createContext<{
 });
 
 type ConfirmationOptions = {
+  PaperProps?: PaperProps;
   title: string;
   contentText: string;
   hideOk?: boolean;
@@ -92,6 +94,7 @@ export const ConfirmationServiceProvider = ({ children }: { children: React.Reac
 
 const ConfirmationModal = ({
   confirmationOptions: {
+    PaperProps,
     title,
     titleProps,
     contentText,
@@ -111,7 +114,7 @@ const ConfirmationModal = ({
   onCancel: () => void;
 }) => {
   return (
-    <BlockingDialog id="confirmation-modal">
+    <BlockingDialog id="confirmation-modal" PaperProps={PaperProps}>
       <DialogTitle sx={{ color: Colors.greyscale.offBlack }} {...titleProps}>
         {title}
       </DialogTitle>
