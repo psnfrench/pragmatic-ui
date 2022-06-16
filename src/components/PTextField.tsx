@@ -73,7 +73,7 @@ const PTextFieldWithFormikComp = (
     <Box marginBottom={2.5} {..._BoxProps}>
       <TextField
         name={name}
-        value={value || defaultValue}
+        value={value !== undefined ? value : defaultValue}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
