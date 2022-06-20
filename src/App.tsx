@@ -14,6 +14,11 @@ import SnackBarDemo from './demo-components/SnackBarDemo';
 import { ConfirmationServiceProvider } from './context/confirmation';
 import ConfirmationDemo from './demo-components/ConfirmationDemo';
 import DateDemo from './demo-components/DateDemo';
+import { SideBar } from './components/SideBar';
+import { ReactComponent as DMExpanded } from './images/DMExpanded.svg';
+import { ReactComponent as DMCollapsed } from './images/DMCollapsed.svg';
+import InputIcon from '@mui/icons-material/Input';
+import LoginIcon from '@mui/icons-material/Login';
 
 const initialValues = {
   firstName: 'Sally',
@@ -42,26 +47,50 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <SnackBarProvider>
           <ConfirmationServiceProvider>
-            <Box p={3}>
-              <Typography variant="h3">Pragmatic UI Demo</Typography>
-              <TextField label="Border Radius" onChange={handleBorderRadiusChange} value={borderRadius} type="number" />
+            <Box display="flex" flexDirection="row">
+              <SideBar
+                logoCollapsed={<DMCollapsed />}
+                logoExpanded={<DMExpanded />}
+                items={[
+                  { text: 'Text Inputs', key: 'textInput', icon: <InputIcon />, divider: true },
+                  {
+                    text: 'Sign Up Form',
+                    key: 'signUp',
+                    icon: <LoginIcon />,
+                    onClick: () => console.log('sign up clicked'),
+                  },
+                ]}
+              >
+                <Box p={2}>
+                  <Typography variant="h6">My Profile Info</Typography>
+                </Box>
+              </SideBar>
+              <Box p={3} flex={1}>
+                <Typography variant="h3">Pragmatic UI Demo</Typography>
+                <TextField
+                  label="Border Radius"
+                  onChange={handleBorderRadiusChange}
+                  value={borderRadius}
+                  type="number"
+                />
 
-              <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                {({ handleSubmit }) => (
-                  <form onSubmit={handleSubmit}>
-                    <TextDemo />
-                    <DateDemo />
-                    <RadioDemo />
-                    <button type="submit">Submit</button>
-                  </form>
-                )}
-              </Formik>
+                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                  {({ handleSubmit }) => (
+                    <form onSubmit={handleSubmit}>
+                      <TextDemo />
+                      <DateDemo />
+                      <RadioDemo />
+                      <button type="submit">Submit</button>
+                    </form>
+                  )}
+                </Formik>
 
-              <SignUpDemo />
+                <SignUpDemo />
 
-              <SnackBarDemo />
+                <SnackBarDemo />
 
-              <ConfirmationDemo />
+                <ConfirmationDemo />
+              </Box>
             </Box>
           </ConfirmationServiceProvider>
         </SnackBarProvider>
