@@ -10,7 +10,6 @@ function SignUpDemo() {
 
   return (
     <Box>
-      <Divider />
       <Typography variant="h4">Sign in page</Typography>
       <Divider />
       <Grid container>

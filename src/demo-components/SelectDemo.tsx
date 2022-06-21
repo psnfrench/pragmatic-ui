@@ -5,7 +5,6 @@ import { PTextField } from '../components/PTextField';
 function SelectDemo() {
   return (
     <Box>
-      <Divider />
       <Typography variant="h4">TODO Select Demo</Typography>
       <Divider />
       <PTextField name="firstName" label="First Name" />

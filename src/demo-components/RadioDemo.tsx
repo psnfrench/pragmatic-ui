@@ -10,7 +10,6 @@ function RadioDemo() {
   ]).current;
   return (
     <Box>
-      <Divider />
       <Typography variant="h4">Radio Inputs</Typography>
       <Divider />
       <PRadioGroup formLabel="Select Gender" name="gender" radioButtons={radioButtons} />

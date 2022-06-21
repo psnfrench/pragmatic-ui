@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, TextField, Theme, Typography } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
@@ -14,8 +14,13 @@ import { ReactComponent as DMExpanded } from './images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from './images/DMCollapsed.svg';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
+import BorderStyleIcon from '@mui/icons-material/BorderStyle';
+import EggAltIcon from '@mui/icons-material/EggAlt';
+import HomeIcon from '@mui/icons-material/Home';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Home from './components/Home';
 
 const initialValues = {
   firstName: 'Sally',
@@ -25,16 +30,50 @@ const initialValues = {
   date2: new Date(),
 };
 
-function AppRouter() {
+export type AppRouterProps = {
+  theme: Theme;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+}
+
+
+export const AppRouter = ({ theme, setTheme }: AppRouterProps) => {
   const navigate = useNavigate();
   const navItems = useMemo(
     () => [
-      { text: 'Text Inputs', key: 'textInput', icon: <InputIcon />, divider: true },
+      {
+        text: 'Home',
+        key: 'home',
+        icon: <HomeIcon />,
+        onClick: () => navigate('/'),
+        divider: true,
+      },
+      {
+        text: 'Border Radius',
+        key: 'borderRadius',
+        icon: <BorderStyleIcon />,
+        onClick: () => navigate('/border-radius'),
+      },
+      {
+        text: 'Text Inputs', key: 'textInput', icon: <InputIcon />,
+        onClick: () => navigate('/demos'),
+      },
       {
         text: 'Sign Up Form',
         key: 'signup',
         icon: <LoginIcon />,
         onClick: () => navigate('/signup'),
+      },
+      {
+        text: 'Snackbar',
+        key: 'snackbar',
+        icon: <EggAltIcon />,
+        onClick: () => navigate('/snackbar'),
+      },
+      {
+        text: 'Confirmation',
+        key: 'confirmation',
+        icon: <CheckCircleIcon />,
+        onClick: () => navigate('/confirmation'),
       },
     ],
     [],
@@ -43,7 +82,6 @@ function AppRouter() {
   const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
     console.log('values: ', values);
   };
-  const [theme, setTheme] = useState(defaultTheme);
   const [borderRadius, setBorderRadius] = useState(16);
   const [open, setOpen] = useState(true);
 
@@ -81,9 +119,11 @@ function AppRouter() {
       </Box>
       <Box sx={{ padding: 3, positionleft: open ? '3px' : '400px' }}>
         <Typography variant="h3">Pragmatic UI Demo</Typography>
+        <br />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route
-            path="/"
+            path="/border-radius"
             element={
               <TextField label="Border Radius" onChange={handleBorderRadiusChange} value={borderRadius} type="number" />
             }

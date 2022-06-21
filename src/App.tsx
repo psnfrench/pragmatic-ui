@@ -18,7 +18,7 @@ function App() {
         <SnackBarProvider>
           <ConfirmationServiceProvider>
             <BrowserRouter>
-              <AppRouter />
+              <AppRouter theme={theme} setTheme={setTheme} />
             </BrowserRouter>
           </ConfirmationServiceProvider>
         </SnackBarProvider>

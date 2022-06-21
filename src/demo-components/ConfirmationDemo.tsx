@@ -62,7 +62,6 @@ function ConfirmationDemo() {
   };
   return (
     <Box mb={2}>
-      <Divider />
       <Typography variant="h4">Confirmation Service</Typography>
       <Divider />
       <Button sx={{ mr: 2 }} variant="contained" onClick={showMessage}>

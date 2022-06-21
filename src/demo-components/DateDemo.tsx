@@ -6,7 +6,6 @@ import { PDateTimePicker } from '../components/PDateTimePicker';
 function DateDemo() {
   return (
     <Box>
-      <Divider />
       <Typography variant="h4">Date Inputs</Typography>
       <Divider />
       <PDatePicker name="date1" label="Date" />

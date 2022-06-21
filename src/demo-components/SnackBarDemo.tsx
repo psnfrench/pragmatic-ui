@@ -7,7 +7,6 @@ function SnackBarDemo() {
   const severities = useRef<AlertColor[]>(['success', 'info', 'warning', 'error']).current;
   return (
     <Box mb={2}>
-      <Divider />
       <Typography variant="h4">Snack Bars</Typography>
       <Divider />
       {severities.map((severity) => (
