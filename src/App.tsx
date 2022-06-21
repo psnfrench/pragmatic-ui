@@ -35,9 +35,9 @@ const navItems = [
   { text: 'Text Inputs', key: 'textInput', icon: <InputIcon />, divider: true },
   {
     text: 'Sign Up Form',
-    key: 'signUp',
+    key: 'signup',
     icon: <LoginIcon />,
-    onClick: () => ( useNavigate('/' + item.key) ),
+    onClick: (key: string) => (  ),
   },
 ];
 

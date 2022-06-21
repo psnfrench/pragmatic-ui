@@ -9,7 +9,7 @@ export type SideBarItem = {
   text: string;
   icon: React.ReactNode;
   divider?: boolean;
-  onClick?: (key: string) => void;
+  onClick?: (key: string) => Window | null
 };
 export type SideBarProps = {
   items: SideBarItem[];
