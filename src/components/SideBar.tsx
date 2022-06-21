@@ -1,4 +1,15 @@
-import { Box, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, List, styled, Theme, CSSObject } from '@mui/material';
+import {
+  Box,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  List,
+  styled,
+  Theme,
+  CSSObject,
+} from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -9,7 +20,7 @@ export type SideBarItem = {
   text: string;
   icon: React.ReactNode;
   divider?: boolean;
-  onClick?: (key: string) => Window | null
+  onClick?: () => void;
 };
 export type SideBarProps = {
   items: SideBarItem[];
@@ -44,25 +55,22 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
   }),
-);
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}));
 
 export const SideBar = ({ items, logoCollapsed, logoExpanded, children, open, setOpen }: SideBarProps) => {
-
   const [selectedKey, setSelectedKey] = useState<string>();
 
   const toggleOpen = () => {
@@ -72,7 +80,7 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children, open, se
   const handleItemClick = (item: SideBarItem) => {
     setSelectedKey(item.key);
     if (item.onClick) {
-      item.onClick(item.key);
+      item.onClick();
     }
   };
 
@@ -143,22 +151,20 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children, open, se
                 sx={{
                   minWidth: 0,
                   mr: open ? 3 : 0,
-                  transition: "1s",
+                  transition: '1s',
                   justifyContent: 'center',
                 }}
               >
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.text} sx={{ display: open ? "block" : "none" }} />
+              <ListItemText primary={item.text} sx={{ display: open ? 'block' : 'none' }} />
             </ListItemButton>
 
             {item.divider && <Divider />}
           </ListItem>
         ))}
       </List>
-      <Box sx={{ flex: 1, alignItems: 'flex-end', display: "flex"}}>
-        {children}
-      </Box>
+      <Box sx={{ flex: 1, alignItems: 'flex-end', display: 'flex' }}>{children}</Box>
     </Drawer>
   );
 };
