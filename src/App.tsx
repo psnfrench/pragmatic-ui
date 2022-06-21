@@ -19,6 +19,8 @@ import { ReactComponent as DMExpanded } from './images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from './images/DMCollapsed.svg';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
+import { BrowserRouter, Route, Link, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const initialValues = {
   firstName: 'Sally',
@@ -27,12 +29,25 @@ const initialValues = {
   date1: new Date(),
   date2: new Date(),
 };
+
+
+const navItems = [
+  { text: 'Text Inputs', key: 'textInput', icon: <InputIcon />, divider: true },
+  {
+    text: 'Sign Up Form',
+    key: 'signUp',
+    icon: <LoginIcon />,
+    onClick: () => ( useNavigate('/' + item.key) ),
+  },
+];
+
 function App() {
   const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
     console.log('values: ', values);
   };
   const [theme, setTheme] = useState(defaultTheme);
   const [borderRadius, setBorderRadius] = useState(16);
+  const [open, setOpen] = useState(true);
 
   const handleBorderRadiusChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     setBorderRadius(parseInt(value));
@@ -47,49 +62,66 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <SnackBarProvider>
           <ConfirmationServiceProvider>
-            <Box display="flex" flexDirection="row">
-              <SideBar
-                logoCollapsed={<DMCollapsed />}
-                logoExpanded={<DMExpanded />}
-                items={[
-                  { text: 'Text Inputs', key: 'textInput', icon: <InputIcon />, divider: true },
-                  {
-                    text: 'Sign Up Form',
-                    key: 'signUp',
-                    icon: <LoginIcon />,
-                    onClick: () => console.log('sign up clicked'),
-                  },
-                ]}
-              >
-                <Box p={2}>
-                  <Typography variant="h6">My Profile Info</Typography>
-                </Box>
-              </SideBar>
-              <Box p={3} flex={1}>
+            <Box
+              sx={{
+                justifyContent: 'flex-start',
+                display: 'inline-flex',
+                flexDirection: 'row',
+                alignContent: 'flex-start',
+              }}
+            >
+              <Box flexGrow={1}>
+                <SideBar
+                  logoCollapsed={<DMCollapsed />}
+                  logoExpanded={<DMExpanded />}
+                  items={navItems}
+                  open={open}
+                  setOpen={setOpen}
+                >
+                  <Box p={2}>
+                    <Typography variant="h6" whiteSpace={'normal'}>
+                      My Profile Info
+                    </Typography>
+                  </Box>
+                </SideBar>
+              </Box>
+              <Box sx={{ padding: 3, positionleft: open ? '3px' : '400px' }}>
                 <Typography variant="h3">Pragmatic UI Demo</Typography>
-                <TextField
-                  label="Border Radius"
-                  onChange={handleBorderRadiusChange}
-                  value={borderRadius}
-                  type="number"
-                />
+                <BrowserRouter>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <TextField
+                          label="Border Radius"
+                          onChange={handleBorderRadiusChange}
+                          value={borderRadius}
+                          type="number"
+                        />
+                      }
+                    />
+                    <Route
+                      path="/demos"
+                      element={
+                        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+                          {({ handleSubmit }) => (
+                            <form onSubmit={handleSubmit}>
+                              <TextDemo />
+                              <DateDemo />
+                              <RadioDemo />
+                              <button type="submit">Submit</button>
+                            </form>
+                          )}
+                        </Formik>
+                      }
+                    />
+                    <Route path="/signup" element={<SignUpDemo />} />
 
-                <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-                  {({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit}>
-                      <TextDemo />
-                      <DateDemo />
-                      <RadioDemo />
-                      <button type="submit">Submit</button>
-                    </form>
-                  )}
-                </Formik>
+                    <Route path="/snackbar" element={<SnackBarDemo />} />
 
-                <SignUpDemo />
-
-                <SnackBarDemo />
-
-                <ConfirmationDemo />
+                    <Route path="/confirmation" element={<ConfirmationDemo />} />
+                  </Routes>
+                </BrowserRouter>
               </Box>
             </Box>
           </ConfirmationServiceProvider>

@@ -1,4 +1,5 @@
-import { Box, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Drawer, List } from '@mui/material';
+import { Box, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, List, styled, Theme, CSSObject } from '@mui/material';
+import MuiDrawer from '@mui/material/Drawer';
 import React, { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -8,7 +9,7 @@ export type SideBarItem = {
   text: string;
   icon: React.ReactNode;
   divider?: boolean;
-  onClick?: () => void;
+  onClick?: (key: string) => void;
 };
 export type SideBarProps = {
   items: SideBarItem[];
@@ -16,10 +17,52 @@ export type SideBarProps = {
   logoExpanded: React.ReactNode;
   defaultOpen?: boolean;
   children?: React.ReactNode;
+  open?: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const SideBar = ({ items, defaultOpen = true, logoCollapsed, logoExpanded, children }: SideBarProps) => {
-  const [open, setOpen] = useState(defaultOpen);
+const drawerWidth = 340;
+
+const openedMixin = (theme: Theme): CSSObject => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+});
+
+const closedMixin = (theme: Theme): CSSObject => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 100px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 100px)`,
+  },
+});
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    }),
+  }),
+);
+
+export const SideBar = ({ items, logoCollapsed, logoExpanded, children, open, setOpen }: SideBarProps) => {
+
   const [selectedKey, setSelectedKey] = useState<string>();
 
   const toggleOpen = () => {
@@ -29,7 +72,7 @@ export const SideBar = ({ items, defaultOpen = true, logoCollapsed, logoExpanded
   const handleItemClick = (item: SideBarItem) => {
     setSelectedKey(item.key);
     if (item.onClick) {
-      item.onClick();
+      item.onClick(item.key);
     }
   };
 
@@ -52,8 +95,9 @@ export const SideBar = ({ items, defaultOpen = true, logoCollapsed, logoExpanded
           sx={{
             minHeight: 140,
             justifyContent: open ? 'initial' : 'center',
-            px: 2.5,
+            px: 0.5,
             borderRadius: '5px',
+            transition: '1s',
           }}
         >
           <Box sx={{ display: 'flex' }}>
@@ -98,20 +142,21 @@ export const SideBar = ({ items, defaultOpen = true, logoCollapsed, logoExpanded
               <ListItemIcon
                 sx={{
                   minWidth: 0,
-                  mr: open ? 3 : 'auto',
+                  mr: open ? 3 : 0,
+                  transition: "1s",
                   justifyContent: 'center',
                 }}
               >
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary={item.text} sx={{ display: open ? "block" : "none" }} />
             </ListItemButton>
 
             {item.divider && <Divider />}
           </ListItem>
         ))}
       </List>
-      <Box flex={1} alignItems="flex-end" display="flex">
+      <Box sx={{ flex: 1, alignItems: 'flex-end', display: "flex"}}>
         {children}
       </Box>
     </Drawer>
