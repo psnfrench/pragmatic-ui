@@ -6,7 +6,7 @@ const Home = () => {
         <Box>
             <Typography variant="h4">Home Page</Typography>
             <Divider />
-            <Typography variant="p">Welcome to the home page for the Pragmatic UI demo</Typography>
+            <Typography variant="body1">Welcome to the home page for the Pragmatic UI demo</Typography>
         </Box>
     )
 }

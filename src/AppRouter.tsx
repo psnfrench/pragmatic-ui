@@ -18,7 +18,7 @@ import BorderStyleIcon from '@mui/icons-material/BorderStyle';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Route, Routes } from 'react-router-dom';
+import { NavigateFunction, Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 
@@ -31,12 +31,12 @@ const initialValues = {
 };
 
 export type AppRouterProps = {
-  theme: Theme;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  theme: Theme;
 }
 
 
-export const AppRouter = ({ theme, setTheme }: AppRouterProps) => {
+export const AppRouter = ({ setTheme, theme }: AppRouterProps) => {
   const navigate = useNavigate();
   const navItems = useMemo(
     () => [
@@ -79,9 +79,6 @@ export const AppRouter = ({ theme, setTheme }: AppRouterProps) => {
     [],
   );
 
-  const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
-    console.log('values: ', values);
-  };
   const [borderRadius, setBorderRadius] = useState(16);
   const [open, setOpen] = useState(true);
 
@@ -92,6 +89,9 @@ export const AppRouter = ({ theme, setTheme }: AppRouterProps) => {
   useEffect(() => {
     setTheme(createPragmaticTheme({ borderRadius }));
   }, [borderRadius]);
+  const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
+    console.log('values: ', values);
+  };
 
   return (
     <Box
@@ -151,6 +151,7 @@ export const AppRouter = ({ theme, setTheme }: AppRouterProps) => {
         </Routes>
       </Box>
     </Box>
+
   );
 }
 
