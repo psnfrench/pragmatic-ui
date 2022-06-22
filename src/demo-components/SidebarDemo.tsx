@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
@@ -6,7 +6,7 @@ import BorderStyleIcon from '@mui/icons-material/BorderStyle';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { SideBar } from '../components/SideBar';
+import { SideBarComponents } from '../components/SideBarComponents';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
 import { Box, Typography } from '@mui/material';
@@ -14,7 +14,6 @@ import { Box, Typography } from '@mui/material';
 
 
 const SidebarDemo = () => {
-    
     const navigate = useNavigate();
     const navItems = useMemo(
         () => [
@@ -57,7 +56,7 @@ const SidebarDemo = () => {
         [],
     );
     return (
-        <SideBar
+        <SideBarComponents
             logoCollapsed={<DMCollapsed />}
             logoExpanded={<DMExpanded />}
             items={navItems}
@@ -67,7 +66,7 @@ const SidebarDemo = () => {
                     My Profile Info
                 </Typography>
             </Box>
-        </SideBar>
+        </SideBarComponents>
     )
 }
 

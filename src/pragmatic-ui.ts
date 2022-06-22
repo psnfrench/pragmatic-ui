@@ -7,7 +7,7 @@ export * from './components/PRadioGroup';
 export * from './components/PasswordInput';
 export * from './components/SimpleSnackbar';
 export * from './components/SignUpCard';
-export * from './components/SideBar';
+export * from './components/SideBarComponents';
 export * from './context/snackbar';
 export * from './context/confirmation';
 export * from './constants/Colors';
