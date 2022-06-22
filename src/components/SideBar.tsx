@@ -132,7 +132,7 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
           </ListItem>
         ))}
       </List>
-      <Box sx={{ flex: 1, alignItems: 'flex-end', display: 'flex' }}>{children}</Box>
+      <Box sx={{ flex: 1, alignItems: 'flex-end', display: open ? 'flex' : 'none' }}>{children}</Box>
     </Drawer>
   );
 };
