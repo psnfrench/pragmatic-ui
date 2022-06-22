@@ -10,7 +10,7 @@ import { SideBar } from './SideBar';
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
-import React, { useMemo } from 'react';
+import React from 'react';
 import BorderStyleIcon from '@mui/icons-material/BorderStyle';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
@@ -24,42 +24,44 @@ describe('Togggling the collapsed state', () => {
         logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
         logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
         items={[
-            {
-              text: 'Home',
-              key: 'home',
-              icon: <HomeIcon data-testid="link1" />,
-              onClick: handleSubmitMock,
-              divider: true,
-            },
-            {
-              text: 'Border Radius',
-              key: 'borderRadius',
-              icon: <BorderStyleIcon data-testid="link2" />,
-              onClick: handleSubmitMock,
-            },
-            {
-              text: 'Text Inputs', key: 'textInput', icon: <InputIcon data-testid="link3" />,
-              onClick: handleSubmitMock,
-            },
-            {
-              text: 'Sign Up Form',
-              key: 'signup',
-              icon: <LoginIcon data-testid="link4" />,
-              onClick: handleSubmitMock,
-            },
-            {
-              text: 'Snackbar',
-              key: 'snackbar',
-              icon: <EggAltIcon data-testid="link5" />,
-              onClick: handleSubmitMock,
-            },
-            {
-              text: 'Confirmation',
-              key: 'confirmation',
-              icon: <CheckCircleIcon data-testid="link6" />,
-              onClick: handleSubmitMock,
-            },
-          ]}
+          {
+            text: 'Home',
+            key: 'home',
+            icon: <HomeIcon data-testid="link1" />,
+            onClick: handleSubmitMock,
+            divider: true,
+          },
+          {
+            text: 'Border Radius',
+            key: 'borderRadius',
+            icon: <BorderStyleIcon data-testid="link2" />,
+            onClick: handleSubmitMock,
+          },
+          {
+            text: 'Text Inputs',
+            key: 'textInput',
+            icon: <InputIcon data-testid="link3" />,
+            onClick: handleSubmitMock,
+          },
+          {
+            text: 'Sign Up Form',
+            key: 'signup',
+            icon: <LoginIcon data-testid="link4" />,
+            onClick: handleSubmitMock,
+          },
+          {
+            text: 'Snackbar',
+            key: 'snackbar',
+            icon: <EggAltIcon data-testid="link5" />,
+            onClick: handleSubmitMock,
+          },
+          {
+            text: 'Confirmation',
+            key: 'confirmation',
+            icon: <CheckCircleIcon data-testid="link6" />,
+            onClick: handleSubmitMock,
+          },
+        ]}
       ></SideBar>,
     );
 
@@ -98,6 +100,5 @@ describe('Togggling the collapsed state', () => {
     await waitFor(() => {
       expect(handleSubmitMock).toHaveBeenCalledTimes(6);
     });
-
   });
 });

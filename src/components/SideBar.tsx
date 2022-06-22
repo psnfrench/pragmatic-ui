@@ -14,6 +14,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import React, { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Colors } from '../constants/Colors';
 
 export type SideBarItem = {
   key: string;
@@ -86,25 +87,14 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
 
   return (
     <Drawer variant="permanent" open={open}>
-      <List
-        sx={{
-          margin: '10px',
-          // selected and (selected + hover) states
-          '&& .Mui-selected, && .Mui-selected:hover': {
-            bgcolor: '#87cefa',
-            '&, & .MuiListItemIcon-root, & .MuiTypography-root': {
-              color: 'white',
-            },
-          },
-        }}
-      >
+      <List>
         <ListItemButton
           onClick={toggleOpen}
           sx={{
             minHeight: 140,
             justifyContent: open ? 'initial' : 'center',
             px: 0.5,
-            borderRadius: '5px',
+            borderRadius: 1,
             transition: '1s',
           }}
         >
@@ -112,13 +102,7 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
             {open ? (
               <>
                 {logoExpanded}
-                <Box
-                  sx={{
-                    color: 'gray',
-                    position: 'relative',
-                    right: 20,
-                  }}
-                >
+                <Box sx={{ color: Colors.greyscale.light }}>
                   <ChevronLeftIcon />
                   <MenuIcon />
                 </Box>
@@ -130,34 +114,18 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
         </ListItemButton>
 
         {items.map((item, index) => (
-          <ListItem
-            key={item.key}
-            disablePadding
-            sx={{
-              display: 'block',
-            }}
-          >
+          <ListItem key={item.key} disablePadding>
             <ListItemButton
               sx={{
-                minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
                 px: 2.5,
-                borderRadius: '5px',
+                borderRadius: 0.5,
               }}
               selected={selectedKey === item.key}
               onClick={() => handleItemClick(item)}
             >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 0,
-                  transition: '1s',
-                  justifyContent: 'center',
-                }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} sx={{ display: open ? 'block' : 'none' }} />
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} sx={{ display: open ? 'block' : 'none', ml: 3 }} />
             </ListItemButton>
 
             {item.divider && <Divider />}

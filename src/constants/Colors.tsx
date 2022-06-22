@@ -11,6 +11,7 @@ export const Colors = {
     coolGrey500: '#A0A3BD',
     coolGrey600: '#6E7191',
     placehold: '#A6A0A0',
+    light: '#9FB3C8',
   },
   error: {
     main: '#E61B00',

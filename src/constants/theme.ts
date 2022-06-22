@@ -213,8 +213,52 @@ export const createPragmaticTheme = ({
               },
             },
           },
+          MuiList: {
+            styleOverrides: {
+              root: {
+                margin: 16,
+              },
+            },
+          },
+          MuiListItem: {
+            styleOverrides: {
+              root: {
+                display: 'block',
+              },
+            },
+          },
+          MuiListItemIcon: {
+            styleOverrides: {
+              root: {
+                minWidth: 0,
+                transition: '1s',
+                justifyContent: 'center',
+              },
+            },
+          },
+          MuiListItemButton: {
+            styleOverrides: {
+              root: {
+                '&.Mui-selected, &.Mui-selected:hover': {
+                  backgroundColor: Colors.secondary.main,
+                  '&, & .MuiListItemIcon-root, & .MuiTypography-root': {
+                    color: 'white',
+                  },
+                },
+              },
+            },
+          },
         },
       },
+
+      // selected and (selected + hover) states
+      // '&& .Mui-selected, && .Mui-selected:hover': {
+      //   bgcolor: '#87cefa',
+      //   '&, & .MuiListItemIcon-root, & .MuiTypography-root': {
+      //     color: 'white',
+      //   },
+      // },
+
       options,
     ),
   );
