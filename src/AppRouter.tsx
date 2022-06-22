@@ -1,8 +1,7 @@
-import { TextField, Theme } from '@mui/material';
+import { Theme } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import './App.css';
-import { theme as defaultTheme, createPragmaticTheme } from './constants/theme';
 import TextDemo from './demo-components/TextDemo';
 import RadioDemo from './demo-components/RadioDemo';
 import SignUpDemo from './demo-components/SignUpDemo';
@@ -10,7 +9,7 @@ import SnackBarDemo from './demo-components/SnackBarDemo';
 import ConfirmationDemo from './demo-components/ConfirmationDemo';
 import BorderRadiusDemo from './demo-components/BorderRadiusDemo';
 import DateDemo from './demo-components/DateDemo';
-import {  Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 
 const initialValues = {

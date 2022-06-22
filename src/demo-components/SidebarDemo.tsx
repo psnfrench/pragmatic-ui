@@ -63,9 +63,9 @@ const SidebarDemo = () => {
             items={navItems}
         >
             <Box p={2}>
-                <Typography variant="h6" whiteSpace={'normal'}>
+                <Typography variant="h6" whiteSpace={'normal'} >
                     My Profile Info
-            </Typography>
+                </Typography>
             </Box>
         </SideBar>
     )

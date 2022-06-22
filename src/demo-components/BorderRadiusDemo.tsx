@@ -1,4 +1,4 @@
-import { TextField, Theme } from '@mui/material'
+import { Box, Divider, TextField, Theme, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { createPragmaticTheme } from '../constants/theme';
 
@@ -18,7 +18,11 @@ function BorderRadiusDemo({setTheme}: BorderDemoProps){
         setTheme(createPragmaticTheme({ borderRadius }));
       }, [borderRadius]);
     return (
-        <TextField label="Border Radius" onChange={handleBorderRadiusChange} value={borderRadius} type="number" />
+        <Box>
+            <Typography variant="h4">Border Radius</Typography>
+            <Divider />
+            <TextField label="Border Radius" onChange={handleBorderRadiusChange} value={borderRadius} type="number" />
+        </Box>
     )
 }
 
