@@ -10,7 +10,7 @@ export const createPragmaticTheme = ({
   options?: ThemeOptions | undefined;
 }) =>
   createTheme(
-    merge(
+    merge<ThemeOptions, ThemeOptions | undefined>(
       {
         palette: {
           primary: Colors.primary,
@@ -111,6 +111,15 @@ export const createPragmaticTheme = ({
               multiline: {
                 paddingTop: 0,
                 paddingBottom: 0,
+              },
+            },
+          },
+          MuiOutlinedInput: {
+            styleOverrides: {
+              notchedOutline: {
+                '&.MuiOutlinedInput-notchedOutline legend': {
+                  display: 'none',
+                },
               },
             },
           },

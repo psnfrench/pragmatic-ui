@@ -1,6 +1,7 @@
 import { Box, IconButton, TextField, TextFieldProps, BoxProps, useTheme } from '@mui/material';
 import { FormikContextType, FormikProps, useFormikContext } from 'formik';
 import get from 'lodash/get';
+import omit from 'lodash/omit';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { ErrorLabel } from './ErrorLabel';
@@ -69,6 +70,10 @@ const PTextFieldWithFormikComp = (
     setShowClear(false);
     formikHandleBlur(e);
   };
+  const themeInputProps =
+    otherProps.variant === 'outlined'
+      ? omit(theme.components?.MuiTextField?.defaultProps?.InputProps, 'disableUnderline')
+      : theme.components?.MuiTextField?.defaultProps?.InputProps;
   return name ? (
     <Box marginBottom={2.5} {..._BoxProps}>
       <TextField
@@ -79,7 +84,7 @@ const PTextFieldWithFormikComp = (
         onFocus={handleFocus}
         hiddenLabel={!props.label}
         InputProps={{
-          ...theme.components?.MuiTextField?.defaultProps?.InputProps,
+          ...themeInputProps,
           endAdornment:
             enableClear && showClear ? (
               <IconButton
