@@ -14,17 +14,35 @@ import BorderStyleIcon from '@mui/icons-material/BorderStyle';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Box, Typography } from '@mui/material';
+import SidebarDemo from './demo-components/SidebarDemo';
+
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
-
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <SnackBarProvider>
           <ConfirmationServiceProvider>
             <BrowserRouter>
-              <AppRouter theme={theme} setTheme={setTheme} />
+              <Box
+                sx={{
+                  justifyContent: 'flex-start',
+                  display: 'inline-flex',
+                  flexDirection: 'row',
+                  alignContent: 'flex-start',
+                }}
+              >
+                <Box flexGrow={1}>
+                  <SidebarDemo />
+                </Box>
+                <Box sx={{ padding: 3, positionleft: open ? '3px' : '400px' }}>
+                  <Typography variant="h3">Pragmatic UI Demo</Typography>
+                  <br />
+                  <AppRouter setTheme={setTheme}/>
+                </Box>
+              </Box>
             </BrowserRouter>
           </ConfirmationServiceProvider>
         </SnackBarProvider>

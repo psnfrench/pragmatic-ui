@@ -28,8 +28,6 @@ export type SideBarProps = {
   logoExpanded: React.ReactNode;
   defaultOpen?: boolean;
   children?: React.ReactNode;
-  open?: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const drawerWidth = 340;
@@ -49,9 +47,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 100px)`,
+  width: `calc(${theme.spacing(7)} + 10px)`,
   [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 100px)`,
+    width: `calc(${theme.spacing(8)} + 10px)`,
   },
 });
 
@@ -70,9 +68,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 }));
 
-export const SideBar = ({ items, logoCollapsed, logoExpanded, children, open, setOpen }: SideBarProps) => {
-  const [selectedKey, setSelectedKey] = useState<string>();
+const defaultOpenState: boolean = true;
 
+export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBarProps) => {
+  const [selectedKey, setSelectedKey] = useState<string>();
+  const [open, setOpen] = useState(defaultOpenState);
   const toggleOpen = () => {
     setOpen((prev) => !prev);
   };
