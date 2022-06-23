@@ -9,6 +9,7 @@ import {
   styled,
   Theme,
   CSSObject,
+  Typography,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useState } from 'react';
@@ -125,7 +126,14 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
               onClick={() => handleItemClick(item)}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} sx={{ display: open ? 'block' : 'none', ml: 3 }} />
+              <ListItemText
+                primary={
+                  <Typography variant="subtitle2" sx={{ textAlign: 'left' }}>
+                    {item.text}
+                  </Typography>
+                }
+                sx={{ display: open ? 'block' : 'none', ml: 3 }}
+              />
             </ListItemButton>
 
             {item.divider && <Divider />}
