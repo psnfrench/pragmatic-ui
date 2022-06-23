@@ -30,6 +30,7 @@ export type SideBarProps = {
   logoExpanded: React.ReactNode;
   defaultOpen?: boolean;
   children?: React.ReactNode;
+  childrenCollapsed?: React.ReactNode;
 };
 
 const drawerWidth = 340;
@@ -72,7 +73,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const defaultOpenState: boolean = true;
 
-export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBarProps) => {
+export const SideBar = ({ items, logoCollapsed, logoExpanded, children, childrenCollapsed }: SideBarProps) => {
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpenState);
   const toggleOpen = () => {
@@ -102,11 +103,11 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
           <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none', width: '100%' }}>
             {open ? (
               <>
-                {logoExpanded}
                 <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
                   <ChevronLeftIcon />
                   <MenuIcon />
                 </Box>
+                {logoExpanded}
               </>
             ) : (
               <>{logoCollapsed}</>
@@ -140,7 +141,7 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
           </ListItem>
         ))}
       </List>
-      <Box sx={{ flex: 1, alignItems: 'flex-end', display: open ? 'flex' : 'none' }}>{children}</Box>
+      <Box sx={{ flex: 1, alignItems: 'flex-end', display: 'flex' }}>{open ? children : childrenCollapsed}</Box>
     </Drawer>
   );
 };

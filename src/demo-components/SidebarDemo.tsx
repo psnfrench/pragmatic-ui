@@ -56,13 +56,26 @@ const SidebarDemo = () => {
     [],
   );
   return (
-    <SideBar logoCollapsed={<DMCollapsed />} logoExpanded={<DMExpanded />} items={navItems}>
+    <SideBar
+      logoCollapsed={<DMCollapsed />}
+      logoExpanded={<DMExpanded />}
+      items={navItems}
+      childrenCollapsed={<CollapseText />}
+    >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>
           My Profile Info
         </Typography>
       </Box>
     </SideBar>
+  );
+};
+
+const CollapseText = () => {
+  return (
+    <Box p={2}>
+      <Typography variant="h6">CT</Typography>
+    </Box>
   );
 };
 
