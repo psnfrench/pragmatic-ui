@@ -22,7 +22,7 @@ I recommend removing AppRouterProps unless you require this for your components.
 For a basic page, use the first "Home" example and alter the path and element to suit.
 
 
-<b>*** NOTE ***<b />
+<b>*** NOTE ***</b>
 
 If the application was not created using webpack, change all svg imports from:
 
