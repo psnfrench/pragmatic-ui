@@ -4,7 +4,7 @@
 
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SideBarComponents } from './SideBarComponents';
+import { SideBar } from './SideBar';
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
@@ -18,7 +18,7 @@ describe('Togggling the collapsed state', () => {
   it('defaults to expanded', async () => {
     const handleSubmitMock = jest.fn();
     render(
-      <SideBarComponents
+      <SideBar
         logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
         logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
         items={[
@@ -60,7 +60,7 @@ describe('Togggling the collapsed state', () => {
             onClick: handleSubmitMock,
           },
         ]}
-      ></SideBarComponents>,
+      ></SideBar>,
     );
 
     const collapsedSvg: HTMLElement = screen.queryByTestId('collapsedSvg');

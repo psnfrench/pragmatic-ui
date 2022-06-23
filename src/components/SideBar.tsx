@@ -71,7 +71,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const defaultOpenState: boolean = true;
 
-export const SideBarComponents = ({ items, logoCollapsed, logoExpanded, children }: SideBarProps) => {
+export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBarProps) => {
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpenState);
   const toggleOpen = () => {
