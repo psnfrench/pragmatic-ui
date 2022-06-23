@@ -98,11 +98,11 @@ export const SideBar = ({ items, logoCollapsed, logoExpanded, children }: SideBa
             transition: '1s',
           }}
         >
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none', width: '100%' }}>
             {open ? (
               <>
                 {logoExpanded}
-                <Box sx={{ color: Colors.greyscale.light }}>
+                <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
                   <ChevronLeftIcon />
                   <MenuIcon />
                 </Box>
