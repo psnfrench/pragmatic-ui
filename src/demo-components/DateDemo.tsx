@@ -10,6 +10,7 @@ function DateDemo() {
       <Divider />
       <PDatePicker name="date1" label="Date" />
       <PDatePicker name="date1" label="Date Outlined" variant="outlined" />
+      <PDatePicker name="date1" label="Date Formatted" inputFormat="dd/MM/yyyy" />
       <PDateTimePicker name="date2" label="Date Time" />
       <PDateTimePicker name="date2" label="Date Time Outlined" variant="outlined" />
     </Box>

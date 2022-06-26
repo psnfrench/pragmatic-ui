@@ -1,11 +1,14 @@
 import { FilledInputProps, TextFieldProps } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
-import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
+import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
 
-export const PDatePicker = (props: ThemedTextFieldProps) => {
+export type PDatePickerProps = Omit<DatePickerProps, 'renderInput' | 'value' | 'onChange'> &
+  Required<Pick<TextFieldProps, 'name'>> &
+  Pick<TextFieldProps, 'variant'>;
+export const PDatePicker = (props: PDatePickerProps) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
   const formikProps = getFormikTextFields(_props);
@@ -15,22 +18,26 @@ export const PDatePicker = (props: ThemedTextFieldProps) => {
 };
 
 const PDatePickerWithFormikComp = (
-  props: ThemedTextFieldProps & RequiredFormikTextFields & Required<Pick<TextFieldProps, 'value'>>,
+  props: Omit<DatePickerProps, 'renderInput' | 'onChange'> &
+    RequiredFormikTextFields &
+    Required<Pick<TextFieldProps, 'value' | 'name'>> &
+    Pick<TextFieldProps, 'variant'>,
 ) => {
-  const { name, value, handleChange, setFieldValue, ...otherProps } = props;
-  const handleDateChange = (dateValue: Date | null) => {
+  const { name, value, handleChange, setFieldValue, variant, ...otherProps } = props;
+  const handleDateChange = (dateValue: unknown, keyboardInputValue?: string | undefined) => {
     setFieldValue(name, dateValue);
   };
   return name ? (
     <DatePicker
       value={value as Date}
       onChange={handleDateChange}
-      renderInput={({ InputProps, variant, ...params }) => {
-        if (otherProps.variant !== 'outlined') {
+      renderInput={({ InputProps, ...params }) => {
+        if (variant !== 'outlined') {
           (InputProps as Partial<FilledInputProps>).disableUnderline = true;
         }
-        return <PTextField name={name} InputProps={{ ...InputProps }} {...params} {...otherProps} />;
+        return <PTextField variant={variant} name={name} InputProps={{ ...InputProps }} {...params} />;
       }}
+      {...otherProps}
     />
   ) : null;
 };
