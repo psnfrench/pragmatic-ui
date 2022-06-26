@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 import { PDatePicker } from '../components/PDatePicker';
 import { PDateTimePicker } from '../components/PDateTimePicker';
+import { PTimePicker } from '../components/PTimePicker';
 
 function DateDemo() {
   return (
@@ -13,6 +14,8 @@ function DateDemo() {
       <PDatePicker name="date1" label="Date Formatted" inputFormat="dd/MM/yyyy" />
       <PDateTimePicker name="date2" label="Date Time" />
       <PDateTimePicker name="date2" label="Date Time Outlined" variant="outlined" />
+      <PTimePicker name="time1" label="Time" />
+      <PTimePicker name="time1" label="Time Outlined" variant="outlined" />
     </Box>
   );
 }

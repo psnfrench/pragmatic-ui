@@ -31,3 +31,6 @@ If the application was not created using webpack, change all svg imports from:
 to:
 
     import DMExpanded from '../images/DMExpanded.svg';
+
+
+ 
