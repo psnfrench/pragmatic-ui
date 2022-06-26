@@ -1,4 +1,5 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
 import { Colors } from './Colors';
 import merge from 'lodash/merge';
 
