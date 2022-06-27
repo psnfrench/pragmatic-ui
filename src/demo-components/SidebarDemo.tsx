@@ -6,6 +6,7 @@ import BorderStyleIcon from '@mui/icons-material/BorderStyle';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { SideBar } from '../components/SideBar';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
@@ -39,7 +40,7 @@ const SidebarDemo = () => {
       {
         text: 'Sign Up Form',
         key: '/signup',
-        icon: <LoginIcon />,
+        icon: <PersonAddAltIcon />,
         onClick: () => navigate('/signup'),
       },
       {

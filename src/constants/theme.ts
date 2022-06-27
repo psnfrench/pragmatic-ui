@@ -177,6 +177,9 @@ export const createPragmaticTheme = ({
             styleOverrides: {
               root: {
                 textTransform: 'none',
+                fontWeight: 600,
+                paddingTop: '9px',
+                paddingBottom: '9px',
               },
               sizeLarge: {
                 paddingTop: 16,

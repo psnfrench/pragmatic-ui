@@ -11,7 +11,6 @@ import AppRouter from './AppRouter';
 import { Box, Typography } from '@mui/material';
 import SidebarDemo from './demo-components/SidebarDemo';
 
-
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
   return (
@@ -26,15 +25,16 @@ function App() {
                   display: 'inline-flex',
                   flexDirection: 'row',
                   alignContent: 'flex-start',
+                  width: '80%',
                 }}
               >
                 <Box flexGrow={1}>
                   <SidebarDemo />
                 </Box>
-                <Box sx={{ padding: 3 }}>
+                <Box sx={{ padding: 3, width: '100%' }}>
                   <Typography variant="h3">Pragmatic UI Demo</Typography>
                   <br />
-                  <AppRouter setTheme={setTheme}/>
+                  <AppRouter setTheme={setTheme} />
                 </Box>
               </Box>
             </BrowserRouter>
