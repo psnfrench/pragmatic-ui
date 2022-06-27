@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { FormikHelpers } from 'formik';
-import SignInCard, { LoginFormValues } from '../components/SignInCard';
+import { SignInCard, LoginFormValues } from '../components/SignInCard';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/user';
 import { SnackBarContext } from '../context/snackbar';

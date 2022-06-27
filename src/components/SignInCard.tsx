@@ -11,7 +11,7 @@ export interface LoginFormValues {
   password: string;
 }
 
-const SignInCard = ({
+export const SignInCard = ({
   onSubmit,
   onForgotPassword,
   onCreateAccount,
@@ -79,5 +79,3 @@ const Form = styled('form')(({ theme }) => ({
   paddingRight: theme.spacing(10),
   flex: 1,
 }));
-
-export default SignInCard;
