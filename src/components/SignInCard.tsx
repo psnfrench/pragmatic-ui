@@ -29,7 +29,7 @@ const SignInCard = ({
   const validate = (values: LoginFormValues) => {
     // eslint-disable-next-line no-unused-vars
     const errors: Partial<{ [key in keyof LoginFormValues]: string }> = validateEmail(values);
-    (Object.keys(initialValues) as Array<keyof typeof initialValues>).forEach((k) => {
+    (Object.keys(initialValues) as (keyof typeof initialValues)[]).forEach((k) => {
       if (!values[k]) {
         errors[k] = 'Required';
       }
