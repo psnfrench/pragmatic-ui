@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Colors } from '../constants/Colors';
@@ -26,6 +26,7 @@ export type SideBarItem = {
 };
 export type SideBarProps = {
   items: SideBarItem[];
+  selectedMenuKey?: string;
   logoCollapsed: React.ReactNode;
   logoExpanded: React.ReactNode;
   defaultOpen?: boolean;
@@ -73,7 +74,24 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const defaultOpenState: boolean = true;
 
-export const SideBar = ({ items, logoCollapsed, logoExpanded, children, childrenCollapsed }: SideBarProps) => {
+export const SideBar = ({
+  items,
+  logoCollapsed,
+  logoExpanded,
+  children,
+  childrenCollapsed,
+  selectedMenuKey,
+}: SideBarProps) => {
+  useEffect(() => {
+    let active = true;
+    if (active) {
+      setSelectedKey(selectedMenuKey);
+    }
+    return () => {
+      active = false;
+    };
+  }, [selectedMenuKey]);
+
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpenState);
   const toggleOpen = () => {

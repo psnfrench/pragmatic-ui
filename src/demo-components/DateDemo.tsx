@@ -16,6 +16,7 @@ function DateDemo() {
       <PDateTimePicker name="date2" label="Date Time Outlined" variant="outlined" />
       <PTimePicker name="time1" label="Time" />
       <PTimePicker name="time1" label="Time Outlined" variant="outlined" />
+      <PTimePicker name="time1" label="Time Formatted" inputFormat="HH:mm:ss" />
     </Box>
   );
 }

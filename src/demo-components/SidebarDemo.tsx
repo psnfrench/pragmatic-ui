@@ -10,63 +10,70 @@ import { SideBar } from '../components/SideBar';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
 import { Box, Typography } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 
 const SidebarDemo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const navItems = useMemo(
     () => [
       {
         text: 'Home',
-        key: 'home',
+        key: '/',
         icon: <HomeIcon />,
         onClick: () => navigate('/'),
         divider: true,
       },
       {
         text: 'Border Radius',
-        key: 'borderRadius',
+        key: '/border-radius',
         icon: <BorderStyleIcon />,
         onClick: () => navigate('/border-radius'),
       },
       {
         text: 'Text Inputs',
-        key: 'textInput',
+        key: '/demos',
         icon: <InputIcon />,
         onClick: () => navigate('/demos'),
       },
       {
         text: 'Sign Up Form',
-        key: 'signup',
+        key: '/signup',
         icon: <LoginIcon />,
         onClick: () => navigate('/signup'),
       },
       {
         text: 'Login Form',
-        key: 'login',
+        key: '/login',
         icon: <LoginIcon />,
         onClick: () => navigate('/login'),
       },
       {
         text: 'Snackbar',
-        key: 'snackbar',
+        key: '/snackbar',
         icon: <EggAltIcon />,
         onClick: () => navigate('/snackbar'),
       },
       {
         text: 'Confirmation',
-        key: 'confirmation',
+        key: '/confirmation',
         icon: <CheckCircleIcon />,
         onClick: () => navigate('/confirmation'),
       },
     ],
     [],
   );
+
+  const selectedNavItem = navItems.find((n) => n.key === location.pathname);
+  const selectedMenuKey = selectedNavItem ? selectedNavItem.key : undefined;
+
   return (
     <SideBar
       logoCollapsed={<DMCollapsed />}
       logoExpanded={<DMExpanded />}
       items={navItems}
       childrenCollapsed={<CollapseText />}
+      selectedMenuKey={selectedMenuKey}
     >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>
