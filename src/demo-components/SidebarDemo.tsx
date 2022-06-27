@@ -41,6 +41,12 @@ const SidebarDemo = () => {
         onClick: () => navigate('/signup'),
       },
       {
+        text: 'Login Form',
+        key: 'login',
+        icon: <LoginIcon />,
+        onClick: () => navigate('/login'),
+      },
+      {
         text: 'Snackbar',
         key: 'snackbar',
         icon: <EggAltIcon />,

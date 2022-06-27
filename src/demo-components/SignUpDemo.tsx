@@ -1,12 +1,18 @@
 import { Box, Divider, Typography, Grid } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { SignUpCard } from '../components/SignUpCard';
 import { Colors } from '../constants/Colors';
 import LandscapeIcon from '@mui/icons-material/Landscape';
+import { useNavigate } from 'react-router-dom';
 
 function SignUpDemo() {
+  const navigate = useNavigate(); 
   const handleSubmit = () => {};
-  const goToLogin = () => {};
+  const [selectedKey, setSelectedKey] = useState<string>();
+  const goToLogin = () => {
+    selectedKey=='login';
+    setSelectedKey(selectedKey);
+    navigate('/login');};
 
   return (
     <Box>
