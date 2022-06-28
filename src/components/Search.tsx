@@ -1,0 +1,50 @@
+import { TextField, TextFieldProps, Theme } from '@mui/material';
+// import createStyles from '@mui/styles/createStyles';
+// import makeStyles from '@mui/styles/makeStyles';
+import debounce from 'lodash/debounce';
+import React, { useMemo, useState } from 'react';
+import { PIcon } from '../pegasus/PIcon';
+
+// const useStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     textField: {
+// paddingTop: '0px !important',
+// marginInline: theme.spacing(2),
+// width: `${theme.spacing(37.5)} !important`,
+//     },
+//     root: {
+//       borderRadius: 12,
+//       height: '42px',
+//       backgroundColor: '#EDF1F6',
+//     },
+//   }),
+// );
+
+export type SearchProps = {
+  placeholder?: string;
+};
+
+export const Search = ({ onChange, ...otherProps }: TextFieldProps & Required<Pick<TextFieldProps, 'onChange'>>) => {
+  const [searchValue, setSearchValue] = useState('');
+  const delayedQuery = useMemo(() => debounce(onChange, 500), [onChange]);
+  //const classes = useStyles();
+  const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    delayedQuery(event);
+    setSearchValue(event.target.value);
+  };
+
+  return (
+    <TextField
+      //className={classes.textField}
+      variant="standard"
+      value={searchValue}
+      onChange={handleSearchChange}
+      InputProps={{
+        disableUnderline: true,
+        startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
+        //classes: { root: `${classes.root}` },
+      }}
+      {...otherProps}
+    />
+  );
+};

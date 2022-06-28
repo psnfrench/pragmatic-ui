@@ -276,4 +276,4 @@ export const createPragmaticTheme = ({
     ),
   );
 
-export const theme = createPragmaticTheme({ borderRadius: 16 });
+export const theme = createPragmaticTheme({ borderRadius: 12 });
