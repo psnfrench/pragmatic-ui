@@ -9,9 +9,8 @@ import SnackBarDemo from './demo-components/SnackBarDemo';
 import ConfirmationDemo from './demo-components/ConfirmationDemo';
 import BorderRadiusDemo from './demo-components/BorderRadiusDemo';
 import DateDemo from './demo-components/DateDemo';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
-import UserContext from './context/user';
 import LoginDemo from './demo-components/LoginDemo';
 import NewDemos from './demo-components/NewDemos';
 import SubmitButton from './components/SubmitButton';
@@ -29,10 +28,18 @@ export type AppRouterProps = {
 };
 
 export const AppRouter = ({ setTheme }: AppRouterProps) => {
-  const { isLoggedIn } = useContext(UserContext);
-
   const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
     console.log('values: ', values);
+  };
+
+  const validate = (values: typeof initialValues) => {
+    const errors: Partial<{ [key in keyof typeof initialValues]: string }> = {};
+    (Object.keys(initialValues) as (keyof typeof initialValues)[]).forEach((k) => {
+      if (!values[k]) {
+        errors[k] = 'Required';
+      }
+    });
+    return errors;
   };
 
   return (
@@ -42,7 +49,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
       <Route
         path="/demos"
         element={
-          <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
             {({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
                 <TextDemo />

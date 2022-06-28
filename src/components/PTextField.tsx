@@ -53,6 +53,7 @@ const PTextFieldWithFormikComp = (
     handleChange,
     errors,
     touched,
+    error: _error, // do not pass down error, we will determine this ourselves
     ...otherProps
   } = props;
   const theme = useTheme();
