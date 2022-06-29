@@ -111,10 +111,10 @@ export const FileDropzone = (props: FileUploaderProps) => {
     setError('');
   };
   const dropZoneConfig: DropzoneOptions = {
-    onDrop: onDrop,
+    onDrop,
     multiple: true,
-    maxFiles: maxFiles,
-    maxSize: maxSize,
+    maxFiles,
+    maxSize,
     noDragEventsBubbling: true,
     noClick: true,
     accept: fileFormat,

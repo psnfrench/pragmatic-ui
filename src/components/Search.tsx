@@ -23,7 +23,7 @@ export type SearchProps = {
 export const Search = ({ onChange, ...otherProps }: TextFieldProps & Required<Pick<TextFieldProps, 'onChange'>>) => {
   const [searchValue, setSearchValue] = useState('');
   const delayedQuery = useMemo(() => debounce(onChange, 500), [onChange]);
-  //const classes = useStyles();
+  // const classes = useStyles();
   const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     delayedQuery(event);
     setSearchValue(event.target.value);
