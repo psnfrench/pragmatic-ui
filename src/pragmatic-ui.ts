@@ -1,5 +1,6 @@
 export * from './components/ErrorLabel';
 export * from './components/FileDropZone';
+export * from './components/OnBoardingCarosel';
 export * from './components/PasswordInput';
 export * from './components/PDateTimePicker';
 export * from './components/PDatePicker';

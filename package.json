@@ -48,6 +48,7 @@
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
     "@types/react-router": "^5.1.18",
+    "@types/react-slick": "^0.23.9",
     "babel-jest": "^27.5.1",
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
@@ -75,7 +76,9 @@
     "formik": "^2.2.9",
     "lodash": "^4.17.21",
     "react-dropzone": "^14.2.1",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1"
   },
   "peerDependencies": {
     "react": "^18.1.0",

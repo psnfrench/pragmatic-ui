@@ -34,7 +34,9 @@ function App() {
                 <Box sx={{ padding: 3, width: '100%' }}>
                   <Typography variant="h3">Pragmatic UI Demo</Typography>
                   <br />
-                  <AppRouter setTheme={setTheme} />
+                  <Box>
+                    <AppRouter setTheme={setTheme} />
+                  </Box>
                 </Box>
               </Box>
             </BrowserRouter>
