@@ -44,7 +44,7 @@ export type FileSelected = {
   fileType: 'new' | 'old';
 };
 
-export const FileDropzone = (props: FileUploaderProps) => {
+export const FileDropZone = (props: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext();
   const { name, maxFiles = 0, maxSize, fileFormat } = props;
   const [files, setFiles] = useState<File[]>([]);
