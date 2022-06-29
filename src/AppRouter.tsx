@@ -12,7 +12,8 @@ import DateDemo from './demo-components/DateDemo';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import LoginDemo from './demo-components/LoginDemo';
-import NewDemos from './demo-components/NewDemos';
+import SearchDemo from './demo-components/SearchDemo';
+import FileDropZoneDemo from './demo-components/FileDropZoneDemo';
 import SubmitButton from './components/SubmitButton';
 
 const initialValues = {
@@ -55,7 +56,8 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
                 <TextDemo />
                 <DateDemo />
                 <RadioDemo />
-                <NewDemos />
+                <SearchDemo />
+                <FileDropZoneDemo />
                 <SubmitButton text="Submit Button" />
               </form>
             )}

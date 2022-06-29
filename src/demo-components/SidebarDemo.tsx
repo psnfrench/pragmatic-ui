@@ -32,7 +32,7 @@ const SidebarDemo = () => {
         onClick: () => navigate('/border-radius'),
       },
       {
-        text: 'Text Inputs',
+        text: 'Various Demo Inputs',
         key: '/demos',
         icon: <InputIcon />,
         onClick: () => navigate('/demos'),
