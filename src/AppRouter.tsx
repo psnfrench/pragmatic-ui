@@ -14,7 +14,7 @@ import Home from './components/Home';
 import LoginDemo from './demo-components/LoginDemo';
 import SearchDemo from './demo-components/SearchDemo';
 import FileDropZoneDemo from './demo-components/FileDropZoneDemo';
-import SubmitButton from './components/SubmitButton';
+import { SubmitButton } from './components/SubmitButton';
 
 const initialValues = {
   firstName: 'Sally',

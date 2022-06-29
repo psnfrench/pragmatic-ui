@@ -7,12 +7,10 @@ export type SubmitButtonProps = {
   loading?: boolean;
 } & ButtonProps;
 
-const SubmitButton = ({ name, text = 'Submit', loading, ...otherProps }: SubmitButtonProps) => {
+export const SubmitButton = ({ name, text = 'Submit', loading, ...otherProps }: SubmitButtonProps) => {
   return (
     <Button name={name} disabled={loading} color="primary" type="submit" {...otherProps}>
       {loading ? 'insert spinner here' : <Typography>{text}</Typography>}
     </Button>
   );
 };
-
-export default SubmitButton;
