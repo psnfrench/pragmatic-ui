@@ -8,18 +8,18 @@ import { SnackBarContext } from '../context/snackbar';
 import { ConfirmationServiceContext } from '../context/confirmation';
 import OnBoardingCarosel from '../components/OnBoardingCarosel';
 import OrchidLogo from '../images/OrchidLogo';
-import slider_1 from '../images/slider_1';
-import slider_2 from '../images/slider_2';
-import slider_3 from '../images/slider_3';
+import slider1 from '../images/slider1';
+import slider2 from '../images/slider2';
+import slider3 from '../images/slider3';
 const ImageTopLeft = require('../images/background_img_top_left.png');
 const ImageTopRight = require('../images/background_img_top_right.png');
 const ImageBottomRight = require('../images/background_img_bottom_right.png');
 const ImageBottomLeft = require('../images/background_img_bottom_left.png');
 
 const items = [
-  { headerText: 'Slider 1', bodyText: 'Body 1', image: slider_1 },
-  { headerText: 'Slider 2', bodyText: 'Body 2', image: slider_2 },
-  { headerText: 'Slider 3', bodyText: 'Body 3', image: slider_3 },
+  { headerText: 'Slider 1', bodyText: 'Body 1', image: slider1 },
+  { headerText: 'Slider 2', bodyText: 'Body 2', image: slider2 },
+  { headerText: 'Slider 3', bodyText: 'Body 3', image: slider3 },
 ];
 
 const LoginDemo = () => {

@@ -1,9 +1,9 @@
 import React from 'react';
 
-const slider_2: React.FC = () => {
+const slider2: React.FC = () => {
   return (
     <svg width="332" height="216" viewBox="0 0 332 216" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_7870_57925)">
+      <g clipPath="url(#clip0_7870_57925)">
         <path
           d="M-1 13C-1 6.37258 4.37258 1 11 1H319C325.627 1 331 6.37258 331 13V176.751C331 183.378 325.627 188.751 319 188.751H203.239C200.496 188.751 197.836 189.69 195.702 191.413L171.763 210.735C167.263 214.366 160.814 214.273 156.422 210.513L134.369 191.634C132.195 189.773 129.427 188.751 126.565 188.751H11C4.37258 188.751 -1 183.378 -1 176.751V13Z"
           fill="#E9F4FE"
@@ -32,8 +32,8 @@ const slider_2: React.FC = () => {
           y2="126.021"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FF9933" />
-          <stop offset="1" stop-color="#ED6C02" />
+          <stop stopColor="#FF9933" />
+          <stop offset="1" stopColor="#ED6C02" />
         </linearGradient>
         <clipPath id="clip0_7870_57925">
           <rect width="332" height="216" fill="white" />
@@ -43,4 +43,4 @@ const slider_2: React.FC = () => {
   );
 };
 
-export default slider_2;
+export default slider2;

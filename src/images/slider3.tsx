@@ -1,6 +1,6 @@
 import React from 'react';
 
-const slider_3: React.FC = () => {
+const slider3: React.FC = () => {
   return (
     <svg width="332" height="216" viewBox="0 0 332 216" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -24,4 +24,4 @@ const slider_3: React.FC = () => {
   );
 };
 
-export default slider_3;
+export default slider3;
