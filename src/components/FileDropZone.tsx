@@ -1,6 +1,4 @@
-import { Box, Button, Grid, IconButton, Theme, Typography } from '@mui/material';
-// import createStyles from '@mui/styles/createStyles';
-// import makeStyles from '@mui/styles/makeStyles';
+import { Box, Button, Grid, IconButton, styled, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import { ErrorLabel } from './ErrorLabel';
@@ -8,31 +6,29 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone';
 import { FileInfo } from '../types';
 import { OverridesColors } from '../pegasus/Colors';
-import { PIcon } from '../pegasus/PIcon';
+import { PIcon } from '../images/PIcon';
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-// //     dropZone: {
-// //       background: '#EFF0F6',
-// //       borderRadius: theme.spacing(2),
-// //       minWidth: theme.spacing(56),
-// //       minHeight: theme.spacing(15),
-// //       textAlign: 'center',
-// //       padding: theme.spacing(2),
-// //       marginTop: theme.spacing(2),
-// //     },
-//     buttonUpload: {
-//       padding: '9px 22px !important',
-//       backgroundColor: '#757EF2 !important',
-//       marginTop: `${theme.spacing(2)} !important`,
-//       width: `${theme.spacing(24)} !important`,
-//     },
-//     iconRemoveFile: {
-//       top: theme.spacing(-3),
-//       left: theme.spacing(3.75),
-//     },
-//   }),
-// );
+const StyledBox = styled(Box)(({ theme }) => ({
+  '& .dropZone': {
+    background: '#EFF0F6',
+    borderRadius: theme.spacing(2),
+    minWidth: theme.spacing(56),
+    minHeight: theme.spacing(15),
+    textAlign: 'center',
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  '& .buttonUpload': {
+    padding: '9px 22px !important',
+    backgroundColor: '#757EF2 !important',
+    marginTop: `${theme.spacing(2)} !important`,
+    width: `${theme.spacing(24)} !important`,
+  },
+  '& .iconRemoveFile': {
+    top: theme.spacing(-3),
+    left: theme.spacing(3.75),
+  },
+}));
 
 export type FileUploaderProps = {
   name: string;
@@ -49,9 +45,8 @@ export type FileSelected = {
 };
 
 export const FileDropzone = (props: FileUploaderProps) => {
-  //const classes = useStyles();
   const { setFieldValue, values } = useFormikContext();
-  const { name, maxFiles, maxSize, fileFormat } = props;
+  const { name, maxFiles = 0, maxSize, fileFormat } = props;
   const [files, setFiles] = useState<File[]>([]);
   const [filesSync, setFileSync] = useState<FileInfo[]>(get(values, name, []));
   const [fileSelected, setFileSelected] = useState<FileSelected[]>(
@@ -63,6 +58,7 @@ export const FileDropzone = (props: FileUploaderProps) => {
   );
 
   const [error, setError] = useState('');
+
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       // Do something with the files
@@ -125,7 +121,7 @@ export const FileDropzone = (props: FileUploaderProps) => {
   };
   const { getRootProps, getInputProps, open } = useDropzone(dropZoneConfig);
   return (
-    <Box>
+    <StyledBox>
       <Box
         sx={{
           '&:hover': {
@@ -134,7 +130,7 @@ export const FileDropzone = (props: FileUploaderProps) => {
             padding: '13px',
           },
         }}
-        //{...getRootProps({ className: classes.dropZone })}
+        {...getRootProps({ className: 'dropZone' })}
         alignItems="center"
       >
         <input type="file" name={name} {...getInputProps()} />
@@ -154,7 +150,7 @@ export const FileDropzone = (props: FileUploaderProps) => {
                       removeFile(index);
                     }}
                     sx={{ position: 'absolute' }}
-                    //className={classes.iconRemoveFile}
+                    className="iconRemoveFile"
                   >
                     <PIcon name="closeIcon" />
                   </IconButton>
@@ -168,7 +164,7 @@ export const FileDropzone = (props: FileUploaderProps) => {
         )}
         <Button
           onClick={() => open()}
-          //className={classes.buttonUpload}
+          className="buttonUpload"
           startIcon={<PIcon name="upLoadIcon" />}
           variant="contained"
         >
@@ -176,6 +172,6 @@ export const FileDropzone = (props: FileUploaderProps) => {
         </Button>
       </Box>
       {error && <ErrorLabel errorText={error} />}
-    </Box>
+    </StyledBox>
   );
 };

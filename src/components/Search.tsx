@@ -1,24 +1,20 @@
-import { TextField, TextFieldProps, Theme } from '@mui/material';
-// import createStyles from '@mui/styles/createStyles';
-// import makeStyles from '@mui/styles/makeStyles';
+import { TextField, TextFieldProps, styled } from '@mui/material';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
-import { PIcon } from '../pegasus/PIcon';
+import { PIcon } from '../images/PIcon';
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     textField: {
-// paddingTop: '0px !important',
-// marginInline: theme.spacing(2),
-// width: `${theme.spacing(37.5)} !important`,
-//     },
-//     root: {
-//       borderRadius: 12,
-//       height: '42px',
-//       backgroundColor: '#EDF1F6',
-//     },
-//   }),
-// );
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '&.textField': {
+    paddingTop: '0px !important',
+    marginInline: theme.spacing(2),
+    width: `${theme.spacing(37.5)} !important`,
+  },
+  '& .inputRoot': {
+    borderRadius: 12,
+    height: '42px',
+    backgroundColor: '#EDF1F6',
+  },
+}));
 
 export type SearchProps = {
   placeholder?: string;
@@ -34,15 +30,15 @@ export const Search = ({ onChange, ...otherProps }: TextFieldProps & Required<Pi
   };
 
   return (
-    <TextField
-      //className={classes.textField}
+    <StyledTextField
+      className="textField"
       variant="standard"
       value={searchValue}
       onChange={handleSearchChange}
       InputProps={{
         disableUnderline: true,
         startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
-        //classes: { root: `${classes.root}` },
+        className: 'inputRoot',
       }}
       {...otherProps}
     />

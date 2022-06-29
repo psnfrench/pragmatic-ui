@@ -5,7 +5,7 @@ import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
 
-export type PTimePickerProps = Omit<TimePickerProps, 'renderInput' | 'value' | 'onChange'> &
+export type PTimePickerProps = Omit<TimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> &
   Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
 export const PTimePicker = (props: PTimePickerProps) => {
@@ -18,7 +18,7 @@ export const PTimePicker = (props: PTimePickerProps) => {
 };
 
 const PTimePickerWithFormikComp = (
-  props: Omit<TimePickerProps, 'renderInput' | 'onChange'> &
+  props: Omit<TimePickerProps<any, any>, 'renderInput' | 'onChange'> &
     RequiredFormikTextFields &
     Required<Pick<TextFieldProps, 'value' | 'name'>> &
     Pick<TextFieldProps, 'variant'>,

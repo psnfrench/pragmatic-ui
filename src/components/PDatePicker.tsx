@@ -5,9 +5,10 @@ import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
 
-export type PDatePickerProps = Omit<DatePickerProps, 'renderInput' | 'value' | 'onChange'> &
+export type PDatePickerProps = Omit<DatePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> &
   Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
+
 export const PDatePicker = (props: PDatePickerProps) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
@@ -18,7 +19,7 @@ export const PDatePicker = (props: PDatePickerProps) => {
 };
 
 const PDatePickerWithFormikComp = (
-  props: Omit<DatePickerProps, 'renderInput' | 'onChange'> &
+  props: Omit<DatePickerProps<any, any>, 'renderInput' | 'onChange'> &
     RequiredFormikTextFields &
     Required<Pick<TextFieldProps, 'value' | 'name'>> &
     Pick<TextFieldProps, 'variant'>,

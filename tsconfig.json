@@ -10,6 +10,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
@@ -21,6 +22,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["src/pragmatic-ui.ts"],
+  "include": ["src/pragmatic-ui.ts", "src/components", "src/custom.d.ts"],
   "exclude": ["node_modules", "src/**/*.test.ts*"]
 }
