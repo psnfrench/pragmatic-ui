@@ -156,7 +156,7 @@ export const SideBar = ({
               selected={selectedKey === item.key}
               onClick={() => handleItemClick(item)}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemIcon sx={textSX}>{item.icon}</ListItemIcon>
               <ListItemText
                 primary={
                   <Typography
