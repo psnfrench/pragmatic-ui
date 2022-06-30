@@ -64,6 +64,8 @@ export type CustomSliderItem = {
   headerText?: string;
   bodyText?: string;
   image: React.FC<{}>;
+  headerColor?: string;
+  bodyColor?: string;
 };
 
 export const CustomSlider = ({ items, headerVariant, bodyVariant, children, ...otherProps }: CustomSliderProps) => {
@@ -74,7 +76,7 @@ export const CustomSlider = ({ items, headerVariant, bodyVariant, children, ...o
     slidesToScroll: 1,
     autoplay: true,
     speed: 1000,
-    autoplaySpeed: 70000,
+    autoplaySpeed: 7000,
     arrows: false,
     cssEase: 'linear',
   };
@@ -84,8 +86,9 @@ export const CustomSlider = ({ items, headerVariant, bodyVariant, children, ...o
   return (
     <React.Fragment>
       <Slider {...updatedSettings}>
-        {items.map((item) => (
+        {items.map((item, key) => (
           <StyledBox
+            key={key}
             className="sliderContainer"
             sx={{ marginTop: '260px', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
           >
@@ -93,10 +96,12 @@ export const CustomSlider = ({ items, headerVariant, bodyVariant, children, ...o
               <item.image />
             </StyledBox>
             <StyledBox className="textSlider">
-              <Typography variant={headerVariant} marginBottom={3.5}>
+              <Typography color={item.headerColor} variant={headerVariant} marginBottom={3.5}>
                 {item.headerText}
               </Typography>
-              <Typography variant={bodyVariant}>{item.bodyText}</Typography>
+              <Typography color={item.bodyColor} variant={bodyVariant}>
+                {item.bodyText}
+              </Typography>
             </StyledBox>
           </StyledBox>
         ))}
