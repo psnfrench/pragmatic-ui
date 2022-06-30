@@ -146,32 +146,38 @@ export const SideBar = ({
         </ListItemButton>
 
         {items.map((item, index) => (
-          <ListItem key={item.key} disablePadding>
-            <ListItemButton
-              sx={{
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-                borderRadius: 0.5,
-              }}
-              selected={selectedKey === item.key}
-              onClick={() => handleItemClick(item)}
-            >
-              <ListItemIcon sx={textSX}>{item.icon}</ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography
-                    variant={textVariant}
-                    sx={[{ textAlign: 'left' }, ...(Array.isArray(textSX) ? textSX : [textSX])]}
-                  >
-                    {item.text}
-                  </Typography>
-                }
-                sx={{ display: open ? 'block' : 'none', ml: 3 }}
-              />
-            </ListItemButton>
+          <React.Fragment>
+            <ListItem key={item.key} disablePadding>
+              <ListItemButton
+                sx={{
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  borderRadius: 0.5,
+                }}
+                selected={selectedKey === item.key}
+                onClick={() => handleItemClick(item)}
+              >
+                <ListItemIcon sx={textSX}>{item.icon}</ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant={textVariant}
+                      sx={[{ textAlign: 'left' }, ...(Array.isArray(textSX) ? textSX : [textSX])]}
+                    >
+                      {item.text}
+                    </Typography>
+                  }
+                  sx={{ display: open ? 'block' : 'none', ml: 3 }}
+                />
+              </ListItemButton>
+            </ListItem>
 
-            {item.divider && <Divider />}
-          </ListItem>
+            {item.divider && (
+              <>
+                <br /> <Divider />
+              </>
+            )}
+          </React.Fragment>
         ))}
       </List>
       <Box sx={{ flex: 1, alignItems: 'flex-end', display: 'flex' }}>{open ? children : childrenCollapsed}</Box>
