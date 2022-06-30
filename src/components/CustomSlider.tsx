@@ -25,6 +25,15 @@ const StyledBox = styled(Box)(() => ({
 
 export type CustomSliderProps = {
   items: CustomSliderItem[];
+  children?: React.ReactNode;
+};
+
+export type CustomSliderItem = {
+  headerText?: string;
+  bodyText?: string;
+  image: React.FC<{}>;
+  headerColor?: string;
+  bodyColor?: string;
   headerVariant?:
     | 'button'
     | 'caption'
@@ -57,18 +66,9 @@ export type CustomSliderProps = {
     | 'body2'
     | 'overline'
     | undefined;
-  children?: React.ReactNode;
 };
 
-export type CustomSliderItem = {
-  headerText?: string;
-  bodyText?: string;
-  image: React.FC<{}>;
-  headerColor?: string;
-  bodyColor?: string;
-};
-
-export const CustomSlider = ({ items, headerVariant, bodyVariant, children, ...otherProps }: CustomSliderProps) => {
+export const CustomSlider = ({ items, children, ...otherProps }: CustomSliderProps) => {
   const settings = {
     dots: true,
     infinite: true,
@@ -96,10 +96,10 @@ export const CustomSlider = ({ items, headerVariant, bodyVariant, children, ...o
               <item.image />
             </StyledBox>
             <StyledBox className="textSlider">
-              <Typography color={item.headerColor} variant={headerVariant} marginBottom={3.5}>
+              <Typography color={item.headerColor} variant={item.headerVariant} marginBottom={3.5}>
                 {item.headerText}
               </Typography>
-              <Typography color={item.bodyColor} variant={bodyVariant}>
+              <Typography color={item.bodyColor} variant={item.bodyVariant}>
                 {item.bodyText}
               </Typography>
             </StyledBox>

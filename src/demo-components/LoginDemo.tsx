@@ -8,19 +8,11 @@ import { SnackBarContext } from '../context/snackbar';
 import { ConfirmationServiceContext } from '../context/confirmation';
 import OnBoardingCarosel from '../components/OnBoardingCarosel';
 import OrchidLogo from '../images/OrchidLogo';
-import slider1 from '../images/slider1';
-import slider2 from '../images/slider2';
-import slider3 from '../images/slider3';
+import { items } from '../constants/CarouselItems';
 const ImageTopLeft = require('../images/background_img_top_left.png');
 const ImageTopRight = require('../images/background_img_top_right.png');
 const ImageBottomRight = require('../images/background_img_bottom_right.png');
 const ImageBottomLeft = require('../images/background_img_bottom_left.png');
-
-const items = [
-  { headerText: 'Slider 1', bodyText: 'Body 1', image: slider1, bodyColor: 'red', headerColor: 'red' },
-  { headerText: 'Slider 2', bodyText: 'Body 2', image: slider2, bodyColor: 'white', headerColor: 'red' },
-  { headerText: 'Slider 3', bodyText: 'Body 3', image: slider3, bodyColor: 'red', headerColor: 'white' },
-];
 
 const LoginDemo = () => {
   const navigate = useNavigate();
