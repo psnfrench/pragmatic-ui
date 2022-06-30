@@ -75,6 +75,7 @@ const SidebarDemo = () => {
       items={navItems}
       childrenCollapsed={<CollapseText />}
       selectedMenuKey={selectedMenuKey}
+      collapsible={false}
     >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>

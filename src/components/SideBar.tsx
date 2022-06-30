@@ -27,8 +27,9 @@ export type SideBarItem = {
 export type SideBarProps = {
   items: SideBarItem[];
   selectedMenuKey?: string;
-  logoCollapsed: React.ReactNode;
+  logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
+  collapsible?: boolean;
   defaultOpen?: boolean;
   children?: React.ReactNode;
   childrenCollapsed?: React.ReactNode;
@@ -81,6 +82,7 @@ export const SideBar = ({
   children,
   childrenCollapsed,
   selectedMenuKey,
+  collapsible = true,
 }: SideBarProps) => {
   useEffect(() => {
     let active = true;
@@ -95,7 +97,7 @@ export const SideBar = ({
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpenState);
   const toggleOpen = () => {
-    setOpen((prev) => !prev);
+    collapsible && setOpen((prev) => !prev);
   };
 
   const handleItemClick = (item: SideBarItem) => {
@@ -122,8 +124,12 @@ export const SideBar = ({
             {open ? (
               <>
                 <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
-                  <ChevronLeftIcon />
-                  <MenuIcon />
+                  {collapsible && (
+                    <>
+                      <ChevronLeftIcon />
+                      <MenuIcon />
+                    </>
+                  )}
                 </Box>
                 {logoExpanded}
               </>
