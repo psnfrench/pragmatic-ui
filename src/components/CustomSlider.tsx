@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled, Typography, TypographyTypeMap } from '@mui/material';
 
 const StyledBox = styled(Box)(() => ({
   '& .sliderContainer': {
@@ -34,38 +34,8 @@ export type CustomSliderItem = {
   image: React.FC<{}>;
   headerColor?: string;
   bodyColor?: string;
-  headerVariant?:
-    | 'button'
-    | 'caption'
-    | 'h1'
-    | 'h2'
-    | 'h3'
-    | 'h4'
-    | 'h5'
-    | 'h6'
-    | 'inherit'
-    | 'subtitle1'
-    | 'subtitle2'
-    | 'body1'
-    | 'body2'
-    | 'overline'
-    | undefined;
-  bodyVariant?:
-    | 'button'
-    | 'caption'
-    | 'h1'
-    | 'h2'
-    | 'h3'
-    | 'h4'
-    | 'h5'
-    | 'h6'
-    | 'inherit'
-    | 'subtitle1'
-    | 'subtitle2'
-    | 'body1'
-    | 'body2'
-    | 'overline'
-    | undefined;
+  headerVariant?: TypographyTypeMap['props']['variant'];
+  bodyVariant?: TypographyTypeMap['props']['variant'];
 };
 
 export const CustomSlider = ({ items, children, ...otherProps }: CustomSliderProps) => {

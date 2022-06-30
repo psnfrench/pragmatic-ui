@@ -159,7 +159,10 @@ export const SideBar = ({
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText
                 primary={
-                  <Typography variant={textVariant} sx={{ textAlign: 'left', ...textSX }}>
+                  <Typography
+                    variant={textVariant}
+                    sx={[{ textAlign: 'left' }, ...(Array.isArray(textSX) ? textSX : [textSX])]}
+                  >
                     {item.text}
                   </Typography>
                 }

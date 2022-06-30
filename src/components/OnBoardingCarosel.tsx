@@ -1,8 +1,6 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
 import { CustomSlider, CustomSliderItem } from './CustomSlider';
-// import '~slick-carousel/slick/slick.css';
-// import '~slick-carousel/slick/slick-theme.css';
 
 const StyledBox = styled(Box)(() => ({
   '& .container': {
