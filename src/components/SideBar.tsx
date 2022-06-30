@@ -97,7 +97,7 @@ export const SideBar = ({
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpenState);
   const toggleOpen = () => {
-    collapsible ? setOpen((prev) => !prev) : return(null);
+    collapsible ? setOpen((prev) => !prev) : setOpen((prev) => prev);
   };
 
   const handleItemClick = (item: SideBarItem) => {
