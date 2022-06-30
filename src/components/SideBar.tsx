@@ -10,6 +10,8 @@ import {
   Theme,
   CSSObject,
   Typography,
+  TypographyTypeMap,
+  SxProps,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useEffect, useState } from 'react';
@@ -33,6 +35,8 @@ export type SideBarProps = {
   defaultOpen?: boolean;
   children?: React.ReactNode;
   childrenCollapsed?: React.ReactNode;
+  textVariant?: TypographyTypeMap['props']['variant'];
+  textSX?: SxProps<Theme>;
 };
 
 const drawerWidth = 340;
@@ -82,7 +86,9 @@ export const SideBar = ({
   children,
   childrenCollapsed,
   selectedMenuKey,
+  textVariant = 'subtitle2',
   collapsible = true,
+  textSX,
 }: SideBarProps) => {
   useEffect(() => {
     let active = true;
@@ -153,7 +159,7 @@ export const SideBar = ({
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText
                 primary={
-                  <Typography variant="subtitle2" sx={{ textAlign: 'left' }}>
+                  <Typography variant={textVariant} sx={{ textAlign: 'left', ...textSX }}>
                     {item.text}
                   </Typography>
                 }
