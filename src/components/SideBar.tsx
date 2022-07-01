@@ -146,8 +146,8 @@ export const SideBar = ({
         </ListItemButton>
 
         {items.map((item, index) => (
-          <React.Fragment>
-            <ListItem key={item.key} disablePadding>
+          <React.Fragment key={item.key}>
+            <ListItem disablePadding>
               <ListItemButton
                 sx={{
                   justifyContent: open ? 'initial' : 'center',
