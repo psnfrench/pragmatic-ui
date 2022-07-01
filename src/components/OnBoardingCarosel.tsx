@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
-import { CustomSlider, CustomSliderItem } from './CustomSlider';
+import { CustomSlider, CustomSliderProps } from './CustomSlider';
 
 const StyledBox = styled(Box)(() => ({
   '& .container': {
@@ -31,13 +31,11 @@ const StyledBox = styled(Box)(() => ({
 }));
 
 export type OnBoardingCarouselProps = {
-  items: CustomSliderItem[];
   imageTopLeft?: string;
   imageTopRight?: string;
   imageBottomLeft?: string;
   imageBottomRight?: string;
-  children?: React.ReactNode;
-};
+} & CustomSliderProps;
 
 export const OnBoardingCarosel = ({
   items,
