@@ -1,5 +1,5 @@
 import React from 'react';
-import Slider from 'react-slick';
+import Slider, { Settings } from 'react-slick';
 import { Box, styled, Typography, TypographyTypeMap } from '@mui/material';
 
 const StyledBox = styled(Box)(() => ({
@@ -26,7 +26,7 @@ const StyledBox = styled(Box)(() => ({
 export type CustomSliderProps = {
   items: CustomSliderItem[];
   children?: React.ReactNode;
-};
+} & Settings;
 
 export type CustomSliderItem = {
   headerText?: string;
@@ -54,28 +54,26 @@ export const CustomSlider = ({ items, children, ...otherProps }: CustomSliderPro
   const updatedSettings = { ...settings, ...otherProps };
 
   return (
-    <React.Fragment>
-      <Slider {...updatedSettings}>
-        {items.map((item, key) => (
-          <StyledBox
-            key={key}
-            className="sliderContainer"
-            sx={{ marginTop: '260px', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
-          >
-            <StyledBox className="imageSlider" marginBottom={4}>
-              <item.image />
-            </StyledBox>
-            <StyledBox className="textSlider">
-              <Typography color={item.headerColor} variant={item.headerVariant} marginBottom={3.5}>
-                {item.headerText}
-              </Typography>
-              <Typography color={item.bodyColor} variant={item.bodyVariant}>
-                {item.bodyText}
-              </Typography>
-            </StyledBox>
+    <Slider {...updatedSettings}>
+      {items.map((item, key) => (
+        <StyledBox
+          key={key}
+          className="sliderContainer"
+          sx={{ marginTop: '260px', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
+        >
+          <StyledBox className="imageSlider" marginBottom={4}>
+            <item.image />
           </StyledBox>
-        ))}
-      </Slider>
-    </React.Fragment>
+          <StyledBox className="textSlider">
+            <Typography color={item.headerColor} variant={item.headerVariant} marginBottom={3.5}>
+              {item.headerText}
+            </Typography>
+            <Typography color={item.bodyColor} variant={item.bodyVariant}>
+              {item.bodyText}
+            </Typography>
+          </StyledBox>
+        </StyledBox>
+      ))}
+    </Slider>
   );
 };
