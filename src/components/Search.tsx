@@ -6,8 +6,6 @@ import { PIcon } from '../images/PIcon';
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '&.textField': {
     paddingTop: '0px !important',
-    marginInline: theme.spacing(2),
-    width: `${theme.spacing(37.5)} !important`,
   },
   '& .inputRoot': {
     borderRadius: 12,
