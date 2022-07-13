@@ -40,7 +40,6 @@ const ComplexFilterChildren = ({
   const handleClose = () => {
     setChildAnchorEl(null);
     setAnchorEl(null);
-    //console.log(childAnchorEl);
   };
   console.log(selectedItem);
   return (

@@ -3,7 +3,7 @@ export * from './components/FileDropZone';
 export * from './components/CustomSlider';
 export * from './components/OnBoardingCarosel';
 export * from './components/PasswordInput';
-export * from './components/PComplexFilter/PComplexFilter';
+// export * from './components/PComplexFilter/PComplexFilter';
 export * from './components/PDateTimePicker';
 export * from './components/PDatePicker';
 export * from './components/PTimePicker';
