@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Box, Button, Menu, MenuItem, styled } from '@mui/material';
 import React from 'react';
 import { itemType } from './PComplexFilter';
