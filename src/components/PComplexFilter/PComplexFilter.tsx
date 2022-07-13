@@ -1,3 +1,4 @@
+/* tslint:disable */
 import * as React from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
