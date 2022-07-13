@@ -30,8 +30,11 @@ export type AppRouterProps = {
 };
 
 export const AppRouter = ({ setTheme }: AppRouterProps) => {
-  const handleSubmit = (values: typeof initialValues, formikHelpers: FormikHelpers<typeof initialValues>) => {
+  const handleSubmit = (values: typeof initialValues, { setSubmitting }: FormikHelpers<typeof initialValues>) => {
     console.log('values: ', values);
+    setTimeout(() => {
+      setSubmitting(false);
+    }, 2000);
   };
 
   const validate = (values: typeof initialValues) => {
@@ -52,7 +55,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
         path="/demos"
         element={
           <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
-            {({ handleSubmit }) => (
+            {({ handleSubmit, isSubmitting }) => (
               <form onSubmit={handleSubmit}>
                 <ComplexFilterDemo />
                 <TextDemo />
@@ -60,7 +63,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
                 <RadioDemo />
                 <SearchDemo />
                 <FileDropZoneDemo />
-                <SubmitButton text="Submit Button" />
+                <SubmitButton text="Submit Button" variant="contained" color="primary" loading={isSubmitting} />
               </form>
             )}
           </Formik>
