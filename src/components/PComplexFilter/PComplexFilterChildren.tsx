@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Box, Button, Menu, MenuItem, styled } from '@mui/material';
 import React from 'react';
 import { itemType } from './PComplexFilter';
@@ -41,7 +40,7 @@ const ComplexFilterChildren = ({
   const handleClose = () => {
     setChildAnchorEl(null);
     setAnchorEl(null);
-    //console.log(childAnchorEl);
+    // console.log(childAnchorEl);
   };
   console.log(selectedItem);
   return (
