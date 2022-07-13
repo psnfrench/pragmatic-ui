@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps, styled } from '@mui/material';
+import { TextField, TextFieldProps, styled, InputProps } from '@mui/material';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
 import { PIcon } from '../images/PIcon';
@@ -15,10 +15,14 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 export type SearchProps = {
+  onChange:
+    | Required<Pick<TextFieldProps, 'onChange'>>
+    | React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    | React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   placeholder?: string;
-};
+} & TextFieldProps;
 
-export const Search = ({ onChange, ...otherProps }: TextFieldProps & Required<Pick<TextFieldProps, 'onChange'>>) => {
+export const Search = ({ onChange, placeholder, ...otherProps }: SearchProps) => {
   const [searchValue, setSearchValue] = useState('');
   const delayedQuery = useMemo(() => debounce(onChange, 500), [onChange]);
   // const classes = useStyles();
@@ -37,6 +41,7 @@ export const Search = ({ onChange, ...otherProps }: TextFieldProps & Required<Pi
         disableUnderline: true,
         startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
         className: 'inputRoot',
+        ...otherProps.InputProps,
       }}
       {...otherProps}
     />

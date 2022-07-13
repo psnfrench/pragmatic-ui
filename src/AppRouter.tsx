@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.css';
 import TextDemo from './demo-components/TextDemo';
 import RadioDemo from './demo-components/RadioDemo';
@@ -15,6 +15,7 @@ import LoginDemo from './demo-components/LoginDemo';
 import SearchDemo from './demo-components/SearchDemo';
 import FileDropZoneDemo from './demo-components/FileDropZoneDemo';
 import { SubmitButton } from './components/SubmitButton';
+import ComplexFilterDemo from './demo-components/ComplexFilterDemo';
 
 const initialValues = {
   firstName: 'Sally',
@@ -53,6 +54,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
           <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
             {({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
+                <ComplexFilterDemo />
                 <TextDemo />
                 <DateDemo />
                 <RadioDemo />

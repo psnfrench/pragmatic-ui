@@ -221,7 +221,7 @@ export const createPragmaticTheme = ({
                   backgroundColor: Colors.primary.background,
                 },
                 '&  ul > li.MuiMenuItem-root': {
-                  color: Colors.greyscale.placehold,
+                  color: Colors.secondary.main,
                 },
               },
             },

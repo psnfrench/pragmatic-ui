@@ -3,6 +3,7 @@ import { Box, SxProps, Theme } from '@mui/system';
 import SearchIcon from './icons/search';
 import AddIcon from './icons/add';
 import ChevronLeft from './icons/chevronLeft';
+import ChevronRight from './icons/chevronRight';
 import UpLoadIcon from './icons/upload';
 import PDFFileIcon from './icons/pdfFileIcon';
 import CloseIcon from './icons/closeIcon';
@@ -26,6 +27,7 @@ export const customIconMap = {
   searchIcon: SearchIcon,
   addIcon: AddIcon,
   chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
   upLoadIcon: UpLoadIcon,
   pdfFileIcon: PDFFileIcon,
   closeIcon: CloseIcon,
