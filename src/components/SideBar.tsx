@@ -12,12 +12,15 @@ import {
   Typography,
   TypographyTypeMap,
   SxProps,
+  Tooltip,
+  Button,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Colors } from '../constants/Colors';
+import { ChevronRight } from '@mui/icons-material';
 
 export type SideBarItem = {
   key: string;
@@ -140,7 +143,9 @@ export const SideBar = ({
                 {logoExpanded}
               </>
             ) : (
-              <>{logoCollapsed}</>
+              <Tooltip title={<ChevronRight />} arrow placement="top">
+                <Box>{logoCollapsed}</Box>
+              </Tooltip>
             )}
           </Box>
         </ListItemButton>

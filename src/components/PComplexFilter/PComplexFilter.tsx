@@ -118,6 +118,7 @@ export function PComplexFilter({
         return null;
     }
   };
+
   const handleSelectedInit = (event: React.MouseEvent<HTMLLIElement>, item: itemType) => {
     if (currentFilters?.includes(item.text) && setCurrentFilters) {
       setCurrentFilters((prev) => prev.filter((i) => i !== item.text));

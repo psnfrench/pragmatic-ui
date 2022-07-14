@@ -1,7 +1,8 @@
+import { SecurityUpdateWarning } from '@mui/icons-material';
 import { Box, Button, Chip, Divider, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { itemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter';
+import { itemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter2';
 import PIcon from '../images/PIcon';
 
 const options: itemType[] = [
@@ -31,26 +32,32 @@ const ComplexFilterDemo = () => {
   const [selectedKey, setSelectedKey] = useState('');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [currentFilters, setCurrentFilters] = useState([]);
+  const [updating, setUpdating] = useState(false);
   const [deleteing, setDeleteing] = useState(false);
   let newOptions: itemType[] = _.clone(options);
   const [filteredOptions, setFilteredOptions] = useState(newOptions);
-  let vars: any;
-  const [update, setUpdate] = useState(Boolean(0));
 
   // TODO get this functioning. When search enabled, only results that match are in the menu
-  const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    event.preventDefault;
-    const found = options.find((option) => {
-      return option.text === event.target.value;
-    });
-    console.log(found);
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  //   event.preventDefault;
+  //   const found = options.map((option) => {
+  //     if (option.text.toLowerCase().includes(event.target.value.toLowerCase())) {
+  //       return option;
+  //     }
+  //   });
+  //   setSearchableOptions(
+  //     found.filter((element) => {
+  //       return element !== undefined;
+  //     }),
+  //   );
+  //   console.log('event.target.value: ', event.target.value);
+  // };
 
   // TODO get this functioning. Same as above
-  const handleSearchSubmit = (e: any) => {
-    e.preventDefault;
-    console.log('Hi');
-  };
+  // const handleSearchSubmit = (e: any) => {
+  //   e.preventDefault;
+  //   console.log('Hi');
+  // };
 
   const handleSelected = (event: React.MouseEvent<HTMLLIElement>, key: string) => {
     // adds the new filter to the filters array
@@ -72,19 +79,14 @@ const ComplexFilterDemo = () => {
 
   // removes filter when Chip deleted
   const handleDelete = (filter: string) => {
-    setTimeout(function () {
-      setDeleteing(true);
-    }, 100);
+    setDeleteing(true);
     setCurrentFilters((prev) => prev.filter((i) => i !== filter));
-    setTimeout(function () {
-      setDeleteing(false);
-    }, 100);
   };
 
   // Maps out all data including children (that are theoretically infinite)
   function displayData(item: itemType[], child?: boolean) {
-    return item.map((option) => (
-      <Box display="flex" flexDirection="column">
+    return item.map((option, key) => (
+      <Box key={key} display="flex" flexDirection="column">
         <Box display="flex" flexDirection="row">
           {child && '-'}
           {option.icon}
@@ -99,30 +101,42 @@ const ComplexFilterDemo = () => {
     ));
   }
 
-  function mapItems(item: itemType[]) {
-    {
-      newOptions = _.clone(item);
-    }
-    newOptions.map((option) => (
+  // useEffect(() => console.log(curentItems), [currentItems]);
+
+  // maps through returned items to list
+  async function mapItems(item: itemType[]) {
+    // sets object to be filtered
+    newOptions = _.clone(item);
+    // maps new object
+    newOptions.map((option, key) => (
       <>
+        {/* if object exists in filter, adds to array */}
         {currentFilters.includes(option.text) ? setFilteredOptions([...filteredOptions, option]) : null}
         {option.children ? mapItems(option.children) : null}
       </>
     ));
   }
 
-  // Demonstrates the current filters working with chips
+  // Performs whenever currentFilters state is updated.
   useEffect(() => {
-    currentFilters.length > 0 && !deleteing ? (
-      <>
-        {currentFilters.length > 1 ? null : setFilteredOptions(filteredOptions.splice(0, filteredOptions.length))}
-        {mapItems(options)}
-      </>
-    ) : null;
-    currentFilters.length < 1 ? setFilteredOptions(_.clone(options)) : null;
-    setTimeout(function () {
-      setUpdate((update) => !update);
-    }, 100);
+    setTimeout(() => {
+      console.log('giving it time');
+    }, 200);
+    // checks there is a filter
+    if (currentFilters.length === 1) {
+      /* clears array to then add filters */
+      setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
+      mapItems(options);
+    } else if (currentFilters.length === 0) {
+      // returns all when no filter
+      setFilteredOptions(_.clone(options));
+    } else if (currentFilters.length < 0 && deleteing) {
+      setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
+      mapItems(options);
+      setDeleteing(false);
+    } else {
+      mapItems(options);
+    }
   }, [currentFilters]);
 
   return (
@@ -133,10 +147,11 @@ const ComplexFilterDemo = () => {
         <PComplexFilter
           // the array that will populate the filter
           items={options}
+          searchable={true}
           // if included, the filter will contain a searchbar. This also handles when the search input field is altered
-          handleSearchChange={handleSearchChange}
+          //handleSearchChange={handleSearchChange}
           // this handles when the search is submitted (potentially irrelevant)
-          handleSearchSubmit={handleSearchSubmit}
+          //handleSearchSubmit={handleSearchSubmit}
           // choose between 'single' and 'multiple'. Multiple allows several options to be selected and removed, single only allows one
           selectVariant={'multiple'}
           // sets the title at the top of the menu
@@ -154,11 +169,10 @@ const ComplexFilterDemo = () => {
           // Example of sending props to the button to change its style
           buttonProps={{ variant: 'contained', sx: { width: '100px' } }}
           // Example of changing the menu style
-          menuPaperProps={{ style: { backgroundColor: 'white' } }}
+          paperProps={{ style: { backgroundColor: 'white', left: '0px' } }}
           // Example of changing the title
-          titleProps={{ variant: 'body1', margin: '8px' }}
-          menuItemProps={{ color: 'red' }}
-          menuListProps={{ color: 'red' }}
+          titleProps={{ variant: 'body1', padding: 4 }}
+          listItemProps={{ color: 'secondary' }}
         />
         <br />
         {/* Example of mapping Chips for each filter with clear button */}
@@ -179,7 +193,7 @@ const ComplexFilterDemo = () => {
             <br />
           </>
         ) : null}
-        {useMemo(() => displayData(filteredOptions), [update])}
+        {displayData(filteredOptions)}
       </>
     </Box>
   );
