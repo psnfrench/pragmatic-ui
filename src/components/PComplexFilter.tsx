@@ -18,7 +18,7 @@ import {
   Box,
   ClickAwayListener,
 } from '@mui/material';
-import { Search } from '../Search';
+import { Search } from './Search';
 import { useEffect, useState } from 'react';
 import { Cancel, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
@@ -172,7 +172,6 @@ export function PComplexFilter({
 
   // TODO get this functioning. When search enabled, only results that match are in the menu
   const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    console.log('event.nativeEvent.type: ', event.target.name);
     if (event.nativeEvent.type === 'deleteContentBackward') {
     }
     var foundArray = currentItems.map((item) => mapFind(item, event.target.value));

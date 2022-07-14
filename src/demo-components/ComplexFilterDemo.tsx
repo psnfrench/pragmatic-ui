@@ -1,8 +1,7 @@
-import { SecurityUpdateWarning } from '@mui/icons-material';
-import { Box, Button, Chip, Divider, Typography } from '@mui/material';
+import { Box, Chip, Divider, Typography } from '@mui/material';
 import _ from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
-import { menuItemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter2';
+import React, { useEffect, useState } from 'react';
+import { menuItemType, PComplexFilter } from '../components/PComplexFilter';
 import PIcon from '../images/PIcon';
 
 const options: menuItemType[] = [
@@ -101,8 +100,6 @@ const ComplexFilterDemo = () => {
       </Box>
     ));
   }
-
-  // useEffect(() => console.log(curentItems), [currentItems]);
 
   // maps through returned items to list
   async function mapItems(items: itemType[]) {
