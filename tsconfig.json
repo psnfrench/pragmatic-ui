@@ -23,8 +23,10 @@
     "jsx": "react-jsx"
   },
   "include": ["src/pragmatic-ui.ts", "src/components", "src/custom.d.ts", "src/demo-components/SliderDemo.tsx"],
-  "exclude": ["node_modules", "src/**/*.test.ts*"],
-  "linterOptions": {
-    "exclude": ["src/components/ComplexFilterOriginal*.tsx", "src/components/PComplexFilter*.tsx"]
-  }
+  "exclude": [
+    "node_modules",
+    "src/**/*.test.ts*",
+    "src/components/ComplexFilterOriginal*.ts*",
+    "src/components/PComplexFilter*.ts*"
+  ]
 }
