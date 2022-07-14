@@ -110,7 +110,7 @@ const ComplexFilterDemo = () => {
     newOptions.map((option, key) => {
       option.children ? mapItems(option.children) : null;
       option.categories.map((category) => {
-        /* if object exists in filter, adds to array */
+        // if object exists in filter, adds to array
         currentFilters.includes(category) ? <>{newItems.push(option)}</> : null;
       });
     });

@@ -110,7 +110,7 @@ export function PComplexFilter({
   const [itemsHistory, setItemsHistory] = useState(history);
 
   const handleClick = (event: any) => {
-    setOpened((opened) => !opened);
+    setOpened(!opened);
     if (!opened) {
       setAnchorEl(event.currentTarget);
     } else {
@@ -127,7 +127,7 @@ export function PComplexFilter({
       case 'multiple':
         setAnchorEl!(null);
         setOpened(false);
-        setTimeout(function () {
+        setTimeout(() => {
           setCurrentItems(items);
           setCurrentTitle(title);
         }, 200);
@@ -144,7 +144,7 @@ export function PComplexFilter({
     } else if (item.children && item.children.length > 0) {
       setCurrentTitles((prev) => [...prev, item.text]);
       setCurrentItems(item.children);
-      setItemsHistory((itemsHistory) => [...itemsHistory, item.children]);
+      setItemsHistory([...itemsHistory, item.children]);
       setCurrentTitle(item.text);
     } else {
       handleSelected(event, item.text);
@@ -172,13 +172,11 @@ export function PComplexFilter({
 
   // TODO get this functioning. When search enabled, only results that match are in the menu
   const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    if (event.nativeEvent.type === 'deleteContentBackward') {
-    }
-    var foundArray = currentItems.map((item) => mapFind(item, event.target.value));
+    let foundArray = currentItems.map((item) => mapFind(item, event.target.value));
     foundArray = foundArray.filter((element) => {
       return element.text !== 'not found';
     });
-    foundArray.length > 0 && setFilteredItems(foundArray);
+    foundArray.length > 0 ? setFilteredItems(foundArray) : null;
   };
 
   const mapFind = (item: menuItemType, text: string) => {
@@ -208,7 +206,7 @@ export function PComplexFilter({
             <Typography variant="h6" textAlign="center" {...titleProps}>
               {currentTitle}
             </Typography>
-            {currentItems != items ? (
+            {currentItems !== items ? (
               <Button
                 sx={{
                   padding: 4,
