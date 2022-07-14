@@ -22,6 +22,7 @@ import { Search } from './Search';
 import { useEffect, useState } from 'react';
 import { Cancel, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
+import PIcon from '../images/PIcon';
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -82,7 +83,7 @@ export function PComplexFilter({
   setAnchorEl,
   selectVariant = 'single',
   title,
-  icon = <MoreVertIcon />,
+  icon = <PIcon name="filterIcon" />,
   label = 'Options',
   itemHeight = 40,
   maxItems = 10.5,
@@ -202,8 +203,11 @@ export function PComplexFilter({
         <Button className="button" onClick={handleClick} {...buttonProps}>
           {icon}
           {label}
+          <ChevronRight
+            sx={{ transform: open ? 'rotate(270deg)' : 'rotate(90deg)', position: 'absolute', right: '10px' }}
+          />
         </Button>
-        <Popper open={open} anchorEl={anchorEl} id="long-menu" sx={{ zIndex: 999999, width: '40ch' }}>
+        <Popper open={open} anchorEl={anchorEl} id="long-menu" sx={{ zIndex: 999999, width: '40ch' }} {...popperProps}>
           <Paper className="paper" {...paperProps}>
             <Typography variant="h6" textAlign="center" {...titleProps}>
               {currentTitle}
@@ -222,7 +226,7 @@ export function PComplexFilter({
                 {backButton}
               </Button>
             ) : null}
-            {handleSearchChange ? (
+            {searchable ? (
               <Box sx={{ paddingLeft: 2, paddingRight: 2 }}>
                 <Search fullWidth onChange={handleSearchChange} {...searchProps} />
               </Box>

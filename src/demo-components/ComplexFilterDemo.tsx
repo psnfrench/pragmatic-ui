@@ -153,7 +153,7 @@ const ComplexFilterDemo = () => {
           // Populated string array of all currently selected filters
           setCurrentFilters={setCurrentFilters}
           // Example of sending props to the button to change its style
-          buttonProps={{ variant: 'contained', sx: { width: '100px' } }}
+          buttonProps={{ variant: 'contained', sx: { width: '130px', justifyContent: 'flex-start' } }}
           // Example of changing the menu style
           paperProps={{ style: { backgroundColor: 'white', left: '0px' } }}
           // Example of changing the title
