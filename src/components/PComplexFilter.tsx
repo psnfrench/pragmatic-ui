@@ -176,7 +176,9 @@ export function PComplexFilter({
     foundArray = foundArray.filter((element) => {
       return element.text !== 'not found';
     });
-    foundArray.length > 0 ? setFilteredItems(foundArray) : null;
+    if (foundArray.length > 0) {
+      setFilteredItems(foundArray);
+    }
   };
 
   const mapFind = (item: menuItemType, text: string) => {
