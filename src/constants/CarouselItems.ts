@@ -1,8 +1,9 @@
+import { CustomSliderItem } from '../components/CustomSlider';
 import slider1 from '../images/slider1';
 import slider2 from '../images/slider2';
 import slider3 from '../images/slider3';
 
-export const items = [
+export const items: CustomSliderItem[] = [
   {
     headerText: 'Slider 1',
     bodyText: 'Body 1',

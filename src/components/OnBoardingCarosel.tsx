@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, BoxProps, styled } from '@mui/material';
 import { CustomSlider, CustomSliderProps } from './CustomSlider';
 
 const StyledBox = styled(Box)(() => ({
@@ -35,9 +35,11 @@ export type OnBoardingCarouselProps = {
   imageTopRight?: string;
   imageBottomLeft?: string;
   imageBottomRight?: string;
+  containerProps?: BoxProps;
 } & CustomSliderProps;
 
 export const OnBoardingCarosel = ({
+  containerProps,
   items,
   imageTopLeft,
   imageTopRight,
@@ -47,7 +49,7 @@ export const OnBoardingCarosel = ({
   ...otherProps
 }: OnBoardingCarouselProps) => {
   return (
-    <StyledBox className="container">
+    <StyledBox className="container" {...containerProps}>
       <StyledBox className="imageTopLeft">
         <img src={imageTopLeft} />
       </StyledBox>
