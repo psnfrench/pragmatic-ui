@@ -21,29 +21,28 @@ import {
 import { Search } from '../Search';
 import { useEffect, useState } from 'react';
 import { Cancel, ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { relative } from 'path/posix';
-import _, { each } from 'lodash';
+import _ from 'lodash';
 const options = [
-  { text: 'None' },
-  { text: 'Atria' },
-  { text: 'Callisto' },
-  { text: 'Dione' },
-  { text: 'Ganymede' },
-  { text: 'Hangouts Call' },
-  { text: 'Luna' },
-  { text: 'Oberon' },
-  { text: 'Phobos' },
-  { text: 'Pyxis' },
-  { text: 'Sedna' },
-  { text: 'Titania' },
-  { text: 'Triton' },
-  { text: 'Umbriel' },
+  { text: 'None', categories: ['1'] },
+  { text: 'Atria', categories: ['1'] },
+  { text: 'Callisto', categories: ['1'] },
+  { text: 'Dione', categories: ['1'] },
+  { text: 'Ganymede', categories: ['1'] },
+  { text: 'Hangouts Call', categories: ['1'] },
+  { text: 'Luna', categories: ['1'] },
+  { text: 'Oberon', categories: ['1'] },
+  { text: 'Phobos', categories: ['1'] },
+  { text: 'Pyxis', categories: ['1'] },
+  { text: 'Sedna', categories: ['1'] },
+  { text: 'Titania', categories: ['1'] },
+  { text: 'Triton', categories: ['1'] },
+  { text: 'Umbriel', categories: ['1'] },
 ];
 
-export type itemType = {
+export type menuItemType = {
   text: string;
   icon?: React.ReactNode;
-  children?: itemType[];
+  children?: menuItemType[];
 };
 
 const StyledMenu = styled(Button)(({ theme }) => ({
@@ -51,7 +50,7 @@ const StyledMenu = styled(Button)(({ theme }) => ({
 }));
 
 export type PComplexFilterProps = {
-  items: itemType[];
+  items: menuItemType[];
   selectedItem?: string;
   setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
   anchorEl: HTMLElement | null;
@@ -103,8 +102,8 @@ export function PComplexFilter({
   const open = Boolean(anchorEl);
   const [opened, setOpened] = useState(false);
   const [searching, setSearching] = useState(false);
-  const [currentItems, setCurrentItems] = useState<itemType[]>(_.clone(items));
-  const [filteredItems, setFilteredItems] = useState<itemType[]>(_.clone(currentItems));
+  const [currentItems, setCurrentItems] = useState<menuItemType[]>(_.clone(items));
+  const [filteredItems, setFilteredItems] = useState<menuItemType[]>(_.clone(currentItems));
   const [currentTitle, setCurrentTitle] = useState(title);
   const [currentTitles, setCurrentTitles] = useState([title]);
   const history: any[] = [items];
@@ -138,7 +137,7 @@ export function PComplexFilter({
     }
   };
 
-  const handleSelectedInit = (event: React.MouseEvent<HTMLLIElement>, item: itemType) => {
+  const handleSelectedInit = (event: React.MouseEvent<HTMLLIElement>, item: menuItemType) => {
     if (currentFilters?.includes(item.text) && setCurrentFilters) {
       setCurrentFilters((prev) => prev.filter((i) => i !== item.text));
       selectedItem = undefined;
@@ -183,7 +182,7 @@ export function PComplexFilter({
     foundArray.length > 0 && setFilteredItems(foundArray);
   };
 
-  const mapFind = (item: itemType, text: string) => {
+  const mapFind = (item: menuItemType, text: string) => {
     return item.text.toLowerCase().includes(text) ? item : { text: 'not found' };
   };
 

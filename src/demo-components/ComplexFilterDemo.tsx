@@ -2,62 +2,63 @@ import { SecurityUpdateWarning } from '@mui/icons-material';
 import { Box, Button, Chip, Divider, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
-import { itemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter2';
+import { menuItemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter2';
 import PIcon from '../images/PIcon';
 
-const options: itemType[] = [
+const options: menuItemType[] = [
   {
-    text: 'Atria',
+    text: 'Transport',
     icon: <PIcon name="addIcon" />,
     children: [
-      { text: 'Child1', children: [{ text: 'Childs Child 1', children: [{ text: 'Childs Childs Child 1' }] }] },
-      { text: 'Child2' },
+      { text: 'Vehicle', children: [{ text: 'Car', children: [{ text: 'Fiat Bambina' }] }] },
+      { text: 'Bike' },
     ],
   },
-  { text: 'Callisto' },
-  { text: 'Dione' },
-  { text: 'Ganymede' },
-  { text: 'Hangouts Call' },
-  { text: 'Luna' },
-  { text: 'Oberon' },
-  { text: 'Phobos' },
-  { text: 'Pyxis' },
-  { text: 'Sedna' },
-  { text: 'Titania' },
-  { text: 'Triton' },
-  { text: 'Umbriel' },
+  { text: 'Sport' },
+  { text: 'Education' },
+  { text: 'Hobbies' },
+  { text: 'Social', children: [{ text: 'People' }] },
+  { text: 'Informative' },
+  { text: 'Travel', children: [{ text: 'Countries' }] },
+];
+
+type itemType = {
+  text: string;
+  icon?: React.ReactNode;
+  categories?: string[];
+  children?: itemType[];
+};
+
+const items: itemType[] = [
+  { text: 'Fiat Bambina', categories: ['Transport', 'Vehicle', 'Car', 'Fiat Bambina'] },
+  {
+    text: 'South Africa',
+    categories: ['Travel', 'Countries'],
+    children: [
+      {
+        text: 'Springboks',
+        categories: ['Countries', 'Sport'],
+        children: [{ text: 'Siya Kolisi', categories: ['Countries', 'Sport', 'People'] }],
+      },
+    ],
+  },
+  { text: 'item 3', categories: ['Phobos', 'Dione'] },
+  { text: 'item 4', categories: ['Pyxis', 'Callisto'] },
+  { text: 'item 5', categories: ['Dione', 'Sedna'] },
+  { text: 'item 6', categories: ['Triton', 'Umbriel'] },
+  { text: 'item 7', categories: ['Phobos', 'Pyxis'] },
+  { text: 'item 8', categories: ['Sedna', 'Dione'] },
+  { text: 'item 9', categories: ['Callisto', 'Childs Childs Child 1'] },
+  { text: 'item 10', categories: ['Phobos', 'Callisto'] },
 ];
 
 const ComplexFilterDemo = () => {
   const [selectedKey, setSelectedKey] = useState('');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [currentFilters, setCurrentFilters] = useState([]);
-  const [updating, setUpdating] = useState(false);
   const [deleteing, setDeleteing] = useState(false);
-  let newOptions: itemType[] = _.clone(options);
-  const [filteredOptions, setFilteredOptions] = useState(newOptions);
-
-  // TODO get this functioning. When search enabled, only results that match are in the menu
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-  //   event.preventDefault;
-  //   const found = options.map((option) => {
-  //     if (option.text.toLowerCase().includes(event.target.value.toLowerCase())) {
-  //       return option;
-  //     }
-  //   });
-  //   setSearchableOptions(
-  //     found.filter((element) => {
-  //       return element !== undefined;
-  //     }),
-  //   );
-  //   console.log('event.target.value: ', event.target.value);
-  // };
-
-  // TODO get this functioning. Same as above
-  // const handleSearchSubmit = (e: any) => {
-  //   e.preventDefault;
-  //   console.log('Hi');
-  // };
+  let newItems: itemType[] = [];
+  const [filteredOptions, setFilteredOptions] = useState(_.clone(items));
 
   const handleSelected = (event: React.MouseEvent<HTMLLIElement>, key: string) => {
     // adds the new filter to the filters array
@@ -74,7 +75,7 @@ const ComplexFilterDemo = () => {
 
   const handleClear = () => {
     setCurrentFilters([]);
-    setFilteredOptions(_.clone(options));
+    setFilteredOptions(_.clone(items));
   };
 
   // removes filter when Chip deleted
@@ -104,38 +105,26 @@ const ComplexFilterDemo = () => {
   // useEffect(() => console.log(curentItems), [currentItems]);
 
   // maps through returned items to list
-  async function mapItems(item: itemType[]) {
+  async function mapItems(items: itemType[]) {
     // sets object to be filtered
-    newOptions = _.clone(item);
+    let newOptions = _.clone(items);
+    let tempOption = null;
     // maps new object
-    newOptions.map((option, key) => (
-      <>
-        {/* if object exists in filter, adds to array */}
-        {currentFilters.includes(option.text) ? setFilteredOptions([...filteredOptions, option]) : null}
-        {option.children ? mapItems(option.children) : null}
-      </>
-    ));
+    newOptions.map((option, key) => {
+      option.children ? mapItems(option.children) : null;
+      option.categories.map((category) => {
+        /* if object exists in filter, adds to array */
+        currentFilters.includes(category) ? <>{newItems.push(option)}</> : null;
+      });
+    });
   }
 
-  // Performs whenever currentFilters state is updated.
   useEffect(() => {
-    setTimeout(() => {
-      console.log('giving it time');
-    }, 200);
-    // checks there is a filter
-    if (currentFilters.length === 1) {
-      /* clears array to then add filters */
-      setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
-      mapItems(options);
-    } else if (currentFilters.length === 0) {
-      // returns all when no filter
-      setFilteredOptions(_.clone(options));
-    } else if (currentFilters.length < 0 && deleteing) {
-      setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
-      mapItems(options);
-      setDeleteing(false);
+    setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
+    if (currentFilters.length === 0) {
+      setFilteredOptions(_.clone(items));
     } else {
-      mapItems(options);
+      mapItems(items).then(() => setFilteredOptions(_.clone(newItems)));
     }
   }, [currentFilters]);
 
