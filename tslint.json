@@ -1,6 +1,6 @@
 {
   "extends": ["tslint:recommended", "tslint-config-prettier"],
   "linterOptions": {
-    "exclude": ["src/components/ComplexFilterOriginal*.d.ts", "src/components/PComplexFilter*.d.ts"]
+    "exclude": ["src/components/ComplexFilterOriginal*.ts*", "src/components/PComplexFilter*.ts*"]
   }
 }
