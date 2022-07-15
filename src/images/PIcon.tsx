@@ -22,6 +22,7 @@ import LogoutIcon from './icons/logout';
 import ClockIcon from './icons/clock';
 import ChevronDownIcon from './icons/chevronDown';
 import ChevronUpIcon from './icons/chevronUp';
+import FilterIcon from './icons/filterIcon';
 
 export const customIconMap = {
   searchIcon: SearchIcon,
@@ -46,6 +47,7 @@ export const customIconMap = {
   clockIcon: ClockIcon,
   chevronDownIcon: ChevronDownIcon,
   chevronUpIcon: ChevronUpIcon,
+  filterIcon: FilterIcon,
 };
 export const PIcon = ({
   name,

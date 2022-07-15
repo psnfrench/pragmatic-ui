@@ -249,6 +249,17 @@ export const createPragmaticTheme = ({
               },
             },
           },
+          MuiTooltip: {
+            styleOverrides: {
+              tooltip: {
+                color: Colors.text.primary,
+                backgroundColor: '#BDBDBD',
+              },
+              arrow: {
+                color: '#BDBDBD',
+              },
+            },
+          },
           MuiListItemButton: {
             styleOverrides: {
               root: {
