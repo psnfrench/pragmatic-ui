@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Button,
   ButtonProps,
@@ -84,7 +83,7 @@ export function PComplexFilter({
   selectVariant = 'single',
   title,
   icon = <PIcon name="filterIcon" />,
-  label = 'Options',
+  label = 'Filter',
   itemHeight = 40,
   maxItems = 10.5,
   handleSelected,
@@ -102,7 +101,6 @@ export function PComplexFilter({
 }: PComplexFilterProps) {
   const open = Boolean(anchorEl);
   const [opened, setOpened] = useState(false);
-  const [searching, setSearching] = useState(false);
   const [currentItems, setCurrentItems] = useState<menuItemType[]>(_.clone(items));
   const [filteredItems, setFilteredItems] = useState<menuItemType[]>(_.clone(currentItems));
   const [currentTitle, setCurrentTitle] = useState(title);
@@ -251,8 +249,8 @@ export function PComplexFilter({
                       {...listItemProps}
                     >
                       {currentFilters && setCurrentFilters && currentFilters.includes(item.text) ? (
-                        <Box display="flex" flexDirection="row">
-                          {item.icon}
+                        <Box display="flex" flexDirection="row" alignItems="center">
+                          {item.icon && <Box paddingRight={1}>{item.icon}</Box>}
                           {item.text}
                           <Button
                             sx={{

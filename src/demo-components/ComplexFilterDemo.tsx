@@ -13,7 +13,7 @@ const options: menuItemType[] = [
       { text: 'Bike' },
     ],
   },
-  { text: 'Sport' },
+  { text: 'Sport', icon: <PIcon name="addIcon" /> },
   { text: 'Education' },
   { text: 'Hobbies' },
   { text: 'Social', children: [{ text: 'People' }] },
@@ -55,7 +55,6 @@ const ComplexFilterDemo = () => {
   const [selectedKey, setSelectedKey] = useState('');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [currentFilters, setCurrentFilters] = useState([]);
-  const [deleteing, setDeleteing] = useState(false);
   let newItems: itemType[] = [];
   const [filteredOptions, setFilteredOptions] = useState(_.clone(items));
 
@@ -79,7 +78,6 @@ const ComplexFilterDemo = () => {
 
   // removes filter when Chip deleted
   const handleDelete = (filter: string) => {
-    setDeleteing(true);
     setCurrentFilters((prev) => prev.filter((i) => i !== filter));
   };
 
