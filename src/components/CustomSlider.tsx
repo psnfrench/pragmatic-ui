@@ -31,7 +31,7 @@ export type CustomSliderProps = {
 export type CustomSliderItem = {
   headerText?: string;
   bodyText?: string;
-  image: React.FC<{}>;
+  image: React.ReactNode;
   headerColor?: string;
   bodyColor?: string;
   headerVariant?: TypographyTypeMap['props']['variant'];
@@ -55,25 +55,27 @@ export const CustomSlider = ({ items, children, ...otherProps }: CustomSliderPro
 
   return (
     <Slider {...updatedSettings}>
-      {items.map((item, key) => (
-        <StyledBox
-          key={key}
-          className="sliderContainer"
-          sx={{ marginTop: '260px', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
-        >
-          <StyledBox className="imageSlider" marginBottom={4}>
-            <item.image />
+      {items.map((item, key) => {
+        return (
+          <StyledBox
+            key={key}
+            className="sliderContainer"
+            sx={{ marginTop: '260px', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}
+          >
+            <StyledBox className="imageSlider" marginBottom={4}>
+              {item.image}
+            </StyledBox>
+            <StyledBox className="textSlider">
+              <Typography color={item.headerColor} variant={item.headerVariant} marginBottom={3.5}>
+                {item.headerText}
+              </Typography>
+              <Typography color={item.bodyColor} variant={item.bodyVariant}>
+                {item.bodyText}
+              </Typography>
+            </StyledBox>
           </StyledBox>
-          <StyledBox className="textSlider">
-            <Typography color={item.headerColor} variant={item.headerVariant} marginBottom={3.5}>
-              {item.headerText}
-            </Typography>
-            <Typography color={item.bodyColor} variant={item.bodyVariant}>
-              {item.bodyText}
-            </Typography>
-          </StyledBox>
-        </StyledBox>
-      ))}
+        );
+      })}
     </Slider>
   );
 };
