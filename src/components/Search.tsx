@@ -41,6 +41,7 @@ export const Search = ({ onChange, placeholder, ...otherProps }: SearchProps) =>
         disableUnderline: true,
         startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
         className: 'inputRoot',
+        placeholder: placeholder,
         ...otherProps.InputProps,
       }}
       {...otherProps}
