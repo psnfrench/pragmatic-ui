@@ -19,10 +19,10 @@ export type SearchProps = {
     | Required<Pick<TextFieldProps, 'onChange'>>
     | React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
     | React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-  placeholder?: string;
+  placeholderText?: string;
 } & TextFieldProps;
 
-export const Search = ({ onChange, placeholder, ...otherProps }: SearchProps) => {
+export const Search = ({ onChange, placeholderText, ...otherProps }: SearchProps) => {
   const [searchValue, setSearchValue] = useState('');
   const delayedQuery = useMemo(() => debounce(onChange, 500), [onChange]);
   // const classes = useStyles();
@@ -41,7 +41,7 @@ export const Search = ({ onChange, placeholder, ...otherProps }: SearchProps) =>
         disableUnderline: true,
         startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
         className: 'inputRoot',
-        placeholder: placeholder,
+        placeholder: placeholderText,
         ...otherProps.InputProps,
       }}
       {...otherProps}

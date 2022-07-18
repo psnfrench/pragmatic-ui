@@ -6,7 +6,7 @@ const SearchDemo = () => {
     console.log(event.target.value);
   };
 
-  return <Search fullWidth placeholder="Search Demo..." onChange={handleSearchChange} />;
+  return <Search fullWidth placeholderText="Search Demo..." onChange={handleSearchChange} />;
 };
 
 export default SearchDemo;
