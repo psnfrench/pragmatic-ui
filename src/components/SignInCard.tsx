@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, styled } from '@mui/material';
+import { Button, ButtonProps, styled, SxProps } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import useValidators from '../hooks/useValidators';
 import { PTextField } from '../components/PTextField';
@@ -15,10 +15,16 @@ export const SignInCard = ({
   onSubmit,
   onForgotPassword,
   onCreateAccount,
+  sx,
+  signInButtonProps,
+  createButtonProps,
 }: {
   onSubmit: (values: LoginFormValues, formikHelpers: FormikHelpers<LoginFormValues>) => void;
   onForgotPassword?: (email: string) => void;
   onCreateAccount?: () => void;
+  sx?: SxProps;
+  signInButtonProps?: ButtonProps;
+  createButtonProps?: ButtonProps;
 }) => {
   const { validateEmail } = useValidators();
   const initialValues: LoginFormValues = {
@@ -41,7 +47,7 @@ export const SignInCard = ({
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit} validateOnMount={true}>
       {({ values, handleSubmit, isSubmitting, isValid }) => {
         return (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} sx={sx}>
             <PTextField label="Email Address" type="email" name="email" fullWidth />
             <PasswordInput label="Password" name="password" fullWidth BoxProps={{ marginBottom: 0.5 }} />
             {onForgotPassword ? (
@@ -54,11 +60,12 @@ export const SignInCard = ({
               variant="contained"
               type="submit"
               disabled={!isValid || isSubmitting}
+              {...signInButtonProps}
             >
               Sign In
             </Button>
             {onCreateAccount ? (
-              <Button fullWidth variant="contained" color="secondary" onClick={onCreateAccount}>
+              <Button fullWidth variant="contained" color="secondary" onClick={onCreateAccount} {...createButtonProps}>
                 Create New Account
               </Button>
             ) : null}

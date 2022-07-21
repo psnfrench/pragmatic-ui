@@ -20,3 +20,4 @@ export * from './context/snackbar';
 export * from './context/confirmation';
 export * from './constants/Colors';
 export * from './constants/theme';
+export { default as useOnTabClose } from './hooks/useOnTabClose';
