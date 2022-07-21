@@ -7,7 +7,6 @@ const StyledBox = styled(Box)(() => ({
     width: '100%',
     height: '100vh',
     minHeight: '1040px',
-    background: '#4938A6',
     position: 'relative',
   },
   '& .imageTopLeft': {
@@ -20,10 +19,12 @@ const StyledBox = styled(Box)(() => ({
     right: '0px',
   },
   '& .imageBottomLeft': {
+    marginBottom: '-4px',
     position: 'absolute',
     bottom: '0px',
   },
   '& .imageBottomRight': {
+    marginBottom: '-4px',
     position: 'absolute',
     bottom: '0px',
     right: '0px',
