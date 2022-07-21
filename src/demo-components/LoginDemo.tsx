@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
-import { FormikHelpers } from 'formik';
+import { FormikHelpers, useFormikContext } from 'formik';
 import { SignInCard, LoginFormValues } from '../components/SignInCard';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/user';
@@ -10,6 +10,7 @@ import OnBoardingCarosel from '../components/OnBoardingCarosel';
 import OrchidLogo from '../images/OrchidLogo';
 import { items } from '../constants/CarouselItems';
 import { Colors } from '../constants/Colors';
+import RightLink from '../components/RightLink';
 const ImageTopLeft = require('../images/background_img_top_left.png');
 const ImageTopRight = require('../images/background_img_top_right.png');
 const ImageBottomRight = require('../images/background_img_bottom_right.png');
@@ -24,6 +25,7 @@ const LoginDemo = () => {
   const { showConfirmationModal, setOpenId } = useContext(ConfirmationServiceContext);
 
   const handleLogin = (values: LoginFormValues, { setSubmitting }: FormikHelpers<LoginFormValues>) => {
+    console.log('values: ', values);
     saveUser(values);
     setSubmitting(false);
   };
@@ -106,12 +108,18 @@ const LoginDemo = () => {
                 </Typography>
                 <SignInCard
                   onSubmit={handleLogin}
-                  onForgotPassword={handleForgotPassword}
                   onCreateAccount={handleCreateAccount}
+                  showStaySignedIn={true}
                   sx={{ backgroundColor: Colors.secondary.main, borderRadius: 0 }}
                   signInButtonProps={{ color: 'info' }}
                   createButtonProps={{ color: 'primary' }}
-                />
+                  signInRowProps={{ sx: { mt: 0, mb: 1.5 } }}
+                >
+                  <Typography variant="body1" marginBottom={4}>
+                    Custom content inside the card
+                  </Typography>
+                  <CustomForgotLink />
+                </SignInCard>
               </>
             )}
           </Box>
@@ -128,6 +136,14 @@ const LoginDemo = () => {
       </Box>
     </div>
   );
+};
+
+const CustomForgotLink = () => {
+  const { values } = useFormikContext<LoginFormValues>();
+  const handleClick = () => {
+    console.log('current email value is: ', values.email);
+  };
+  return <RightLink label="Forgot My password" onClick={handleClick} />;
 };
 
 export default LoginDemo;
