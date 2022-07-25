@@ -108,8 +108,18 @@ export const SideBar = ({
 
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpenState);
+  const [closed, setClosed] = useState(!defaultOpenState);
   const toggleOpen = () => {
-    collapsible ? setOpen((prev) => !prev) : setOpen((prev) => prev);
+    if (collapsible) {
+      setOpen((prev) => !prev);
+      if (!closed) {
+        setTimeout(() => {
+          setClosed((prev) => !prev);
+        }, 200);
+      } else {
+        setClosed((prev) => !prev);
+      }
+    }
   };
 
   const handleItemClick = (item: SideBarItem) => {
@@ -131,9 +141,9 @@ export const SideBar = ({
             transition: '1s',
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none' }}>
+          <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', padding: 'none' }}>
             {open ? (
-              <>
+              <Box display="flex" flex={1} flexDirection="column">
                 <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
                   {collapsible && (
                     <>
@@ -143,7 +153,7 @@ export const SideBar = ({
                   )}
                 </Box>
                 {logoExpanded}
-              </>
+              </Box>
             ) : (
               <Tooltip title={<ChevronRight />} arrow placement="top">
                 <Box display="flex" flexDirection="column" justifyContent="center">
@@ -174,7 +184,7 @@ export const SideBar = ({
             <ListItem disablePadding>
               <ListItemButton
                 sx={{
-                  justifyContent: open ? 'initial' : 'center',
+                  justifyContent: !closed ? 'initial' : 'center',
                   px: 2.5,
                   borderRadius: 0.5,
                 }}
@@ -191,7 +201,7 @@ export const SideBar = ({
                       {item.text}
                     </Typography>
                   }
-                  sx={{ display: open ? 'block' : 'none', ml: 3 }}
+                  sx={{ display: open ? 'block' : 'none', margin: 0, ml: 3 }}
                 />
               </ListItemButton>
             </ListItem>
