@@ -19,9 +19,11 @@ import {
 } from '@mui/material';
 import { Search } from './Search';
 import { useEffect, useState } from 'react';
-import { Cancel, ChevronLeft, ChevronRight } from '@mui/icons-material';
-import _ from 'lodash';
+import { Cancel, ChevronLeft, ChevronRight, SignalWifiStatusbarNull } from '@mui/icons-material';
 import PIcon from '../images/PIcon';
+import { forEach } from 'lodash';
+import _ from 'lodash';
+
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -45,13 +47,9 @@ export type menuItemType = {
   children?: menuItemType[];
 };
 
-const StyledMenu = styled(Button)(({ theme }) => ({
-  margin: `${theme.spacing(1)} 0 ${theme.spacing(1)} 0`,
-}));
-
 export type PComplexFilterProps = {
   items: menuItemType[];
-  selectedItem?: string;
+  selectedItem?: menuItemType;
   setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
   anchorEl: HTMLElement | null;
   selectVariant?: 'single' | 'multiple';
@@ -60,10 +58,10 @@ export type PComplexFilterProps = {
   label?: string;
   itemHeight?: number;
   maxItems?: number;
-  handleSelected: (event: React.MouseEvent<HTMLLIElement>, item: string) => void;
+  handleSelected: (event: React.MouseEvent<HTMLLIElement>, item?: menuItemType, parent?: menuItemType) => void;
   searchable?: boolean;
-  currentFilters?: string[];
-  setCurrentFilters?: React.Dispatch<React.SetStateAction<string[]>>;
+  currentFilters?: menuItemType[];
+  setCurrentFilters?: React.Dispatch<React.SetStateAction<any[]>>;
   buttonProps?: ButtonProps;
   backButton?: React.ReactNode;
   backButtonProps?: ButtonProps;
@@ -72,10 +70,11 @@ export type PComplexFilterProps = {
   paperProps?: PaperProps;
   listProps?: ListProps;
   listItemProps?: ListItemProps;
+  placeholderText?: string;
   searchProps?: Omit<TextFieldProps, 'InputProps'>;
 };
 
-export function PComplexFilter({
+export function PComplexFilterV2({
   items = options,
   selectedItem,
   anchorEl,
@@ -97,17 +96,18 @@ export function PComplexFilter({
   popperProps,
   paperProps,
   listItemProps,
+  placeholderText,
   searchProps,
 }: PComplexFilterProps) {
   const open = Boolean(anchorEl);
   const [opened, setOpened] = useState(false);
-  const [currentItems, setCurrentItems] = useState<menuItemType[]>(_.clone(items));
-  const [filteredItems, setFilteredItems] = useState<menuItemType[]>(_.clone(currentItems));
+  const [currentItems, setCurrentItems] = useState<menuItemType[]>([...items]);
+  const [filteredItems, setFilteredItems] = useState<menuItemType[]>([...currentItems]);
   const [currentTitle, setCurrentTitle] = useState(title);
   const [currentTitles, setCurrentTitles] = useState([title]);
-  const history: any[] = [items];
-  const [itemsHistory, setItemsHistory] = useState(history);
+  const [itemsHistory, setItemsHistory] = useState([items]);
   const [back, setBack] = useState(false);
+  const [parent, setParent] = useState<menuItemType>();
 
   const handleClick = (event: any) => {
     setOpened(!opened);
@@ -127,11 +127,12 @@ export function PComplexFilter({
     setCurrentItems([...items]);
     setFilteredItems([...currentItems]);
     setItemsHistory([items]);
+    console.log('items: ', currentItems);
   };
 
   const handleSelectedInit = (event: React.MouseEvent<HTMLLIElement>, item: menuItemType) => {
-    if (currentFilters?.includes(item.text) && setCurrentFilters) {
-      setCurrentFilters((prev) => prev.filter((i) => i !== item.text));
+    if (currentFilters?.includes(item) && setCurrentFilters) {
+      setCurrentFilters((prev) => prev.filter((i) => i !== item));
       selectedItem = undefined;
     } else if (item.children && item.children.length > 0) {
       setCurrentTitles((prev) => [...prev, item.text]);
@@ -139,10 +140,58 @@ export function PComplexFilter({
       setItemsHistory([...itemsHistory, item.children]);
       setCurrentTitle(item.text);
       setBack(true);
+      if (itemsHistory.length === 1) {
+        let newItem = _.cloneDeep(item);
+        // newItem.children.filter(function (value) {
+        //   return value.text !== item.text;
+        // });
+        // newItem.children.splice(0, item.children.length);
+        setParent(newItem);
+      } else {
+        const newParent = _.cloneDeep(parent);
+        if (newParent.children.length > 0) {
+          recursive(newParent, item);
+          for (var i = 0; i < newParent.children.length; i++) {
+            if (newParent.children[i].text !== item.text) {
+              newParent.children.splice(i, 1);
+            }
+          }
+          console.log('newParent: ', newParent);
+        } else {
+          newParent.children.push(item);
+        }
+        setParent(newParent);
+      }
     } else {
-      handleSelected(event, item.text);
+      handleSelected(event, item, parent);
     }
   };
+
+  function recursive(newParent: menuItemType, item: menuItemType) {
+    if (newParent.children.length > 0) {
+      if (newParent.children[0].children) {
+        forEach(newParent.children, function (value) {
+          const node = recursive(value, item);
+          if (node)
+            return {
+              text: newParent.text,
+              icon: newParent.icon,
+              children: newParent.children,
+            };
+        });
+      } else {
+        for (var i = 0; i < newParent.children.length; i++) {
+          if (newParent.children[i].text !== item.text) {
+            newParent.children.splice(i, 1);
+          }
+        }
+      }
+
+      console.log('newParent: ', newParent);
+    } else {
+      return undefined;
+    }
+  }
 
   function handleBack() {
     if (currentTitles && currentTitles.length > 0) {
@@ -158,13 +207,12 @@ export function PComplexFilter({
     setCurrentItems(lastItem);
   }
 
-  function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, text: string) {
+  function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, item: menuItemType) {
     if (setCurrentFilters) {
-      setCurrentFilters((prev) => prev.filter((i) => i !== text));
+      setCurrentFilters((prev) => prev.filter((i) => i !== item));
     }
   }
 
-  // TODO get this functioning. When search enabled, only results that match are in the menu
   const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     let foundArray = currentItems.map((item) => mapFind(item, event.target.value));
     foundArray = foundArray.filter((element) => {
@@ -221,7 +269,7 @@ export function PComplexFilter({
             ) : null}
             {searchable ? (
               <Box sx={{ paddingLeft: 2, paddingRight: 2 }}>
-                <Search fullWidth onChange={handleSearchChange} {...searchProps} />
+                <Search fullWidth onChange={handleSearchChange} placeholderText={placeholderText} />
               </Box>
             ) : null}
             {filteredItems.length > 0 ? (
@@ -237,13 +285,13 @@ export function PComplexFilter({
                       sx={{ height: itemHeight, width: '100%' }}
                       key={item.text}
                       selected={
-                        (currentFilters && currentFilters.includes(item.text)) ||
-                        (selectVariant === 'single' && item.text === selectedItem)
+                        (currentFilters && currentFilters.includes(item)) ||
+                        (selectVariant === 'single' && item === selectedItem)
                       }
                       onClick={(event) => handleSelectedInit(event, item)}
                       {...listItemProps}
                     >
-                      {currentFilters && setCurrentFilters && currentFilters.includes(item.text) ? (
+                      {currentFilters && setCurrentFilters && currentFilters.includes(item) ? (
                         <Box display="flex" flexDirection="row" alignItems="center">
                           {item.icon && <Box paddingRight={1}>{item.icon}</Box>}
                           {item.text}
@@ -253,7 +301,7 @@ export function PComplexFilter({
                               position: 'absolute',
                               right: 0,
                             }}
-                            onClick={(event) => handleDelete(event, item.text)}
+                            onClick={(event) => handleDelete(event, item)}
                           >
                             <Cancel />
                           </Button>

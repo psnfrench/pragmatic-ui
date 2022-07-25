@@ -40,6 +40,7 @@ export type SideBarProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
+  closedDrawerWidth: number;
 };
 
 const drawerWidth = 340;
@@ -59,9 +60,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 10px)`,
+  width: `calc(90px)`,
   [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 10px)`,
+    width: `100px`,
   },
 });
 
@@ -92,6 +93,7 @@ export const SideBar = ({
   textVariant = 'subtitle2',
   collapsible = true,
   textSX,
+  closedDrawerWidth,
 }: SideBarProps) => {
   useEffect(() => {
     let active = true;
@@ -129,7 +131,7 @@ export const SideBar = ({
             transition: '1s',
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none', width: '100%' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none', flex: 1 }}>
             {open ? (
               <>
                 <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
@@ -144,7 +146,9 @@ export const SideBar = ({
               </>
             ) : (
               <Tooltip title={<ChevronRight />} arrow placement="top">
-                <Box>{logoCollapsed}</Box>
+                <Box display="flex" flex={1} justifyContent="center">
+                  {logoCollapsed}
+                </Box>
               </Tooltip>
             )}
           </Box>
@@ -185,7 +189,7 @@ export const SideBar = ({
           </React.Fragment>
         ))}
       </List>
-      <Box sx={{ flex: 1, alignItems: 'flex-end', display: 'flex' }}>{open ? children : childrenCollapsed}</Box>
+      <Box sx={{ display: 'flex', flex: 1, alignItems: 'flex-end' }}>{open ? children : childrenCollapsed}</Box>
     </Drawer>
   );
 };
