@@ -60,7 +60,7 @@ export type PComplexFilterProps = {
   label?: string;
   itemHeight?: number;
   maxItems?: number;
-  handleSelected: (event: React.MouseEvent<HTMLLIElement>, item: string) => void;
+  handleSelected: (event: React.MouseEvent<HTMLLIElement>, item: string, parentMenuItemType?: menuItemType) => void;
   searchable?: boolean;
   currentFilters?: string[];
   setCurrentFilters?: React.Dispatch<React.SetStateAction<string[]>>;
@@ -140,7 +140,7 @@ export function PComplexFilter({
       setCurrentTitle(item.text);
       setBack(true);
     } else {
-      handleSelected(event, item.text);
+      handleSelected(event, item.text, itemsHistory[itemsHistory.length - 2]);
     }
   };
 

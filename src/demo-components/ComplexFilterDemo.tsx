@@ -54,11 +54,12 @@ const items: itemType[] = [
 const ComplexFilterDemo = () => {
   const [selectedKey, setSelectedKey] = useState('');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currentFilters, setCurrentFilters] = useState([]);
+  const [currentFilters, setCurrentFilters] = useState<string[]>([]);
   let newItems: itemType[] = [];
   const [filteredOptions, setFilteredOptions] = useState(_.clone(items));
 
-  const handleSelected = (event: React.MouseEvent<HTMLLIElement>, key: string) => {
+  const handleSelected = (event: React.MouseEvent<HTMLLIElement>, key: string, parentMenuItemType?: menuItemType) => {
+    console.log('parentMenuItemType: ', parentMenuItemType);
     // adds the new filter to the filters array
     setCurrentFilters((currentFilters) => [...currentFilters, key]);
     // sets the selected key
