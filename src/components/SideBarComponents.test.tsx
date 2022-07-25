@@ -66,11 +66,6 @@ describe('Togggling the collapsed state', () => {
     const collapsedSvg: HTMLElement = screen.queryByTestId('collapsedSvg');
     const expandedSvg: HTMLElement = screen.queryByTestId('expandedSvg');
     const link1: HTMLElement = screen.queryByTestId('link1');
-    const link2: HTMLElement = screen.queryByTestId('link2');
-    const link3: HTMLElement = screen.queryByTestId('link3');
-    const link4: HTMLElement = screen.queryByTestId('link4');
-    const link5: HTMLElement = screen.queryByTestId('link5');
-    const link6: HTMLElement = screen.queryByTestId('link6');
 
     expect(expandedSvg).toBeInTheDocument();
     expect(collapsedSvg).not.toBeInTheDocument();
@@ -87,16 +82,6 @@ describe('Togggling the collapsed state', () => {
 
     await waitFor(() => {
       expect(handleSubmitMock).toHaveBeenCalledTimes(1);
-    });
-
-    userEvent.click(link2);
-    userEvent.click(link3);
-    userEvent.click(link4);
-    userEvent.click(link5);
-    userEvent.click(link6);
-
-    await waitFor(() => {
-      expect(handleSubmitMock).toHaveBeenCalledTimes(6);
     });
   });
 });
