@@ -19,6 +19,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import React, { useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
 
@@ -35,12 +36,12 @@ export type SideBarProps = {
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
   collapsible?: boolean;
+  expandHint?: boolean;
   defaultOpen?: boolean;
   children?: React.ReactNode;
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
-  closedDrawerWidth: number;
 };
 
 const drawerWidth = 340;
@@ -92,8 +93,8 @@ export const SideBar = ({
   selectedMenuKey,
   textVariant = 'subtitle2',
   collapsible = true,
+  expandHint = false,
   textSX,
-  closedDrawerWidth,
 }: SideBarProps) => {
   useEffect(() => {
     let active = true;
@@ -126,18 +127,17 @@ export const SideBar = ({
           sx={{
             minHeight: 140,
             justifyContent: open ? 'initial' : 'center',
-            px: 0.5,
             borderRadius: 1,
             transition: '1s',
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none', flex: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', padding: 'none' }}>
             {open ? (
               <>
                 <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
                   {collapsible && (
                     <>
-                      <ChevronLeftIcon />
+                      <ChevronLeftIcon sx={{ marginRight: '-9px' }} />
                       <MenuIcon />
                     </>
                   )}
@@ -146,7 +146,22 @@ export const SideBar = ({
               </>
             ) : (
               <Tooltip title={<ChevronRight />} arrow placement="top">
-                <Box display="flex" flex={1} justifyContent="center">
+                <Box display="flex" flexDirection="column" justifyContent="center">
+                  {expandHint ? (
+                    <Box
+                      display="flex"
+                      flex={1}
+                      position="absolute"
+                      top="0px"
+                      left="auto"
+                      right="auto"
+                      justifyContent="center"
+                      color={Colors.greyscale.light}
+                    >
+                      <MenuIcon sx={{ marginRight: '-4.5px' }} />
+                      <ChevronRightIcon sx={{ marginLeft: '-4.5px' }} />
+                    </Box>
+                  ) : null}
                   {logoCollapsed}
                 </Box>
               </Tooltip>

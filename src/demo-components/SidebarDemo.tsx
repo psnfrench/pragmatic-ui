@@ -77,6 +77,7 @@ const SidebarDemo = () => {
       selectedMenuKey={selectedMenuKey}
       textVariant="body2"
       textSX={[{ color: 'black' }]}
+      expandHint
     >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>
