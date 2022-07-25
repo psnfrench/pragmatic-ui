@@ -149,7 +149,7 @@ export function PComplexFilter({
       currentTitles.pop();
       const last = currentTitles[currentTitles.length - 1];
       setCurrentTitle(last);
-      currentTitles.at(-1) == title ? setBack(false) : null;
+      currentTitles.at(-1) === title ? setBack(false) : null;
     } else {
       setCurrentTitle(title);
     }
