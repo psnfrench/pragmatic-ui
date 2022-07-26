@@ -82,8 +82,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 }));
 
-const defaultOpenState: boolean = true;
-
 export const SideBar = ({
   items,
   logoCollapsed,
@@ -95,6 +93,7 @@ export const SideBar = ({
   collapsible = true,
   expandHint = false,
   textSX,
+  defaultOpen = true,
 }: SideBarProps) => {
   useEffect(() => {
     let active = true;
@@ -107,8 +106,8 @@ export const SideBar = ({
   }, [selectedMenuKey]);
 
   const [selectedKey, setSelectedKey] = useState<string>();
-  const [open, setOpen] = useState(defaultOpenState);
-  const [closed, setClosed] = useState(!defaultOpenState);
+  const [open, setOpen] = useState(defaultOpen);
+  const [closed, setClosed] = useState(!defaultOpen);
   const toggleOpen = () => {
     if (collapsible) {
       setOpen((prev) => !prev);
