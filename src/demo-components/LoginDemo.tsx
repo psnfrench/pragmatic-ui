@@ -114,6 +114,7 @@ const LoginDemo = () => {
                   signInButtonProps={{ color: 'info' }}
                   createButtonProps={{ color: 'primary' }}
                   signInRowProps={{ sx: { mt: 0, mb: 1.5 } }}
+                  inputVariant="outlined"
                 >
                   <Typography variant="body1" marginBottom={4}>
                     Custom content inside the card
