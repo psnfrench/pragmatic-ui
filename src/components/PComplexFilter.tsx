@@ -139,7 +139,7 @@ export function PComplexFilter({
   const [itemsHistory, setItemsHistory] = useState(history);
   const [back, setBack] = useState(false);
   const [parent, setParent] = useState<menuItemType>();
-  let valid = areChildrenOK(items);
+  const valid = areChildrenOK(items);
 
   // triggers when filter button pressed. Opens/closes poppers
   const handleClick = (event: any) => {
@@ -168,7 +168,7 @@ export function PComplexFilter({
     if (index === currentIndex) {
       handleChipClose(index);
     } else if (anchorEl) {
-      handleClose;
+      handleClose();
     } else {
       setAnchorElFilter(event.currentTarget);
       setCurrentIndex(index);
@@ -186,35 +186,37 @@ export function PComplexFilter({
   };
 
   // handles when a menu item is selected
-  const handleSelected = (item: menuItemType, parent?: menuItemType) => {
+  const handleSelected = (item: menuItemType, menuParent?: menuItemType) => {
     // if item already selected, deselects item
     if (item.selected) {
       item.selected = false;
       // checks parent contains no selected items
       const empty =
-        parent &&
-        parent.children &&
-        parent.children.map((child) => {
+        menuParent &&
+        menuParent.children &&
+        menuParent.children.map((child) => {
           if (child.selected) {
             return true;
           }
           return false;
         });
-      //if parent empty, remove from array
+      // if parent empty, remove from array
       if (empty?.includes(true) === false) {
-        if (currentFilters && parent && currentFilters.includes(parent)) {
-          const newState = currentFilters.filter((item) => {
-            return item.text !== parent.text;
+        if (currentFilters && menuParent && currentFilters.includes(menuParent)) {
+          const newState = currentFilters.filter((menu) => {
+            return menu.text !== menuParent.text;
           });
-          setCurrentFilters && setCurrentFilters(newState);
+          if (setCurrentFilters) {
+            setCurrentFilters(newState);
+          }
         }
       } else {
         // if not empty, sets current filter to deselected
-        parent &&
-          setCurrentFilters &&
+        if (menuParent && setCurrentFilters) {
           setCurrentFilters((prev) =>
-            prev.map((filter) => (filter.text === parent.text ? (filter = parent) : (filter = filter))),
+            prev.map((filter) => (filter.text === menuParent.text ? (filter = menuParent) : (filter = filter))),
           );
+        }
       }
       // if item has children
     } else if (item.children && item.children.length > 0) {
@@ -233,22 +235,24 @@ export function PComplexFilter({
     } else {
       // selects item
       item.selected = true;
-      if (parent) {
+      if (menuParent) {
         // if parent exists in current filters, alters parent
-        if (currentFilters && currentFilters.includes(parent)) {
+        if (currentFilters && currentFilters.includes(menuParent)) {
           const newState: menuItemType[] = currentFilters.map((filter) => {
-            if (filter.text === parent.text) {
-              return parent;
+            if (filter.text === menuParent.text) {
+              return menuParent;
             }
             return filter;
           });
-          setCurrentFilters && setCurrentFilters(newState);
+          if (setCurrentFilters) {
+            setCurrentFilters(newState);
+          }
           // if parent not exist, add to filters
         } else {
-          setCurrentFilters && setCurrentFilters((prev) => [...prev, parent]);
+          if (setCurrentFilters) {
+            setCurrentFilters((prev) => [...prev, menuParent]);
+          }
         }
-      } else {
-        console.log('no parent');
       }
     }
   };
@@ -271,10 +275,10 @@ export function PComplexFilter({
   // handles the search event and returns all current items that include the search term
   const handleSearchChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    items?: menuItemType[],
+    menus?: menuItemType[],
   ) => {
-    if (items) {
-      let foundArray = items.map((item) => mapFind(item, event.target.value.toLowerCase()));
+    if (menus) {
+      let foundArray = menus.map((item) => mapFind(item, event.target.value.toLowerCase()));
       foundArray = foundArray.filter((element) => {
         return element.text !== 'not found';
       });
@@ -296,7 +300,9 @@ export function PComplexFilter({
 
   // clears all filters
   const handleClear = () => {
-    setCurrentFilters && setCurrentFilters([]);
+    if (setCurrentFilters) {
+      setCurrentFilters([]);
+    }
     deSelect(items);
     handleClose();
     setAnchorElFilter(null);
@@ -311,8 +317,12 @@ export function PComplexFilter({
 
   // removes filter when Chip deleted
   const handleChipDelete = (filter: menuItemType) => {
-    setCurrentFilters && setCurrentFilters((prev: menuItemType[]) => prev.filter((i) => i.text !== filter.text));
-    filter.children && deSelect(filter.children);
+    if (setCurrentFilters) {
+      setCurrentFilters((prev: menuItemType[]) => prev.filter((i) => i.text !== filter.text));
+    }
+    if (filter.children) {
+      deSelect(filter.children);
+    }
     handleClose();
     setAnchorElFilter(null);
   };
@@ -320,16 +330,16 @@ export function PComplexFilter({
   // creates a label for each child selected
   const formatLabel = (filter: menuItemType) => {
     let breakline = false;
-    let label = filter.text + ': ';
+    let labelString = filter.text + ': ';
     filter.children?.forEach((child) => {
       if (child.selected && !breakline) {
-        label = label + child.text;
+        labelString = labelString + child.text;
         breakline = true;
       } else if (child.selected) {
-        label = label + ', ' + child.text;
+        labelString = labelString + ', ' + child.text;
       }
     });
-    return label;
+    return labelString;
   };
 
   // shows if child is selected
@@ -361,7 +371,7 @@ export function PComplexFilter({
             <Search fullWidth onChange={handleDisplayedItemsSearch} sx={{ paddingRight: 2 }} />
           )}
         </>
-        <ClickAwayListener onClickAway={open ? handleClose : function () {}}>
+        <ClickAwayListener onClickAway={open ? handleClose : () => null}>
           <Box width="fit-content">
             <Button className="button" onClick={handleClick} {...buttonProps}>
               {icon}
