@@ -61,8 +61,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
 function areChildrenOK(children: menuItemType[]) {
   let countBranches = 0;
   let countLeaves = 0;
-  for (let i = 0; i < children.length; i++) {
-    const child = children[i];
+  for (let child of children) {
     if (child.children) {
       countBranches++;
       if (!areChildrenOK(child.children)) {
