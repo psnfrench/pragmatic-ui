@@ -23,6 +23,7 @@ import ClockIcon from './icons/clock';
 import ChevronDownIcon from './icons/chevronDown';
 import ChevronUpIcon from './icons/chevronUp';
 import FilterIcon from './icons/filterIcon';
+import CrossSmallIcon from './icons/crossSmall';
 
 export const customIconMap = {
   searchIcon: SearchIcon,
@@ -48,6 +49,7 @@ export const customIconMap = {
   chevronDownIcon: ChevronDownIcon,
   chevronUpIcon: ChevronUpIcon,
   filterIcon: FilterIcon,
+  crossSmallIcon: CrossSmallIcon,
 };
 export const PIcon = ({
   name,

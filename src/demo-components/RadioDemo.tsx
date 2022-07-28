@@ -13,6 +13,8 @@ function RadioDemo() {
       <Typography variant="h4">Radio Inputs</Typography>
       <Divider />
       <PRadioGroup formLabel="Select Gender" name="gender" radioButtons={radioButtons} />
+      <br />
+      <br />
     </Box>
   );
 }

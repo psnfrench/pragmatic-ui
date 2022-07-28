@@ -1,24 +1,53 @@
-import { Box, Chip, Divider, Typography } from '@mui/material';
-import _ from 'lodash';
+import { ChevronRight } from '@mui/icons-material';
+import { Box, Divider, Typography } from '@mui/material';
+import _, { filter } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { menuItemType, PComplexFilter } from '../components/PComplexFilter';
+import { Search } from '../components/Search';
 import PIcon from '../images/PIcon';
 
 const options: menuItemType[] = [
   {
     text: 'Transport',
+    secondary: 'Moving stuff',
     icon: <PIcon name="addIcon" />,
     children: [
-      { text: 'Vehicle', children: [{ text: 'Car', children: [{ text: 'Fiat Bambina' }] }] },
-      { text: 'Bike' },
+      {
+        text: 'Vehicle',
+        children: [{ text: 'Car' }, { text: 'Truck' }, { text: 'Ute' }],
+      },
+      {
+        text: 'Bike',
+        children: [{ text: 'Mountain Bike' }, { text: 'Downhill Bike' }, { text: 'E-Bike' }],
+      },
     ],
   },
-  { text: 'Sport', icon: <PIcon name="addIcon" /> },
-  { text: 'Education' },
-  { text: 'Hobbies' },
+  {
+    text: 'Sport',
+    children: [{ text: 'Rugby' }, { text: 'Football' }, { text: 'Basketball' }],
+  },
+  {
+    text: 'Education',
+    children: [{ text: 'Primary' }, { text: 'Secondary' }, { text: 'Tertiary' }],
+  },
+  {
+    text: 'Hobbies',
+    children: [{ text: 'Guitar' }, { text: 'Hiking' }, { text: 'Reading' }],
+  },
   { text: 'Social', children: [{ text: 'People' }] },
-  { text: 'Informative' },
-  { text: 'Travel', children: [{ text: 'Countries' }] },
+  {
+    text: 'Travel',
+    children: [
+      {
+        text: 'Countries',
+        children: [{ text: 'South Africa' }, { text: 'France' }, { text: 'New Zealand' }],
+      },
+      {
+        text: 'Activities',
+        children: [{ text: 'Mountain Biking' }, { text: 'Whale Watching' }, { text: 'Visiting Holy Sites' }],
+      },
+    ],
+  },
 ];
 
 type itemType = {
@@ -41,6 +70,20 @@ const items: itemType[] = [
       },
     ],
   },
+  {
+    text: 'New Zealand',
+    categories: ['Travel', 'Countries'],
+    children: [
+      {
+        text: 'All Blacks',
+        categories: ['Countries', 'Sport'],
+        children: [
+          { text: 'Richie McCaw', categories: ['Countries', 'Sport', 'People'] },
+          { text: 'Conrad Smith', categories: ['Countries', 'Sport', 'People'] },
+        ],
+      },
+    ],
+  },
   { text: 'item 3', categories: ['Phobos', 'Dione'] },
   { text: 'item 4', categories: ['Pyxis', 'Callisto'] },
   { text: 'item 5', categories: ['Dione', 'Sedna'] },
@@ -52,35 +95,13 @@ const items: itemType[] = [
 ];
 
 const ComplexFilterDemo = () => {
-  const [selectedKey, setSelectedKey] = useState('');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currentFilters, setCurrentFilters] = useState<string[]>([]);
+  const [currentFilters, setCurrentFilters] = useState<menuItemType[]>([]);
+  const [currentSearch, setCurrentSearch] = useState<string>();
+  const [filteredOptions, setFilteredOptions] = useState([...items]);
+  const [searchedOptions, setSearchedOptions] = useState([...items]);
   let newItems: itemType[] = [];
-  const [filteredOptions, setFilteredOptions] = useState(_.clone(items));
-
-  const handleSelected = (event: React.MouseEvent<HTMLLIElement>, key: string, parentMenuItemType?: menuItemType) => {
-    console.log('parentMenuItemType: ', parentMenuItemType);
-    // adds the new filter to the filters array
-    setCurrentFilters((currentFilters) => [...currentFilters, key]);
-    // sets the selected key
-    setSelectedKey(key);
-    // use if every time someone clicks a filter, you want the menu to go away. Remove if not wanted
-    // setAnchorEl(null);
-  };
-
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
-  };
-
-  const handleClear = () => {
-    setCurrentFilters([]);
-    setFilteredOptions(_.clone(items));
-  };
-
-  // removes filter when Chip deleted
-  const handleDelete = (filter: string) => {
-    setCurrentFilters((prev) => prev.filter((i) => i !== filter));
-  };
+  let newSearchItems: itemType[] = [];
 
   // Maps out all data including children (that are theoretically infinite)
   function displayData(item: itemType[], child?: boolean) {
@@ -100,86 +121,135 @@ const ComplexFilterDemo = () => {
     ));
   }
 
-  // maps through returned items to list
+  // Maps out all data including children (that are theoretically infinite)
+  function displayDataParent(item: itemType[], child?: boolean) {
+    return item.map((option, key) => (
+      <Box key={key} display="flex" flexDirection="column">
+        <Box display="flex" flexDirection="row">
+          {option.icon}
+          {option.text}
+          {option.children && <ChevronRight />}
+        </Box>
+      </Box>
+    ));
+  }
+
+  // maps through returned items, adds to new array
   async function mapItems(items: itemType[]) {
     // sets object to be filtered
-    let newOptions = _.clone(items);
-    let tempOption = null;
+    let newOptions = [...items];
     // maps new object
     newOptions.map((option, key) => {
       option.children ? mapItems(option.children) : null;
       option.categories.map((category) => {
         // if object exists in filter, adds to array
-        currentFilters.includes(category) ? <>{newItems.push(option)}</> : null;
+        currentFilters.forEach((filter) => {
+          filter.text === category ? newItems.push(option) : null;
+        });
+        return;
       });
     });
   }
 
+  // When currentFilters changes, resets options and rerenders options that match filter term.
   useEffect(() => {
     setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
-    if (currentFilters.length === 0) {
-      setFilteredOptions(_.clone(items));
+    if (currentFilters.length === 0 && !currentSearch) {
+      setFilteredOptions([...items]);
+      setSearchedOptions([...items]);
+    } else if (currentSearch) {
+      mapItems(items)
+        .then(() => setFilteredOptions([...newItems]))
+        .then(() => filterData([...newItems]))
+        .then(() => setSearchedOptions([...newSearchItems]));
     } else {
-      mapItems(items).then(() => setFilteredOptions(_.clone(newItems)));
+      mapItems(items)
+        .then(() => setFilteredOptions([...newItems]))
+        .then(() => setSearchedOptions([...newItems]));
     }
   }, [currentFilters]);
+
+  //When the search value changes, filters data based on filters and search term
+  useEffect(() => {
+    if (currentSearch) {
+      newSearchItems = [];
+      filterData([...filteredOptions]).then(() => setSearchedOptions([...newSearchItems]));
+    } else if (filteredOptions.length > 0) {
+      setSearchedOptions([...filteredOptions]);
+    } else {
+      setFilteredOptions([...items]);
+      setSearchedOptions([...items]);
+    }
+  }, [currentSearch]);
+
+  // Returns each object in current options that includes the search term.
+  async function filterData(options: menuItemType[]) {
+    options.forEach((option, index) => {
+      const val = option.text.toLowerCase().includes(currentSearch);
+      if (val) {
+        newSearchItems.push(option);
+      }
+    });
+  }
+
+  // alternative search filtering, iterates through all children
+  async function filterDataChildren(options: menuItemType[]) {
+    options.forEach((option, index) => {
+      if (option.children) {
+        filterData(option.children);
+      }
+      const val = option.text.toLowerCase().includes(currentSearch);
+      if (val) {
+        newSearchItems.push(option);
+      }
+    });
+  }
+
+  // sets state when search changed
+  const handleDisplayedItemsSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setCurrentSearch(event.target.value.toLowerCase());
+  };
 
   return (
     <Box>
       <>
         <Typography variant="h4">Complex Filter</Typography>
         <Divider />
-        <PComplexFilter
-          // the array that will populate the filter
-          items={options}
-          searchable={true}
-          // if included, the filter will contain a searchbar. This also handles when the search input field is altered
-          //handleSearchChange={handleSearchChange}
-          // this handles when the search is submitted (potentially irrelevant)
-          //handleSearchSubmit={handleSearchSubmit}
-          // choose between 'single' and 'multiple'. Multiple allows several options to be selected and removed, single only allows one
-          selectVariant={'multiple'}
-          // sets the title at the top of the menu
-          title={'Filter Search'}
-          // Mainly used for single, focusses on the selected item and changes color to primary.main
-          selectedItem={selectedKey}
-          // pass the function that you want to execute when one is selected
-          handleSelected={handleSelected}
-          // Having anchorEl & setAnchorEl here allows control over the popup appearing or disappearing
-          anchorEl={anchorEl}
-          setAnchorEl={setAnchorEl}
-          currentFilters={currentFilters}
-          // Populated string array of all currently selected filters
-          setCurrentFilters={setCurrentFilters}
-          // Example of sending props to the button to change its style
-          buttonProps={{ variant: 'contained', sx: { width: '130px', justifyContent: 'flex-start' } }}
-          // Example of changing the menu style
-          paperProps={{ style: { backgroundColor: 'white', left: '0px' } }}
-          // Example of changing the title
-          titleProps={{ variant: 'body1', padding: 4 }}
-          listItemProps={{ color: 'secondary' }}
-        />
+        <Box display="flex" flexDirection="row">
+          <PComplexFilter
+            // the array that will populate the filter
+            items={options}
+            searchable={true}
+            // if included, the filter will contain a searchbar. This also handles when the search input field is altered
+            //handleSearchChange={handleSearchChange}
+            // this handles when the search is submitted (potentially irrelevant)
+            //handleSearchSubmit={handleSearchSubmit}
+            // choose between 'single' and 'multiple'. Multiple allows several options to be selected and removed, single only allows one
+            selectVariant={'multiple'}
+            // sets the title at the top of the menu
+            title={'Filter Search'}
+            // Having anchorEl & setAnchorEl here allows control over the popup appearing or disappearing
+            anchorEl={anchorEl}
+            setAnchorEl={setAnchorEl}
+            currentFilters={currentFilters}
+            // Populated string array of all currently selected filters
+            setCurrentFilters={setCurrentFilters}
+            // Example of sending props to the button to change its style
+            buttonProps={{ variant: 'contained', sx: { width: '130px', justifyContent: 'flex-start' } }}
+            // Example of changing the menu style
+            paperProps={{ style: { backgroundColor: 'white', left: '0px' } }}
+            // Example of changing the title
+            titleProps={{ padding: 4 }}
+            listItemProps={{ color: 'secondary' }}
+            handleDisplayedItemsSearch={handleDisplayedItemsSearch}
+          />
+        </Box>
         <br />
         {/* Example of mapping Chips for each filter with clear button */}
-        {currentFilters.map((filter, key) => (
-          <Chip
-            key={key}
-            sx={{ marginRight: '16px' }}
-            label={filter}
-            variant="outlined"
-            onClick={handleClick}
-            onDelete={() => handleDelete(filter)}
-          />
-        ))}
-        {currentFilters.length != 0 ? (
-          <>
-            <Chip color="primary" label="Clear All" onClick={handleClear} onDelete={handleClear} />
-            <br />
-            <br />
-          </>
-        ) : null}
-        {displayData(filteredOptions)}
+
+        {displayDataParent(searchedOptions)}
       </>
+      <br />
     </Box>
   );
 };

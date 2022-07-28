@@ -5,23 +5,23 @@ import {
   PaperProps,
   styled,
   TextFieldProps,
-  Typography,
   TypographyProps,
   Popper,
-  ListItem,
-  List,
   PopperProps,
   ListProps,
-  Paper,
-  ListItemProps,
   Box,
   ClickAwayListener,
+  Chip,
+  CheckboxProps,
+  Typography,
+  ChipProps,
 } from '@mui/material';
-import { Search } from './Search';
-import { useEffect, useState } from 'react';
-import { Cancel, ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
 import PIcon from '../images/PIcon';
+import ComplexFilterPaper from './ComplexFilterPaper';
+import { useEffect, useState } from 'react';
+import { Search } from './Search';
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -39,19 +39,45 @@ const options = [
   { text: 'Umbriel', categories: ['1'] },
 ];
 
+// type of item in the menu
 export type menuItemType = {
   text: string;
+  secondary?: string;
   icon?: React.ReactNode;
+  selected?: boolean;
   children?: menuItemType[];
 };
 
-const StyledMenu = styled(Button)(({ theme }) => ({
-  margin: `${theme.spacing(1)} 0 ${theme.spacing(1)} 0`,
+// Styles chip
+const StyledChip = styled(Chip)(({ theme }) => ({
+  marginRight: '16px',
+  width: 'fit-content',
+  minHeight: '44px',
+  borderRadius: '12px',
+  color: theme.palette.action.active,
 }));
 
+// returns true if all children and childrens children are all leaves or all branches.
+function areChildrenOK(children: menuItemType[]) {
+  let countBranches = 0;
+  let countLeaves = 0;
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    if (child.children) {
+      countBranches++;
+      if (!areChildrenOK(child.children)) {
+        return false;
+      }
+    } else {
+      countLeaves++;
+    }
+  }
+  return countBranches === 0 || countLeaves === 0;
+}
+
+// Props for filter component
 export type PComplexFilterProps = {
   items: menuItemType[];
-  selectedItem?: string;
   setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
   anchorEl: HTMLElement | null;
   selectVariant?: 'single' | 'multiple';
@@ -60,10 +86,9 @@ export type PComplexFilterProps = {
   label?: string;
   itemHeight?: number;
   maxItems?: number;
-  handleSelected: (event: React.MouseEvent<HTMLLIElement>, item: string, parentMenuItemType?: menuItemType) => void;
   searchable?: boolean;
-  currentFilters?: string[];
-  setCurrentFilters?: React.Dispatch<React.SetStateAction<string[]>>;
+  currentFilters?: menuItemType[];
+  setCurrentFilters?: React.Dispatch<React.SetStateAction<menuItemType[]>>;
   buttonProps?: ButtonProps;
   backButton?: React.ReactNode;
   backButtonProps?: ButtonProps;
@@ -71,22 +96,23 @@ export type PComplexFilterProps = {
   popperProps?: PopperProps;
   paperProps?: PaperProps;
   listProps?: ListProps;
-  listItemProps?: ListItemProps;
+  listItemProps?: CheckboxProps;
   searchProps?: Omit<TextFieldProps, 'InputProps'>;
+  chipProps?: ChipProps;
+  clearChipProps?: ChipProps;
+  handleDisplayedItemsSearch?: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
 };
 
 export function PComplexFilter({
   items = options,
-  selectedItem,
   anchorEl,
   setAnchorEl,
   selectVariant = 'single',
   title,
   icon = <PIcon name="filterIcon" />,
   label = 'Filter',
-  itemHeight = 40,
+  itemHeight = 50,
   maxItems = 10.5,
-  handleSelected,
   searchable = false,
   currentFilters,
   setCurrentFilters,
@@ -98,29 +124,37 @@ export function PComplexFilter({
   paperProps,
   listItemProps,
   searchProps,
+  chipProps,
+  clearChipProps,
+  handleDisplayedItemsSearch,
 }: PComplexFilterProps) {
-  const open = Boolean(anchorEl);
-  const [opened, setOpened] = useState(false);
+  const [open, setOpen] = useState(Boolean(anchorEl));
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [anchorElFilter, setAnchorElFilter] = useState<HTMLElement | null>(null);
   const [currentItems, setCurrentItems] = useState<menuItemType[]>(_.clone(items));
   const [filteredItems, setFilteredItems] = useState<menuItemType[]>(_.clone(currentItems));
   const [currentTitle, setCurrentTitle] = useState(title);
   const [currentTitles, setCurrentTitles] = useState([title]);
-  const history: any[] = [items];
+  const history: menuItemType[][] = [items];
   const [itemsHistory, setItemsHistory] = useState(history);
   const [back, setBack] = useState(false);
+  const [parent, setParent] = useState<menuItemType>();
+  let valid = areChildrenOK(items);
 
+  // triggers when filter button pressed. Opens/closes poppers
   const handleClick = (event: any) => {
-    setOpened(!opened);
-    if (!opened) {
+    setOpen(!open);
+    if (!open) {
       setAnchorEl(event.currentTarget);
     } else {
       setAnchorEl(null);
     }
   };
 
+  // resets variables for menu
   const handleClose = () => {
     setBack(false);
-    setOpened(false);
+    setOpen(false);
     setAnchorEl(null);
     setCurrentTitle(title);
     setCurrentTitles([title]);
@@ -129,21 +163,97 @@ export function PComplexFilter({
     setItemsHistory([items]);
   };
 
-  const handleSelectedInit = (event: React.MouseEvent<HTMLLIElement>, item: menuItemType) => {
-    if (currentFilters?.includes(item.text) && setCurrentFilters) {
-      setCurrentFilters((prev) => prev.filter((i) => i !== item.text));
-      selectedItem = undefined;
-    } else if (item.children && item.children.length > 0) {
-      setCurrentTitles((prev) => [...prev, item.text]);
-      setCurrentItems(item.children);
-      setItemsHistory([...itemsHistory, item.children]);
-      setCurrentTitle(item.text);
-      setBack(true);
+  // shows/hides popper for each chip
+  const handleChipClick = (children: menuItemType[], index: number) => (event: any) => {
+    if (index === currentIndex) {
+      handleChipClose(index);
+    } else if (anchorEl) {
+      handleClose;
     } else {
-      handleSelected(event, item.text, itemsHistory[itemsHistory.length - 2]);
+      setAnchorElFilter(event.currentTarget);
+      setCurrentIndex(index);
+      setFilteredItems(children);
     }
   };
 
+  // closes chip popper
+  const handleChipClose = (index: number) => {
+    if (index === currentIndex) {
+      setAnchorElFilter(null);
+      setCurrentIndex(-1);
+      handleClose();
+    }
+  };
+
+  // handles when a menu item is selected
+  const handleSelected = (item: menuItemType, parent?: menuItemType) => {
+    // if item already selected, deselects item
+    if (item.selected) {
+      item.selected = false;
+      // checks parent contains no selected items
+      const empty =
+        parent &&
+        parent.children &&
+        parent.children.map((child) => {
+          if (child.selected) {
+            return true;
+          }
+          return false;
+        });
+      //if parent empty, remove from array
+      if (empty?.includes(true) === false) {
+        if (currentFilters && parent && currentFilters.includes(parent)) {
+          const newState = currentFilters.filter((item) => {
+            return item.text !== parent.text;
+          });
+          setCurrentFilters && setCurrentFilters(newState);
+        }
+      } else {
+        // if not empty, sets current filter to deselected
+        parent &&
+          setCurrentFilters &&
+          setCurrentFilters((prev) =>
+            prev.map((filter) => (filter.text === parent.text ? (filter = parent) : (filter = filter))),
+          );
+      }
+      // if item has children
+    } else if (item.children && item.children.length > 0) {
+      // adds parent name to title array
+      setCurrentTitles((prev) => [...prev, item.text]);
+      // changes current items to children
+      setCurrentItems(item.children);
+      // adds children to itemHistory to give ability for backtracking
+      setItemsHistory([...itemsHistory, item.children]);
+      // sets the current title
+      setCurrentTitle(item.text);
+      // sets the parent
+      setParent(item);
+      // enables going back
+      setBack(true);
+    } else {
+      // selects item
+      item.selected = true;
+      if (parent) {
+        // if parent exists in current filters, alters parent
+        if (currentFilters && currentFilters.includes(parent)) {
+          const newState: menuItemType[] = currentFilters.map((filter) => {
+            if (filter.text === parent.text) {
+              return parent;
+            }
+            return filter;
+          });
+          setCurrentFilters && setCurrentFilters(newState);
+          // if parent not exist, add to filters
+        } else {
+          setCurrentFilters && setCurrentFilters((prev) => [...prev, parent]);
+        }
+      } else {
+        console.log('no parent');
+      }
+    }
+  };
+
+  // sets menu to previous state (i.e one step up the tree)
   function handleBack() {
     if (currentTitles && currentTitles.length > 0) {
       currentTitles.pop();
@@ -158,120 +268,212 @@ export function PComplexFilter({
     setCurrentItems(lastItem);
   }
 
-  function handleDelete(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, text: string) {
-    if (setCurrentFilters) {
-      setCurrentFilters((prev) => prev.filter((i) => i !== text));
-    }
-  }
-
-  // TODO get this functioning. When search enabled, only results that match are in the menu
-  const handleSearchChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    let foundArray = currentItems.map((item) => mapFind(item, event.target.value));
-    foundArray = foundArray.filter((element) => {
-      return element.text !== 'not found';
-    });
-    if (foundArray.length > 0) {
-      setFilteredItems(foundArray);
+  // handles the search event and returns all current items that include the search term
+  const handleSearchChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    items?: menuItemType[],
+  ) => {
+    if (items) {
+      let foundArray = items.map((item) => mapFind(item, event.target.value.toLowerCase()));
+      foundArray = foundArray.filter((element) => {
+        return element.text !== 'not found';
+      });
+      if (foundArray.length > 0) {
+        setFilteredItems(foundArray);
+      }
     }
   };
 
+  // returns an item if included, or a dummy to be removed if not
   const mapFind = (item: menuItemType, text: string) => {
     return item.text.toLowerCase().includes(text) ? item : { text: 'not found' };
   };
 
+  // when currentItems changes, sets Filtered items as well
   useEffect(() => {
     setFilteredItems(currentItems);
   }, [currentItems]);
 
-  return (
-    <ClickAwayListener onClickAway={handleClose}>
-      <Box
-        sx={{ position: 'relative' }}
-        aria-label="more"
-        id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-      >
-        <Button className="button" onClick={handleClick} {...buttonProps}>
-          {icon}
-          {label}
-          <ChevronRight
-            sx={{ transform: open ? 'rotate(270deg)' : 'rotate(90deg)', position: 'absolute', right: '10px' }}
-          />
-        </Button>
-        <Popper open={open} anchorEl={anchorEl} id="long-menu" sx={{ zIndex: 999999, width: '40ch' }} {...popperProps}>
-          <Paper className="paper" {...paperProps}>
-            <Typography variant="h6" textAlign="center" {...titleProps}>
-              {currentTitle}
-            </Typography>
-            {back ? (
-              <Button
-                sx={{
-                  padding: 4,
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                }}
-                onClick={handleBack}
-                {...backButtonProps}
-              >
-                {backButton}
-              </Button>
-            ) : null}
-            {searchable ? (
-              <Box sx={{ paddingLeft: 2, paddingRight: 2 }}>
-                <Search fullWidth onChange={handleSearchChange} {...searchProps} />
-              </Box>
-            ) : null}
-            {filteredItems.length > 0 ? (
-              <List
-                style={{
-                  maxHeight: itemHeight * maxItems,
-                  overflow: 'auto',
-                }}
-              >
-                {filteredItems &&
-                  filteredItems.map((item, key) => (
-                    <ListItem
-                      sx={{ height: itemHeight, width: '100%' }}
-                      key={item.text}
-                      selected={
-                        (currentFilters && currentFilters.includes(item.text)) ||
-                        (selectVariant === 'single' && item.text === selectedItem)
-                      }
-                      onClick={(event) => handleSelectedInit(event, item)}
-                      {...listItemProps}
-                    >
-                      {currentFilters && setCurrentFilters && currentFilters.includes(item.text) ? (
-                        <Box display="flex" flexDirection="row" alignItems="center">
-                          {item.icon && <Box paddingRight={1}>{item.icon}</Box>}
-                          {item.text}
-                          <Button
-                            sx={{
-                              padding: 0,
-                              position: 'absolute',
-                              right: 0,
-                            }}
-                            onClick={(event) => handleDelete(event, item.text)}
-                          >
-                            <Cancel />
-                          </Button>
-                        </Box>
-                      ) : (
-                        <Box display="flex" flexDirection="row" alignItems="center">
-                          {item.icon && <Box paddingRight={1}>{item.icon}</Box>}
-                          {item.text}
-                          {item.children && <ChevronRight sx={{ position: 'absolute', right: 10 }} />}
-                        </Box>
-                      )}
-                    </ListItem>
-                  ))}
-              </List>
-            ) : null}
-          </Paper>
-        </Popper>
+  // clears all filters
+  const handleClear = () => {
+    setCurrentFilters && setCurrentFilters([]);
+    deSelect(items);
+    handleClose();
+    setAnchorElFilter(null);
+  };
+
+  // deselects every item
+  const deSelect = (itemsList: menuItemType[]) => {
+    itemsList.forEach((item) => {
+      item.children ? deSelect(item.children) : (item.selected = false);
+    });
+  };
+
+  // removes filter when Chip deleted
+  const handleChipDelete = (filter: menuItemType) => {
+    setCurrentFilters && setCurrentFilters((prev: menuItemType[]) => prev.filter((i) => i.text !== filter.text));
+    filter.children && deSelect(filter.children);
+    handleClose();
+    setAnchorElFilter(null);
+  };
+
+  // creates a label for each child selected
+  const formatLabel = (filter: menuItemType) => {
+    let breakline = false;
+    let label = filter.text + ': ';
+    filter.children?.forEach((child) => {
+      if (child.selected && !breakline) {
+        label = label + child.text;
+        breakline = true;
+      } else if (child.selected) {
+        label = label + ', ' + child.text;
+      }
+    });
+    return label;
+  };
+
+  // shows if child is selected
+  const display = (filter: menuItemType) => {
+    let exist: boolean = false;
+    filter.children?.map((child) => {
+      if (child.selected) {
+        exist = true;
+      }
+    });
+    return exist;
+  };
+
+  return valid ? (
+    <Box
+      sx={{ position: 'relative' }}
+      aria-label="more"
+      id="long-button"
+      aria-controls={open ? 'long-menu' : undefined}
+      aria-expanded={open ? 'true' : undefined}
+      aria-haspopup="true"
+      display="flex"
+      flexDirection="column"
+      flex={1}
+    >
+      <Box display="flex" flexDirection="row" flex={1}>
+        <>
+          {handleDisplayedItemsSearch && (
+            <Search fullWidth onChange={handleDisplayedItemsSearch} sx={{ paddingRight: 2 }} />
+          )}
+        </>
+        <ClickAwayListener onClickAway={open ? handleClose : function () {}}>
+          <Box width="fit-content">
+            <Button className="button" onClick={handleClick} {...buttonProps}>
+              {icon}
+              {label}
+              <ChevronRight
+                sx={{ transform: open ? 'rotate(270deg)' : 'rotate(90deg)', position: 'absolute', right: '10px' }}
+              />
+            </Button>
+            <ComplexFilterPaper
+              open={open}
+              anchorEl={anchorEl}
+              id="long-menu"
+              paperProps={paperProps}
+              titleProps={titleProps}
+              currentTitle={currentTitle}
+              back={back}
+              backButton={backButton}
+              backButtonProps={backButtonProps}
+              searchable={searchable}
+              handleBack={handleBack}
+              handleSearchChange={(event) => handleSearchChange(event, currentItems)}
+              handleSelected={handleSelected}
+              filteredItems={filteredItems}
+              filterParent={parent}
+              itemHeight={itemHeight}
+              maxItems={maxItems}
+              listItemProps={listItemProps}
+              searchProps={searchProps}
+            />
+          </Box>
+        </ClickAwayListener>
       </Box>
-    </ClickAwayListener>
+      <Box display={currentFilters && currentFilters[0] ? 'flex' : 'none'} paddingTop={2} flexDirection="row">
+        {currentFilters?.map(
+          (filter, index) =>
+            filter.children &&
+            display(filter) && (
+              <ClickAwayListener onClickAway={() => handleChipClose(index)} key={index}>
+                <Box key={index}>
+                  <StyledChip
+                    key={index}
+                    label={
+                      <Box display="flex" flexDirection="row" alignItems="center" textAlign="center">
+                        <Typography variant="subtitle2" color="action.active" sx={{ paddingRight: 1 }}>
+                          {formatLabel(filter)}
+                        </Typography>
+                        <ChevronRight
+                          sx={{
+                            transform: index === currentIndex ? 'rotate(270deg)' : 'rotate(90deg)',
+                            fontSize: '1.3rem',
+                          }}
+                        />
+                      </Box>
+                    }
+                    variant={index === currentIndex ? 'filled' : 'outlined'}
+                    onClick={handleChipClick(filter.children, index)}
+                    deleteIcon={
+                      <Box onClick={() => handleChipDelete(filter)}>
+                        <PIcon name="crossSmallIcon" />
+                      </Box>
+                    }
+                    onDelete={() => handleChipDelete(filter)}
+                    {...chipProps}
+                  />
+                  <ComplexFilterPaper
+                    open={Boolean(anchorElFilter) && index === currentIndex}
+                    anchorEl={anchorElFilter}
+                    id={filter.text}
+                    popperProps={popperProps}
+                    paperProps={paperProps}
+                    titleProps={titleProps}
+                    currentTitle={filter.text}
+                    back={back}
+                    backButton={backButton}
+                    backButtonProps={backButtonProps}
+                    searchable={searchable}
+                    handleBack={handleBack}
+                    handleSearchChange={(event) => handleSearchChange(event, filter.children)}
+                    handleSelected={handleSelected}
+                    filteredItems={filteredItems}
+                    filterParent={parent}
+                    itemHeight={itemHeight}
+                    maxItems={maxItems}
+                    listItemProps={listItemProps}
+                    searchProps={searchProps}
+                  />
+                </Box>
+              </ClickAwayListener>
+            ),
+        )}
+        {currentFilters && currentFilters[0] && (
+          <>
+            <StyledChip
+              color="primary"
+              label={
+                <Typography variant="subtitle2" color="primary.contrastText" sx={{ paddingRight: 1 }}>
+                  Clear All
+                </Typography>
+              }
+              onClick={handleClear}
+              onDelete={handleClear}
+              {...clearChipProps}
+            />
+            <br />
+            <br />
+          </>
+        )}
+      </Box>
+    </Box>
+  ) : (
+    <Typography color="red" variant="h6">
+      Your data for the filter is invalid. Ensure that children of each object are all leaves or branches.
+    </Typography>
   );
 }
