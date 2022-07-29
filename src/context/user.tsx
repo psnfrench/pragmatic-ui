@@ -1,6 +1,7 @@
 import { Box, CircularProgress } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import { User } from '../types'
+import { menuItemType } from '../components/PComplexFilter/PComplexFilter';
+import { User } from '../types';
 // import useAuthApiRoutes from '../hooks/api/useAuthApiRoutes';
 const UserContext = React.createContext<{
   user?: Partial<User>;
@@ -13,8 +14,6 @@ const UserContext = React.createContext<{
   setIsLoggedIn: () => undefined,
   saveUser: () => undefined,
 });
-
-
 
 export default UserContext;
 

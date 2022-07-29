@@ -1,5 +1,6 @@
 import { ChevronRight } from '@mui/icons-material';
 import {
+  Avatar,
   Box,
   Button,
   ButtonProps,
@@ -20,12 +21,25 @@ import {
 import _ from 'lodash';
 import React from 'react';
 import { menuItemType } from './PComplexFilter';
-import { Search } from './Search';
+import { Search } from '../Search';
 
 const StyledRadio = styled(Radio)(({ theme }) => ({
   '&.Mui-checked': {
     color: theme.palette.primary.main,
   },
+}));
+
+const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
+  '&.Mui-checked': {
+    color: theme.palette.primary.main,
+  },
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  height: '24px',
+  width: '24px',
+  marginRight: theme.spacing(1),
 }));
 
 export type ComplexFilterPaperProps = {
@@ -75,6 +89,23 @@ const ComplexFilterPaper = ({
   itemsHistory,
   filterParent,
 }: ComplexFilterPaperProps) => {
+  const countSelected = (items: menuItemType[], count?: number) => {
+    if (!count) {
+      count = 0;
+    }
+    for (const child of items) {
+      if (child.children) {
+        const newCount: number = countSelected(child.children, count);
+        if (newCount) {
+          count = newCount;
+        }
+      } else if (child.selected) {
+        count++;
+      }
+    }
+    return count;
+  };
+
   return (
     <Popper
       open={open}
@@ -84,27 +115,9 @@ const ComplexFilterPaper = ({
       sx={{ zIndex: 99999, width: '40ch' }}
       {...popperProps}
     >
-      <Box
-        sx={{
-          zIndex: 999999,
-          position: 'relative',
-          mt: '12px',
-          '&::before': {
-            backgroundColor: 'white',
-            content: '""',
-            display: 'block',
-            position: 'absolute',
-            width: 16,
-            height: 16,
-            top: -8,
-            transform: 'rotate(225deg)',
-            left: 'calc(50% - 8px)',
-            boxShadow: '3px 3px 6px -3px rgba(0,0,0,0.2)',
-          },
-        }}
-      />
       <Paper
         sx={{
+          marginTop: '12px',
           borderRadius: 0,
           boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)',
           filter: 'drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.14)) drop-shadow(0px 1px 10px rgba(0, 0, 0, 0.12))',
@@ -150,17 +163,34 @@ const ComplexFilterPaper = ({
                         padding: 4,
                         borderRadius: 0,
                       }}
-                      onClick={(event) => handleSelected(item, filterParent)}
+                      onClick={() => handleSelected(item, filterParent)}
                     >
-                      <Box>
-                        <Typography variant="body1" color="primary.main" textAlign="left">
-                          {item.text}
-                        </Typography>
-                        {item.secondary && (
-                          <Typography variant="body2" color="action.active">
-                            {item.secondary}
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                        flex={1}
+                        justifyContent="space-between"
+                      >
+                        <Box display="flex" flexDirection="column" flex={1}>
+                          <Typography variant="body1" color="primary.main" textAlign="left">
+                            {item.text}
                           </Typography>
-                        )}
+                          {item.secondary && (
+                            <Typography variant="body2" color="action.active" textAlign="left">
+                              {item.secondary}
+                            </Typography>
+                          )}
+                        </Box>
+                        <StyledAvatar
+                          sx={{
+                            display: countSelected(item.children) === 0 ? 'none' : 'inline-flex',
+                          }}
+                        >
+                          <Typography variant="body1" color="primary.contrastText">
+                            {countSelected(item.children)}
+                          </Typography>
+                        </StyledAvatar>
                       </Box>
                       <ChevronRight color="action" />
                     </Button>
@@ -175,14 +205,25 @@ const ComplexFilterPaper = ({
                       alignContent: 'center',
                     }}
                     control={
-                      <StyledRadio
-                        sx={{ marginY: -4 }}
-                        checked={item.selected || false}
-                        onClick={() => handleSelected(item, filterParent)}
-                        name={item.text}
-                        value={item}
-                        {...listItemProps}
-                      />
+                      (filterParent as menuItemType).multiple ? (
+                        <StyledCheckbox
+                          sx={{ marginY: -4 }}
+                          checked={item.selected || false}
+                          onClick={() => handleSelected(item, filterParent)}
+                          name={item.text}
+                          value={item}
+                          {...listItemProps}
+                        />
+                      ) : (
+                        <StyledRadio
+                          sx={{ marginY: -4 }}
+                          checked={item.selected || false}
+                          onClick={() => handleSelected(item, filterParent)}
+                          name={item.text}
+                          value={item}
+                          {...listItemProps}
+                        />
+                      )
                     }
                     label={
                       <React.Fragment>

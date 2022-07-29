@@ -1,9 +1,9 @@
 import { ChevronRight } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
-import _, { filter } from 'lodash';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { menuItemType, PComplexFilter } from '../components/PComplexFilter';
-import { Search } from '../components/Search';
+import { menuItemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter';
+import UserContext from '../context/user';
 import PIcon from '../images/PIcon';
 
 const options: menuItemType[] = [
@@ -15,36 +15,43 @@ const options: menuItemType[] = [
       {
         text: 'Vehicle',
         children: [{ text: 'Car' }, { text: 'Truck' }, { text: 'Ute' }],
+        multiple: false,
       },
       {
         text: 'Bike',
         children: [{ text: 'Mountain Bike' }, { text: 'Downhill Bike' }, { text: 'E-Bike' }],
+        multiple: true,
       },
     ],
   },
   {
     text: 'Sport',
     children: [{ text: 'Rugby' }, { text: 'Football' }, { text: 'Basketball' }],
+    multiple: true,
   },
   {
     text: 'Education',
     children: [{ text: 'Primary' }, { text: 'Secondary' }, { text: 'Tertiary' }],
+    multiple: true,
   },
   {
     text: 'Hobbies',
     children: [{ text: 'Guitar' }, { text: 'Hiking' }, { text: 'Reading' }],
+    multiple: true,
   },
-  { text: 'Social', children: [{ text: 'People' }] },
+  { text: 'Social', children: [{ text: 'People' }], multiple: true },
   {
     text: 'Travel',
     children: [
       {
         text: 'Countries',
         children: [{ text: 'South Africa' }, { text: 'France' }, { text: 'New Zealand' }],
+        multiple: true,
       },
       {
         text: 'Activities',
         children: [{ text: 'Mountain Biking' }, { text: 'Whale Watching' }, { text: 'Visiting Holy Sites' }],
+        multiple: true,
       },
     ],
   },
@@ -58,28 +65,29 @@ type itemType = {
 };
 
 const items: itemType[] = [
-  { text: 'Fiat Bambina', categories: ['Transport', 'Vehicle', 'Car', 'Fiat Bambina'] },
+  { text: 'Fiat Bambina', categories: ['Car'] },
   {
     text: 'South Africa',
     categories: ['Travel', 'Countries'],
     children: [
       {
         text: 'Springboks',
-        categories: ['Countries', 'Sport'],
-        children: [{ text: 'Siya Kolisi', categories: ['Countries', 'Sport', 'People'] }],
+        categories: ['Countries', 'Rugby'],
+        children: [{ text: 'Siya Kolisi', categories: ['South Africa', 'Rugby', 'People'] }],
       },
     ],
   },
   {
     text: 'New Zealand',
-    categories: ['Travel', 'Countries'],
+    categories: ['New Zealand'],
     children: [
       {
         text: 'All Blacks',
-        categories: ['Countries', 'Sport'],
+        categories: ['New Zealand', 'Rugby'],
         children: [
-          { text: 'Richie McCaw', categories: ['Countries', 'Sport', 'People'] },
-          { text: 'Conrad Smith', categories: ['Countries', 'Sport', 'People'] },
+          { text: 'Richie McCaw', categories: ['New Zealand', 'Rugby', 'People'] },
+          { text: 'Conrad Smith', categories: ['New Zealand', 'Rugby', 'People'] },
+          { text: 'Cory Vickers', categories: ['New Zealand', 'Football', 'People'] },
         ],
       },
     ],
@@ -96,7 +104,7 @@ const items: itemType[] = [
 
 const ComplexFilterDemo = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [currentFilters, setCurrentFilters] = useState<menuItemType[]>([]);
+  const [currentFilterString, setCurrentFilterString] = useState<string[]>([]);
   const [currentSearch, setCurrentSearch] = useState<string>();
   const [filteredOptions, setFilteredOptions] = useState([...items]);
   const [searchedOptions, setSearchedOptions] = useState([...items]);
@@ -134,40 +142,66 @@ const ComplexFilterDemo = () => {
     ));
   }
 
-  // maps through returned items, adds to new array
+  // maps through returned items, adds to new array if matches all filters
   async function mapItems(items: itemType[]) {
     // sets object to be filtered
     let newOptions = [...items];
     // maps new object
     newOptions.map((option, key) => {
       option.children ? mapItems(option.children) : null;
-      option.categories.map((category) => {
-        // if object exists in filter, adds to array
-        currentFilters.forEach((filter) => {
-          filter.text === category ? newItems.push(option) : null;
-        });
-        return;
+      let include: boolean = true;
+      // if object exists in filter, adds to array
+      currentFilterString.forEach((filter) => {
+        let i = option.categories.find((category) => category === filter);
+        if (!i) {
+          include = false;
+        }
       });
+      if (include) {
+        newItems.push(option);
+      }
+      return;
+    });
+  }
+
+  // maps through returned items, adds to new array if matches any
+  async function mapItemsAny(items: itemType[]) {
+    // sets object to be filtered
+    let newOptions = [...items];
+    // maps new object
+    newOptions.map((option, key) => {
+      option.children ? mapItemsAny(option.children) : null;
+      let include: boolean = false;
+      // if object exists in filter, adds to array
+      currentFilterString.forEach((filter) => {
+        if (option.categories.find((category) => category === filter)) {
+          include = true;
+        }
+      });
+      if (include) {
+        newItems.push(option);
+      }
+      return;
     });
   }
 
   // When currentFilters changes, resets options and rerenders options that match filter term.
   useEffect(() => {
     setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
-    if (currentFilters.length === 0 && !currentSearch) {
+    if (currentFilterString.length === 0 && !currentSearch) {
       setFilteredOptions([...items]);
       setSearchedOptions([...items]);
     } else if (currentSearch) {
-      mapItems(items)
+      mapItems([...items])
         .then(() => setFilteredOptions([...newItems]))
         .then(() => filterData([...newItems]))
         .then(() => setSearchedOptions([...newSearchItems]));
     } else {
-      mapItems(items)
+      mapItems([...items])
         .then(() => setFilteredOptions([...newItems]))
         .then(() => setSearchedOptions([...newItems]));
     }
-  }, [currentFilters]);
+  }, [currentFilterString]);
 
   //When the search value changes, filters data based on filters and search term
   useEffect(() => {
@@ -210,6 +244,13 @@ const ComplexFilterDemo = () => {
     setCurrentSearch(event.target.value.toLowerCase());
   };
 
+  // deselects every item
+  const deSelect = (itemsList: menuItemType[]) => {
+    itemsList.forEach((item) => {
+      item.children ? deSelect(item.children) : (item.selected = false);
+    });
+  };
+
   return (
     <Box>
       <>
@@ -220,20 +261,14 @@ const ComplexFilterDemo = () => {
             // the array that will populate the filter
             items={options}
             searchable={true}
-            // if included, the filter will contain a searchbar. This also handles when the search input field is altered
-            //handleSearchChange={handleSearchChange}
-            // this handles when the search is submitted (potentially irrelevant)
-            //handleSearchSubmit={handleSearchSubmit}
-            // choose between 'single' and 'multiple'. Multiple allows several options to be selected and removed, single only allows one
-            selectVariant={'multiple'}
             // sets the title at the top of the menu
             title={'Filter Search'}
             // Having anchorEl & setAnchorEl here allows control over the popup appearing or disappearing
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
-            currentFilters={currentFilters}
             // Populated string array of all currently selected filters
-            setCurrentFilters={setCurrentFilters}
+            currentFilterString={currentFilterString}
+            setCurrentFilterString={setCurrentFilterString}
             // Example of sending props to the button to change its style
             buttonProps={{ variant: 'contained', sx: { width: '130px', justifyContent: 'flex-start' } }}
             // Example of changing the menu style
