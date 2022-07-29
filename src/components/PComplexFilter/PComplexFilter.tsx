@@ -246,11 +246,10 @@ export function PComplexFilter({
       // selects item
       if (menuParent) {
         if (!menuParent.multiple) {
-          let found: menuItemType[] = [];
+          const found: menuItemType[] = [];
           (menuParent.children as menuItemType[]).forEach((child, index) =>
             child.selected ? found.push(child) : null,
           );
-          console.log('found: ', found);
           if (found !== []) {
             found.forEach((find) => {
               setCurrentFilterString(currentFilterString.filter((e) => e !== find.text));
@@ -338,12 +337,9 @@ export function PComplexFilter({
 
   // removes filter when Chip deleted
   const handleChipDelete = (filter: menuItemType) => {
-    console.log('filter: ', filter);
-
     const i = (filter.children as menuItemType[]).find((e) => e.selected === true);
-    console.log('i: ', i);
     setCurrentFilterString(currentFilterString.filter((e) => e !== (i as menuItemType).text));
-    setCurrentFilters((prev: menuItemType[]) => prev.filter((i) => i.text !== filter.text));
+    setCurrentFilters((prev: menuItemType[]) => prev.filter((e) => e.text !== filter.text));
     if (filter.children) {
       deSelect(filter.children);
     }
@@ -354,7 +350,7 @@ export function PComplexFilter({
   // creates a label for each child selected
   const formatLabel = (filter: menuItemType) => {
     let labelString = filter.text + ': ';
-    let labelArray: string[] = [];
+    const labelArray: string[] = [];
     filter.children?.forEach((child) => {
       if (child.selected) {
         labelArray.push(child.text);
