@@ -6,7 +6,10 @@ import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
 export const PDateTimePicker = (
-  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & ThemedTextFieldProps,
+  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & {
+    TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
+  } & Required<Pick<TextFieldProps, 'name'>> &
+    Pick<TextFieldProps, 'variant'>,
 ) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
@@ -17,25 +20,27 @@ export const PDateTimePicker = (
 };
 
 const PDateTimePickerWithFormikComp = (
-  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'onChange'> &
-    ThemedTextFieldProps &
-    RequiredFormikTextFields &
-    Required<Pick<TextFieldProps, 'value'>>,
+  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'onChange'> & {
+    TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
+  } & Required<Pick<TextFieldProps, 'name' | 'value'>> &
+    Pick<TextFieldProps, 'variant'> &
+    RequiredFormikTextFields,
 ) => {
-  const { name, value, handleChange, setFieldValue, onAccept, ...otherProps } = props;
+  const { name, value, variant, handleChange, setFieldValue, TextFieldProps, ...otherProps } = props;
   const handleDateChange = (dateValue: Date | null) => {
     setFieldValue(name, dateValue);
   };
   return name ? (
     <DateTimePicker
-      onAccept={onAccept}
       value={value as Date}
       onChange={handleDateChange}
-      renderInput={({ InputProps, variant, ...params }) => {
-        if (otherProps.variant !== 'outlined') {
+      renderInput={({ InputProps, ...params }) => {
+        if (variant !== 'outlined') {
           (InputProps as Partial<FilledInputProps>).disableUnderline = true;
         }
-        return <PTextField name={name} InputProps={{ ...InputProps }} {...params} />;
+        return (
+          <PTextField variant={variant} name={name} InputProps={{ ...InputProps }} {...params} {...TextFieldProps} />
+        );
       }}
       {...otherProps}
     />

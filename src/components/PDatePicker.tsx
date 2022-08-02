@@ -3,10 +3,11 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
-import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
+import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export type PDatePickerProps = Omit<DatePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> &
-  Required<Pick<TextFieldProps, 'name'>> &
+export type PDatePickerProps = Omit<DatePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & {
+  TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
+} & Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
 
 export const PDatePicker = (props: PDatePickerProps) => {
@@ -20,11 +21,12 @@ export const PDatePicker = (props: PDatePickerProps) => {
 
 const PDatePickerWithFormikComp = (
   props: Omit<DatePickerProps<any, any>, 'renderInput' | 'onChange'> &
-    RequiredFormikTextFields &
-    Required<Pick<TextFieldProps, 'value' | 'name'>> &
+    RequiredFormikTextFields & {
+      TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
+    } & Required<Pick<TextFieldProps, 'name' | 'value'>> &
     Pick<TextFieldProps, 'variant'>,
 ) => {
-  const { name, value, handleChange, setFieldValue, variant, ...otherProps } = props;
+  const { name, value, handleChange, setFieldValue, variant, TextFieldProps, ...otherProps } = props;
   const handleDateChange = (dateValue: unknown, keyboardInputValue?: string | undefined) => {
     setFieldValue(name, dateValue);
   };
@@ -36,7 +38,9 @@ const PDatePickerWithFormikComp = (
         if (variant !== 'outlined') {
           (InputProps as Partial<FilledInputProps>).disableUnderline = true;
         }
-        return <PTextField variant={variant} name={name} InputProps={{ ...InputProps }} {...params} />;
+        return (
+          <PTextField variant={variant} name={name} InputProps={{ ...InputProps }} {...params} {...TextFieldProps} />
+        );
       }}
       {...otherProps}
     />
