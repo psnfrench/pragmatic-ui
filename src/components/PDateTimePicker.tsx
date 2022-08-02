@@ -26,7 +26,7 @@ const PDateTimePickerWithFormikComp = (
     Pick<TextFieldProps, 'variant'> &
     RequiredFormikTextFields,
 ) => {
-  const { name, value, variant, handleChange, setFieldValue, TextFieldProps, ...otherProps } = props;
+  const { name, value, variant, handleChange, setFieldValue, ...otherProps } = props;
   const handleDateChange = (dateValue: Date | null) => {
     setFieldValue(name, dateValue);
   };
@@ -39,7 +39,13 @@ const PDateTimePickerWithFormikComp = (
           (InputProps as Partial<FilledInputProps>).disableUnderline = true;
         }
         return (
-          <PTextField variant={variant} name={name} InputProps={{ ...InputProps }} {...params} {...TextFieldProps} />
+          <PTextField
+            variant={variant}
+            name={name}
+            InputProps={{ ...InputProps }}
+            {...params}
+            {...props.TextFieldProps}
+          />
         );
       }}
       {...otherProps}
