@@ -1,11 +1,13 @@
 import { FilledInputProps, TextFieldProps } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePicker, DateTimePickerProps } from '@mui/x-date-pickers/DateTimePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export const PDateTimePicker = (props: ThemedTextFieldProps) => {
+export const PDateTimePicker = (
+  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & ThemedTextFieldProps,
+) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
   const formikProps = getFormikTextFields(_props);
@@ -15,22 +17,27 @@ export const PDateTimePicker = (props: ThemedTextFieldProps) => {
 };
 
 const PDateTimePickerWithFormikComp = (
-  props: ThemedTextFieldProps & RequiredFormikTextFields & Required<Pick<TextFieldProps, 'value'>>,
+  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'onChange'> &
+    ThemedTextFieldProps &
+    RequiredFormikTextFields &
+    Required<Pick<TextFieldProps, 'value'>>,
 ) => {
-  const { name, value, handleChange, setFieldValue, ...otherProps } = props;
+  const { name, value, handleChange, setFieldValue, onAccept, ...otherProps } = props;
   const handleDateChange = (dateValue: Date | null) => {
     setFieldValue(name, dateValue);
   };
   return name ? (
     <DateTimePicker
+      onAccept={onAccept}
       value={value as Date}
       onChange={handleDateChange}
       renderInput={({ InputProps, variant, ...params }) => {
         if (otherProps.variant !== 'outlined') {
           (InputProps as Partial<FilledInputProps>).disableUnderline = true;
         }
-        return <PTextField name={name} InputProps={{ ...InputProps }} {...params} {...otherProps} />;
+        return <PTextField name={name} InputProps={{ ...InputProps }} {...params} />;
       }}
+      {...otherProps}
     />
   ) : null;
 };
