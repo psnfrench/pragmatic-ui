@@ -105,7 +105,11 @@ describe('Togggling the collapsed state', () => {
     });
   });
   it('is collapsed when defaultOpen false prop is passed', async () => {
-    render(<TestSideBar SideBarProps={{ defaultOpen: false }} />);
+    render(
+      <BrowserRouter>
+        <TestSideBar SideBarProps={{ defaultOpen: false }} />
+      </BrowserRouter>,
+    );
 
     const collapsedSvg: HTMLElement | null = screen.queryByTestId('collapsedSvg');
     const expandedSvg: HTMLElement | null = screen.queryByTestId('expandedSvg');
