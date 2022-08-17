@@ -24,52 +24,50 @@ const TestSideBar = ({
 }) => {
   return (
     <BrowserRouter>
-      <Route>
-        <SideBar
-          logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
-          logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
-          items={[
-            {
-              text: 'Home',
-              key: 'home',
-              icon: <HomeIcon data-testid="link1" />,
-              onClick: onClick,
-              divider: true,
-            },
-            {
-              text: 'Border Radius',
-              key: 'borderRadius',
-              icon: <BorderStyleIcon data-testid="link2" />,
-              onClick: onClick,
-            },
-            {
-              text: 'Text Inputs',
-              key: 'textInput',
-              icon: <InputIcon data-testid="link3" />,
-              onClick: onClick,
-            },
-            {
-              text: 'Sign Up Form',
-              key: 'signup',
-              icon: <LoginIcon data-testid="link4" />,
-              onClick: onClick,
-            },
-            {
-              text: 'Snackbar',
-              key: 'snackbar',
-              icon: <EggAltIcon data-testid="link5" />,
-              onClick: onClick,
-            },
-            {
-              text: 'Confirmation',
-              key: 'confirmation',
-              icon: <CheckCircleIcon data-testid="link6" />,
-              onClick: onClick,
-            },
-          ]}
-          {...SideBarProps}
-        ></SideBar>
-      </Route>
+      <SideBar
+        logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
+        logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
+        items={[
+          {
+            text: 'Home',
+            key: 'home',
+            icon: <HomeIcon data-testid="link1" />,
+            onClick: onClick,
+            divider: true,
+          },
+          {
+            text: 'Border Radius',
+            key: 'borderRadius',
+            icon: <BorderStyleIcon data-testid="link2" />,
+            onClick: onClick,
+          },
+          {
+            text: 'Text Inputs',
+            key: 'textInput',
+            icon: <InputIcon data-testid="link3" />,
+            onClick: onClick,
+          },
+          {
+            text: 'Sign Up Form',
+            key: 'signup',
+            icon: <LoginIcon data-testid="link4" />,
+            onClick: onClick,
+          },
+          {
+            text: 'Snackbar',
+            key: 'snackbar',
+            icon: <EggAltIcon data-testid="link5" />,
+            onClick: onClick,
+          },
+          {
+            text: 'Confirmation',
+            key: 'confirmation',
+            icon: <CheckCircleIcon data-testid="link6" />,
+            onClick: onClick,
+          },
+        ]}
+        {...SideBarProps}
+      ></SideBar>
     </BrowserRouter>
   );
 };
