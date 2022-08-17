@@ -20,7 +20,7 @@ const SidebarDemo = () => {
     () => [
       {
         text: 'Home',
-        key: '/',
+        key: '',
         icon: <HomeIcon />,
         onClick: () => navigate('/'),
         divider: true,

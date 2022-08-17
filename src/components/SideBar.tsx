@@ -95,9 +95,16 @@ export const SideBar = ({
   listItemSx,
   defaultOpen = true,
 }: SideBarProps) => {
-  const location = useLocation();
-  const selectedNavItem = items.find((n) => n.key === location.pathname || '/' + n.key === location.pathname);
-  const selectedMenuKey = selectedNavItem ? selectedNavItem.key : undefined;
+  const getSelectedMenu = () => {
+    const location = useLocation();
+    const path = location.pathname.split('/');
+    console.log(path);
+    const selectedItem = items.find((n) => n.key === path[1]);
+    console.log(selectedItem);
+    if (selectedItem) return selectedItem.key;
+    else return undefined;
+  };
+  const selectedMenuKey: string | undefined = getSelectedMenu();
 
   useEffect(() => {
     let active = true;
