@@ -13,7 +13,7 @@ import BorderStyleIcon from '@mui/icons-material/BorderStyle';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 const TestSideBar = ({
   onClick,
@@ -23,59 +23,61 @@ const TestSideBar = ({
   SideBarProps?: Omit<SideBarProps, 'items' | 'logoExpanded' | 'logoCollapsed'>;
 }) => {
   return (
-    <BrowserRouter>
-      <SideBar
-        logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
-        logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
-        items={[
-          {
-            text: 'Home',
-            key: 'home',
-            icon: <HomeIcon data-testid="link1" />,
-            onClick: onClick,
-            divider: true,
-          },
-          {
-            text: 'Border Radius',
-            key: 'borderRadius',
-            icon: <BorderStyleIcon data-testid="link2" />,
-            onClick: onClick,
-          },
-          {
-            text: 'Text Inputs',
-            key: 'textInput',
-            icon: <InputIcon data-testid="link3" />,
-            onClick: onClick,
-          },
-          {
-            text: 'Sign Up Form',
-            key: 'signup',
-            icon: <LoginIcon data-testid="link4" />,
-            onClick: onClick,
-          },
-          {
-            text: 'Snackbar',
-            key: 'snackbar',
-            icon: <EggAltIcon data-testid="link5" />,
-            onClick: onClick,
-          },
-          {
-            text: 'Confirmation',
-            key: 'confirmation',
-            icon: <CheckCircleIcon data-testid="link6" />,
-            onClick: onClick,
-          },
-        ]}
-        {...SideBarProps}
-      ></SideBar>
-    </BrowserRouter>
+    <SideBar
+      logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
+      logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
+      items={[
+        {
+          text: 'Home',
+          key: 'home',
+          icon: <HomeIcon data-testid="link1" />,
+          onClick: onClick,
+          divider: true,
+        },
+        {
+          text: 'Border Radius',
+          key: 'borderRadius',
+          icon: <BorderStyleIcon data-testid="link2" />,
+          onClick: onClick,
+        },
+        {
+          text: 'Text Inputs',
+          key: 'textInput',
+          icon: <InputIcon data-testid="link3" />,
+          onClick: onClick,
+        },
+        {
+          text: 'Sign Up Form',
+          key: 'signup',
+          icon: <LoginIcon data-testid="link4" />,
+          onClick: onClick,
+        },
+        {
+          text: 'Snackbar',
+          key: 'snackbar',
+          icon: <EggAltIcon data-testid="link5" />,
+          onClick: onClick,
+        },
+        {
+          text: 'Confirmation',
+          key: 'confirmation',
+          icon: <CheckCircleIcon data-testid="link6" />,
+          onClick: onClick,
+        },
+      ]}
+      {...SideBarProps}
+    ></SideBar>
   );
 };
 
 describe('Togggling the collapsed state', () => {
   it('defaults to expanded, and collapses when clicked', async () => {
     const handleSubmitMock = jest.fn();
-    render(<TestSideBar onClick={handleSubmitMock} />);
+    render(
+      <BrowserRouter>
+        <TestSideBar onClick={handleSubmitMock} />
+      </BrowserRouter>,
+    );
 
     const collapsedSvg: HTMLElement | null = screen.queryByTestId('collapsedSvg');
     const expandedSvg: HTMLElement | null = screen.queryByTestId('expandedSvg');
