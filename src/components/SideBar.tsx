@@ -98,9 +98,7 @@ export const SideBar = ({
   const getSelectedMenu = () => {
     const location = useLocation();
     const path = location.pathname.split('/');
-    console.log(path);
     const selectedItem = items.find((n) => n.key === path[1]);
-    console.log(selectedItem);
     if (selectedItem) return selectedItem.key;
     else return undefined;
   };
