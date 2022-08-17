@@ -152,7 +152,7 @@ const ComplexFilterDemo = () => {
       let include: boolean = true;
       // if object exists in filter, adds to array
       currentFilterString.forEach((filter) => {
-        let i = option.categories.find((category) => category === filter);
+        let i = (option.categories as string[]).find((category) => category === filter);
         if (!i) {
           include = false;
         }
@@ -174,7 +174,7 @@ const ComplexFilterDemo = () => {
       let include: boolean = false;
       // if object exists in filter, adds to array
       currentFilterString.forEach((filter) => {
-        if (option.categories.find((category) => category === filter)) {
+        if ((option.categories as string[]).find((category) => category === filter)) {
           include = true;
         }
       });
@@ -219,7 +219,7 @@ const ComplexFilterDemo = () => {
   // Returns each object in current options that includes the search term.
   async function filterData(options: menuItemType[]) {
     options.forEach((option, index) => {
-      const val = option.text.toLowerCase().includes(currentSearch);
+      const val = option.text.toLowerCase().includes(currentSearch as string);
       if (val) {
         newSearchItems.push(option);
       }
@@ -232,7 +232,7 @@ const ComplexFilterDemo = () => {
       if (option.children) {
         filterData(option.children);
       }
-      const val = option.text.toLowerCase().includes(currentSearch);
+      const val = option.text.toLowerCase().includes(currentSearch as string);
       if (val) {
         newSearchItems.push(option);
       }

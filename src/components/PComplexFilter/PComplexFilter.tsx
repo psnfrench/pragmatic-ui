@@ -90,6 +90,7 @@ export type PComplexFilterProps = {
   searchable?: boolean;
   currentFilterString: string[];
   setCurrentFilterString: React.Dispatch<React.SetStateAction<string[]>>;
+  returnedFilters?: menuItemType[];
   buttonProps?: ButtonProps;
   backButton?: React.ReactNode;
   backButtonProps?: ButtonProps;
@@ -118,6 +119,7 @@ export function PComplexFilter({
   searchable = false,
   currentFilterString,
   setCurrentFilterString,
+  returnedFilters,
   buttonProps,
   backButton = <ChevronLeft />,
   backButtonProps,
@@ -318,6 +320,11 @@ export function PComplexFilter({
   useEffect(() => {
     setFilteredItems(currentItems);
   }, [currentItems]);
+
+  // when currentItems changes, sets Filtered items as well
+  useEffect(() => {
+    returnedFilters = currentFilters;
+  }, [currentFilters]);
 
   // clears all filters
   const handleClear = () => {

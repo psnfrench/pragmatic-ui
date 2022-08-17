@@ -15,7 +15,7 @@ import { useLocation } from 'react-router-dom';
 
 const SidebarDemo = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
     () => [
       {
@@ -27,37 +27,37 @@ const SidebarDemo = () => {
       },
       {
         text: 'Border Radius',
-        key: '/border-radius',
+        key: 'border-radius',
         icon: <BorderStyleIcon />,
         onClick: () => navigate('/border-radius'),
       },
       {
         text: 'Various Demo Inputs',
-        key: '/demos',
+        key: 'demos',
         icon: <InputIcon />,
         onClick: () => navigate('/demos'),
       },
       {
         text: 'Sign Up Form',
-        key: '/signup',
+        key: 'signup',
         icon: <PersonAddAltIcon />,
         onClick: () => navigate('/signup'),
       },
       {
         text: 'Login Form',
-        key: '/login',
+        key: 'login',
         icon: <LoginIcon />,
         onClick: () => navigate('/login'),
       },
       {
         text: 'Snackbar',
-        key: '/snackbar',
+        key: 'snackbar',
         icon: <EggAltIcon />,
         onClick: () => navigate('/snackbar'),
       },
       {
         text: 'Confirmation',
-        key: '/confirmation',
+        key: 'confirmation',
         icon: <CheckCircleIcon />,
         onClick: () => navigate('/confirmation'),
       },
@@ -65,19 +65,16 @@ const SidebarDemo = () => {
     [],
   );
 
-  const selectedNavItem = navItems.find((n) => n.key === location.pathname);
-  const selectedMenuKey = selectedNavItem ? selectedNavItem.key : undefined;
-
   return (
     <SideBar
       logoCollapsed={<DMCollapsed />}
       logoExpanded={<DMExpanded />}
       items={navItems}
       childrenCollapsed={<CollapseText />}
-      selectedMenuKey={selectedMenuKey}
       textVariant="body2"
       textSX={[{ color: 'black' }]}
       expandHint
+      listItemSx={{ backgroundColor: 'red' }}
     >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>

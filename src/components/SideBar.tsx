@@ -14,6 +14,7 @@ import {
   SxProps,
   Tooltip,
   Button,
+  ButtonProps,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
+import { useLocation } from 'react-router-dom';
 
 export type SideBarItem = {
   key: string;
@@ -32,7 +34,6 @@ export type SideBarItem = {
 };
 export type SideBarProps = {
   items: SideBarItem[];
-  selectedMenuKey?: string;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
   collapsible?: boolean;
@@ -42,6 +43,7 @@ export type SideBarProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
+  listItemSx?: SxProps<Theme>;
 };
 
 const drawerWidth = 340;
@@ -88,13 +90,17 @@ export const SideBar = ({
   logoExpanded,
   children,
   childrenCollapsed,
-  selectedMenuKey,
   textVariant = 'subtitle2',
   collapsible = true,
   expandHint = false,
   textSX,
+  listItemSx,
   defaultOpen = true,
 }: SideBarProps) => {
+  const location = useLocation();
+  const selectedNavItem = items.find((n) => n.key === location.pathname || '/' + n.key === location.pathname);
+  const selectedMenuKey = selectedNavItem ? selectedNavItem.key : undefined;
+
   useEffect(() => {
     let active = true;
     if (active) {
@@ -104,6 +110,12 @@ export const SideBar = ({
       active = false;
     };
   }, [selectedMenuKey]);
+
+  const StyledListItemButton = styled(ListItemButton)(() => ({
+    '&.Mui-selected, &.Mui-selected:hover': {
+      ...listItemSx,
+    },
+  }));
 
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpen);
@@ -155,7 +167,7 @@ export const SideBar = ({
               </Box>
             ) : (
               <Tooltip title={<ChevronRight />} arrow placement="top">
-                <Box display="flex" flexDirection="column" justifyContent="center">
+                <Box display="flex" justifyContent="center">
                   {expandHint ? (
                     <Box
                       display="flex"
@@ -181,14 +193,14 @@ export const SideBar = ({
         {items.map((item, index) => (
           <React.Fragment key={item.key}>
             <ListItem disablePadding>
-              <ListItemButton
+              <StyledListItemButton
+                selected={selectedKey === item.key}
+                onClick={() => handleItemClick(item)}
                 sx={{
                   justifyContent: !closed ? 'initial' : 'center',
                   px: 2.5,
                   borderRadius: 0.5,
                 }}
-                selected={selectedKey === item.key}
-                onClick={() => handleItemClick(item)}
               >
                 <ListItemIcon sx={textSX}>{item.icon}</ListItemIcon>
                 <ListItemText
@@ -202,7 +214,7 @@ export const SideBar = ({
                   }
                   sx={{ display: open ? 'block' : 'none', margin: 0, ml: 3 }}
                 />
-              </ListItemButton>
+              </StyledListItemButton>
             </ListItem>
 
             {item.divider && (
