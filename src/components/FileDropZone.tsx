@@ -47,7 +47,7 @@ export type FileUploaderProps = {
   maxSize?: number;
   fileFormat: Accept;
   featured?: boolean;
-
+  type?: 'img' | 'pdf' | 'other';
   onFilesChange?: () => void;
 };
 
@@ -66,7 +66,7 @@ const StyledImg = styled('img')(() => ({
 
 export const FileDropZone = (props: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext();
-  const { name, maxFiles = 0, maxSize, fileFormat, featured } = props;
+  const { name, maxFiles = 0, maxSize, fileFormat, featured, type } = props;
   const [files, setFiles] = useState<File[]>([]);
   const [filesSync, setFileSync] = useState<FileInfo[]>(get(values, name, []));
   const [fileSelected, setFileSelected] = useState<FileSelected[]>(
@@ -154,6 +154,37 @@ export const FileDropZone = (props: FileUploaderProps) => {
     accept: fileFormat,
   };
   const { getRootProps, getInputProps, open } = useDropzone(dropZoneConfig);
+
+  const showThumbnail = (fileName: string, index: number) => {
+    const nameArray = fileName.split('.');
+    const name = nameArray[nameArray.length - 1];
+    let thumbnail: React.ReactNode;
+    if (name === '.pdf') thumbnail = <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
+    else if (name === '.png' || '.jpg' || '.jpeg') thumbnail = <StyledImg src={URL.createObjectURL(files[index])} />;
+    else
+      thumbnail = (
+        <Box position="relative" padding="0px">
+          <Typography
+            variant="body1"
+            color="white"
+            sx={{
+              padding: 0,
+              position: 'absolute',
+              top: '50%',
+              left: 0,
+              right: 0,
+              margin: 0,
+              transform: 'translateY(-50%)',
+              width: '50.156px',
+            }}
+          >
+            {name}
+          </Typography>
+          <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
+        </Box>
+      );
+    return thumbnail;
+  };
   return (
     <StyledBox>
       <Box
@@ -176,14 +207,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
             {fileSelected.map((file, index) => (
               <Grid item xs={6} key={index}>
                 <Box className="thumbnailCover">
-                  <>
-                    {name.includes('.pdf') ? (
-                      <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />
-                    ) : (
-                      <StyledImg src={URL.createObjectURL(files[index])} />
-                      // (files[index].type
-                    )}
-                  </>
+                  <>{showThumbnail(file.fileName, index)}</>
                   <IconButton
                     onClick={() => {
                       index && starFile(index);

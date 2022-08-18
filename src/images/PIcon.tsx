@@ -25,6 +25,7 @@ import ChevronUpIcon from './icons/chevronUp';
 import FilterIcon from './icons/filterIcon';
 import CrossSmallIcon from './icons/crossSmall';
 import StarIcon from './icons/star';
+import BlankFileIcon from './icons/blankFileIcon';
 
 export const customIconMap = {
   searchIcon: SearchIcon,
@@ -52,6 +53,7 @@ export const customIconMap = {
   filterIcon: FilterIcon,
   crossSmallIcon: CrossSmallIcon,
   starIcon: StarIcon,
+  blankFileIcon: BlankFileIcon,
 };
 export const PIcon = ({
   name,
