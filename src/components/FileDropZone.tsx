@@ -208,7 +208,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
                   <>{showThumbnail(file.fileName, index)}</>
                   <IconButton
                     onClick={() => {
-                      index && starFile(index);
+                      if (index) starFile(index);
                     }}
                     sx={{ position: 'absolute' }}
                     className="iconStarFile"
