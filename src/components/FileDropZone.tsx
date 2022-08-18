@@ -47,7 +47,6 @@ export type FileUploaderProps = {
   maxSize?: number;
   fileFormat: Accept;
   featured?: boolean;
-  type?: 'img' | 'pdf' | 'other';
   onFilesChange?: () => void;
 };
 
@@ -66,7 +65,7 @@ const StyledImg = styled('img')(() => ({
 
 export const FileDropZone = (props: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext();
-  const { name, maxFiles = 0, maxSize, fileFormat, featured, type } = props;
+  const { name, maxFiles = 0, maxSize, fileFormat, featured } = props;
   const [files, setFiles] = useState<File[]>([]);
   const [filesSync, setFileSync] = useState<FileInfo[]>(get(values, name, []));
   const [fileSelected, setFileSelected] = useState<FileSelected[]>(
@@ -156,10 +155,10 @@ export const FileDropZone = (props: FileUploaderProps) => {
 
   const showThumbnail = (fileName: string, index: number) => {
     const nameArray = fileName.split('.');
-    const name = nameArray[nameArray.length - 1];
+    const _name = nameArray[nameArray.length - 1];
     let thumbnail: React.ReactNode;
-    if (name === '.pdf') thumbnail = <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
-    else if (name === '.png' || '.jpg' || '.jpeg') thumbnail = <StyledImg src={URL.createObjectURL(files[index])} />;
+    if (_name === '.pdf') thumbnail = <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
+    else if (_name === '.png' || '.jpg' || '.jpeg') thumbnail = <StyledImg src={URL.createObjectURL(files[index])} />;
     else
       thumbnail = (
         <Box position="relative" padding="0px">
@@ -177,7 +176,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
               width: '50.156px',
             }}
           >
-            {name}
+            {_name}
           </Typography>
           <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
         </Box>
