@@ -12,7 +12,7 @@ const FileDropZoneDemo = () => {
     <Box>
       <Typography variant="h4">File Dropzone</Typography>
       <Divider />
-      <FileDropZone name=".pdf" fileFormat={fileFormatExample} maxFiles={0} featured />
+      <FileDropZone name="" fileFormat={fileFormatExample} maxFiles={0} featured />
 
       <br />
     </Box>

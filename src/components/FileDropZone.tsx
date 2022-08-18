@@ -154,34 +154,38 @@ export const FileDropZone = (props: FileUploaderProps) => {
   const { getRootProps, getInputProps, open } = useDropzone(dropZoneConfig);
 
   const showThumbnail = (fileName: string, index: number) => {
-    const nameArray = fileName.split('.');
-    const _name = nameArray[nameArray.length - 1];
-    let thumbnail: React.ReactNode;
-    if (_name === '.pdf') thumbnail = <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
-    else if (_name === '.png' || '.jpg' || '.jpeg') thumbnail = <StyledImg src={URL.createObjectURL(files[index])} />;
-    else
-      thumbnail = (
-        <Box position="relative" padding="0px">
-          <Typography
-            variant="body1"
-            color="white"
-            sx={{
-              padding: 0,
-              position: 'absolute',
-              top: '50%',
-              left: 0,
-              right: 0,
-              margin: 0,
-              transform: 'translateY(-50%)',
-              width: '50.156px',
-            }}
-          >
-            {_name}
-          </Typography>
-          <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
-        </Box>
-      );
-    return thumbnail;
+    try {
+      const nameArray = fileName.split('.');
+      const _name = nameArray[nameArray.length - 1];
+      let thumbnail: React.ReactNode;
+      if (_name === '.pdf') thumbnail = <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
+      else if (_name === '.png' || '.jpg' || '.jpeg') thumbnail = <StyledImg src={URL.createObjectURL(files[index])} />;
+      else
+        thumbnail = (
+          <Box position="relative" padding="0px">
+            <Typography
+              variant="body1"
+              color="white"
+              sx={{
+                padding: 0,
+                position: 'absolute',
+                top: '50%',
+                left: 0,
+                right: 0,
+                margin: 0,
+                transform: 'translateY(-50%)',
+                width: '50.156px',
+              }}
+            >
+              {_name}
+            </Typography>
+            <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
+          </Box>
+        );
+      return thumbnail;
+    } catch {
+      // do nothing
+    }
   };
   return (
     <StyledBox>
@@ -217,9 +221,9 @@ export const FileDropZone = (props: FileUploaderProps) => {
                       name="starIcon"
                       sx={{
                         display: featured ? 'inline-flex' : 'none',
-                        backgroundColor: index ? 'white' : '#FFB400',
-                        color: index ? 'currentColor' : 'white',
-                        borderRadius: 16,
+                        backgroundColor: index ? 'white !important' : '#FFB400 !important',
+                        color: index ? 'currentColor !important' : 'white !important',
+                        borderRadius: '16px !important',
                         padding: '4px',
                       }}
                     />
