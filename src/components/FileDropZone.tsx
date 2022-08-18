@@ -89,7 +89,6 @@ export const FileDropZone = (props: FileUploaderProps) => {
           filePosition: index + files.length,
           fileType: 'new',
         }));
-        console.log(acceptedFiles);
         setFileSelected([...fileSelected, ...newFileSelected]);
         setFiles([...files, ...acceptedFiles]);
         setError('');
