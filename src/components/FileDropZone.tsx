@@ -2,7 +2,7 @@ import { Box, Button, Grid, IconButton, styled, Typography } from '@mui/material
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import { ErrorLabel } from './ErrorLabel';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone';
 import { FileInfo } from '../types';
 import { OverridesColors } from '../pegasus/Colors';
@@ -117,11 +117,11 @@ export const FileDropZone = (props: FileUploaderProps) => {
     const fileRemove = fileSelected[fileIndex];
     if (fileRemove.fileType === 'new') {
       const _files = [...files];
-      _files.splice(fileRemove.filePosition, 1);
+      _files.splice(fileIndex, 1);
       setFiles([..._files]);
     } else {
       const _fileSync = [...filesSync];
-      _fileSync.splice(fileRemove.filePosition, 1);
+      _fileSync.splice(fileIndex, 1);
       setFileSync([..._fileSync]);
     }
     const _fileSelected = [...fileSelected];
@@ -132,13 +132,18 @@ export const FileDropZone = (props: FileUploaderProps) => {
 
   const starFile = (fileIndex: number) => {
     const fileStar = fileSelected[fileIndex];
+    if (fileStar.fileType === 'new') {
+      const _files = [...files];
+      _files.splice(fileIndex, 1);
+      setFiles([files[fileIndex], ..._files]);
+    } else {
+      const _fileSync = [...filesSync];
+      _fileSync.splice(fileIndex, 1);
+      setFileSync([filesSync[fileIndex], ..._fileSync]);
+    }
     const _fileSelected = [...fileSelected];
     _fileSelected.splice(fileIndex, 1);
     setFileSelected([fileStar, ..._fileSelected]);
-    const _fileStar = files[fileIndex];
-    const _files = [...files];
-    _files.splice(fileIndex, 1);
-    setFiles([_fileStar, ..._files]);
     setError('');
   };
 
@@ -212,7 +217,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
                   <>{showThumbnail(file.fileName, index)}</>
                   <IconButton
                     onClick={() => {
-                      if (index) starFile(index);
+                      starFile(index);
                     }}
                     sx={{ position: 'absolute' }}
                     className="iconStarFile"
