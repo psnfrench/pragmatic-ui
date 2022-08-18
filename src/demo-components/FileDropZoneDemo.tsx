@@ -1,8 +1,9 @@
 import { Box, Divider, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FileDropZone } from '../components/FileDropZone';
 
 const fileFormatExample = {
+  'application/images': ['.jpg', '.jpeg', '.png'],
   'application/pdf': ['.pdf'],
 };
 
@@ -11,7 +12,8 @@ const FileDropZoneDemo = () => {
     <Box>
       <Typography variant="h4">File Dropzone</Typography>
       <Divider />
-      <FileDropZone name="" fileFormat={fileFormatExample} maxFiles={0} />
+      <FileDropZone name="" fileFormat={fileFormatExample} maxFiles={0} featured />
+
       <br />
     </Box>
   );

@@ -28,6 +28,17 @@ const StyledBox = styled(Box)(({ theme }) => ({
     top: theme.spacing(-3),
     left: theme.spacing(3.75),
   },
+  '& .iconStarFile': {
+    top: theme.spacing(-3),
+    right: theme.spacing(3.75),
+  },
+  '& .thumbnailCover': {
+    position: 'relative',
+    width: '53px',
+    height: '58px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
 }));
 
 export type FileUploaderProps = {
@@ -35,6 +46,8 @@ export type FileUploaderProps = {
   maxFiles?: number;
   maxSize?: number;
   fileFormat: Accept;
+  featured?: boolean;
+
   onFilesChange?: () => void;
 };
 
@@ -44,9 +57,16 @@ export type FileSelected = {
   fileType: 'new' | 'old';
 };
 
+const StyledImg = styled('img')(() => ({
+  height: '58px',
+  width: '100%',
+  objectFit: 'cover',
+  mask: 'linear-gradient(-45deg, transparent 8px, #ddd 0) bottom right',
+}));
+
 export const FileDropZone = (props: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext();
-  const { name, maxFiles = 0, maxSize, fileFormat } = props;
+  const { name, maxFiles = 0, maxSize, fileFormat, featured } = props;
   const [files, setFiles] = useState<File[]>([]);
   const [filesSync, setFileSync] = useState<FileInfo[]>(get(values, name, []));
   const [fileSelected, setFileSelected] = useState<FileSelected[]>(
@@ -69,6 +89,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
           filePosition: index + files.length,
           fileType: 'new',
         }));
+        console.log(acceptedFiles);
         setFileSelected([...fileSelected, ...newFileSelected]);
         setFiles([...files, ...acceptedFiles]);
         setError('');
@@ -110,6 +131,19 @@ export const FileDropZone = (props: FileUploaderProps) => {
     setFileSelected([..._fileSelected]);
     setError('');
   };
+
+  const starFile = (fileIndex: number) => {
+    const fileStar = fileSelected[fileIndex];
+    const _fileSelected = [...fileSelected];
+    _fileSelected.splice(fileIndex, 1);
+    setFileSelected([fileStar, ..._fileSelected]);
+    const _fileStar = files[fileIndex];
+    const _files = [...files];
+    _files.splice(fileIndex, 1);
+    setFiles([_fileStar, ..._files]);
+    setError('');
+  };
+
   const dropZoneConfig: DropzoneOptions = {
     onDrop,
     multiple: true,
@@ -141,10 +175,33 @@ export const FileDropZone = (props: FileUploaderProps) => {
           <Grid container spacing={2} justifyContent="space-around">
             {fileSelected.map((file, index) => (
               <Grid item xs={6} key={index}>
-                <Box
-                  sx={{ position: 'relative', width: '53px', height: '58px', marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                  <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />
+                <Box className="thumbnailCover">
+                  <>
+                    {name.includes('.pdf') ? (
+                      <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />
+                    ) : (
+                      <StyledImg src={URL.createObjectURL(files[index])} />
+                      // (files[index].type
+                    )}
+                  </>
+                  <IconButton
+                    onClick={() => {
+                      index && starFile(index);
+                    }}
+                    sx={{ position: 'absolute' }}
+                    className="iconStarFile"
+                  >
+                    <PIcon
+                      name="starIcon"
+                      sx={{
+                        display: featured ? 'inline-flex' : 'none',
+                        backgroundColor: index ? 'white' : '#FFB400',
+                        color: index ? 'currentColor' : 'white',
+                        borderRadius: 16,
+                        padding: '4px',
+                      }}
+                    />
+                  </IconButton>
                   <IconButton
                     onClick={() => {
                       removeFile(index);

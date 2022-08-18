@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material';
+import { Button, Theme } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import './App.css';
@@ -9,7 +9,7 @@ import SnackBarDemo from './demo-components/SnackBarDemo';
 import ConfirmationDemo from './demo-components/ConfirmationDemo';
 import BorderRadiusDemo from './demo-components/BorderRadiusDemo';
 import DateDemo from './demo-components/DateDemo';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import LoginDemo from './demo-components/LoginDemo';
 import SearchDemo from './demo-components/SearchDemo';
@@ -30,6 +30,7 @@ export type AppRouterProps = {
 };
 
 export const AppRouter = ({ setTheme }: AppRouterProps) => {
+  const navigate = useNavigate();
   const handleSubmit = (values: typeof initialValues, { setSubmitting }: FormikHelpers<typeof initialValues>) => {
     console.log('values: ', values);
     setTimeout(() => {
@@ -69,6 +70,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
           </Formik>
         }
       />
+      <Route path="/demos/test-sidebar" element={<SnackBarDemo />} />
       <Route path="/login" element={<LoginDemo />} />
       <Route path="/signup" element={<SignUpDemo />} />
       <Route path="/snackbar" element={<SnackBarDemo />} />
