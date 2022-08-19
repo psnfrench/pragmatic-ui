@@ -51,7 +51,7 @@ export type FileUploaderProps = {
 };
 
 export type FileSelected = {
-  fileName: string;
+  filename: string;
   filePosition: number;
   fileType: 'new' | 'old';
 };
@@ -70,7 +70,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
   const [filesSync, setFileSync] = useState<FileInfo[]>(get(values, name, []));
   const [fileSelected, setFileSelected] = useState<FileSelected[]>(
     get(values, name, []).map((file: FileInfo, index: number) => ({
-      fileName: file.origFileName,
+      filename: file.origFileName,
       filePosition: index,
       fileType: 'old',
     })),
@@ -84,7 +84,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
       const numberOfFiles = fileSelected.length + acceptedFiles.length;
       if ((numberOfFiles <= maxFiles && maxFiles !== 0) || maxFiles === 0) {
         const newFileSelected: FileSelected[] = acceptedFiles.map((_file, index) => ({
-          fileName: _file.name,
+          filename: _file.name,
           filePosition: index + files.length,
           fileType: 'new',
         }));
@@ -214,7 +214,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
             {fileSelected.map((file, index) => (
               <Grid item xs={6} key={index}>
                 <Box className="thumbnailCover">
-                  <>{showThumbnail(file.fileName, index)}</>
+                  <>{showThumbnail(file.filename, index)}</>
                   <IconButton
                     onClick={() => {
                       starFile(index);
@@ -244,7 +244,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
                   </IconButton>
                 </Box>
                 <Typography color={OverridesColors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
-                  {file.fileName}
+                  {file.filename}
                 </Typography>
               </Grid>
             ))}
