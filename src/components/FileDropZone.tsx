@@ -1,12 +1,12 @@
 import { Box, Button, Grid, IconButton, styled, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
-import { ErrorLabel } from './ErrorLabel';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone';
-import { FileInfo } from '../types';
-import { OverridesColors } from '../pegasus/Colors';
+import { FileInfo, Image } from '../types';
 import { PIcon } from '../images/PIcon';
+import { Colors } from '../constants/Colors';
+import { ErrorLabel } from './ErrorLabel';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   '& .dropZone': {
@@ -43,6 +43,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 export type FileUploaderProps = {
   name: string;
+  awsUrl?: string;
   maxFiles?: number;
   maxSize?: number;
   fileFormat: Accept;
@@ -50,7 +51,8 @@ export type FileUploaderProps = {
   onFilesChange?: () => void;
 };
 
-export type FileSelected = {
+export type CurrentFiles = {
+  imageUrl?: string;
   filename: string;
   filePosition: number;
   fileType: 'new' | 'old';
@@ -64,16 +66,30 @@ const StyledImg = styled('img')(() => ({
 }));
 
 export const FileDropZone = (props: FileUploaderProps) => {
-  const { setFieldValue, values } = useFormikContext();
-  const { name, maxFiles = 0, maxSize, fileFormat, featured } = props;
+  const { name, maxFiles = 0, maxSize, fileFormat, featured, awsUrl } = props;
+  const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] }>();
   const [files, setFiles] = useState<File[]>([]);
-  const [filesSync, setFileSync] = useState<FileInfo[]>(get(values, name, []));
-  const [fileSelected, setFileSelected] = useState<FileSelected[]>(
-    get(values, name, []).map((file: FileInfo, index: number) => ({
-      filename: file.origFileName,
-      filePosition: index,
-      fileType: 'old',
-    })),
+  const [filesSync, setFileSync] = useState<(Image | FileInfo)[]>(get(values, name, []));
+  const [currentFiles, setCurrentFiles] = useState<CurrentFiles[]>(
+    get(values, name, []).map((value: FileInfo | Image, index: number) => {
+      const file: FileInfo | undefined = (value as FileInfo).locationUrl ? (value as FileInfo) : undefined;
+      const image: Image = value as Image;
+      if (file) {
+        return {
+          imageUrl: file.locationUrl,
+          filename: file.origFileName,
+          filePosition: index,
+          fileType: 'old',
+        };
+      } else {
+        return {
+          imageUrl: awsUrl ? awsUrl + '/' + image.path : image.path,
+          filename: image.filename,
+          filePosition: index,
+          fileType: 'old',
+        };
+      }
+    }),
   );
 
   const [error, setError] = useState('');
@@ -81,14 +97,15 @@ export const FileDropZone = (props: FileUploaderProps) => {
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       // Do something with the files
-      const numberOfFiles = fileSelected.length + acceptedFiles.length;
+      const numberOfFiles = currentFiles.length + acceptedFiles.length;
       if ((numberOfFiles <= maxFiles && maxFiles !== 0) || maxFiles === 0) {
-        const newFileSelected: FileSelected[] = acceptedFiles.map((_file, index) => ({
+        const newCurrentFiles: CurrentFiles[] = acceptedFiles.map((_file, index) => ({
+          imageUrl: URL.createObjectURL(_file),
           filename: _file.name,
           filePosition: index + files.length,
           fileType: 'new',
         }));
-        setFileSelected([...fileSelected, ...newFileSelected]);
+        setCurrentFiles([...currentFiles, ...newCurrentFiles]);
         setFiles([...files, ...acceptedFiles]);
         setError('');
       } else {
@@ -102,7 +119,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
         }
       }
     },
-    [fileSelected, files, maxFiles],
+    [currentFiles, files, maxFiles],
   );
 
   useEffect(() => {
@@ -114,7 +131,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
   }, [filesSync, name, setFieldValue]);
 
   const removeFile = (fileIndex: number) => {
-    const fileRemove = fileSelected[fileIndex];
+    const fileRemove = currentFiles[fileIndex];
     if (fileRemove.fileType === 'new') {
       const _files = [...files];
       _files.splice(fileIndex, 1);
@@ -124,14 +141,14 @@ export const FileDropZone = (props: FileUploaderProps) => {
       _fileSync.splice(fileIndex, 1);
       setFileSync([..._fileSync]);
     }
-    const _fileSelected = [...fileSelected];
+    const _fileSelected = [...currentFiles];
     _fileSelected.splice(fileIndex, 1);
-    setFileSelected([..._fileSelected]);
+    setCurrentFiles([..._fileSelected]);
     setError('');
   };
 
   const starFile = (fileIndex: number) => {
-    const fileStar = fileSelected[fileIndex];
+    const fileStar = currentFiles[fileIndex];
     if (fileStar.fileType === 'new') {
       const _files = [...files];
       _files.splice(fileIndex, 1);
@@ -141,12 +158,13 @@ export const FileDropZone = (props: FileUploaderProps) => {
       _fileSync.splice(fileIndex, 1);
       setFileSync([filesSync[fileIndex], ..._fileSync]);
     }
-    const _fileSelected = [...fileSelected];
+    const _fileSelected = [...currentFiles];
     _fileSelected.splice(fileIndex, 1);
-    setFileSelected([fileStar, ..._fileSelected]);
+    setCurrentFiles([fileStar, ..._fileSelected]);
     setError('');
   };
 
+  // eslint-disable-next-line object-shorthand
   const dropZoneConfig: DropzoneOptions = {
     onDrop,
     multiple: true,
@@ -158,40 +176,6 @@ export const FileDropZone = (props: FileUploaderProps) => {
   };
   const { getRootProps, getInputProps, open } = useDropzone(dropZoneConfig);
 
-  const showThumbnail = (fileName: string, index: number) => {
-    try {
-      const nameArray = fileName.split('.');
-      const _name = nameArray[nameArray.length - 1];
-      let thumbnail: React.ReactNode;
-      if (_name === '.pdf') thumbnail = <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
-      else if (_name === '.png' || '.jpg' || '.jpeg') thumbnail = <StyledImg src={URL.createObjectURL(files[index])} />;
-      else
-        thumbnail = (
-          <Box position="relative" padding="0px">
-            <Typography
-              variant="body1"
-              color="white"
-              sx={{
-                padding: 0,
-                position: 'absolute',
-                top: '50%',
-                left: 0,
-                right: 0,
-                margin: 0,
-                transform: 'translateY(-50%)',
-                width: '50.156px',
-              }}
-            >
-              {_name}
-            </Typography>
-            <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
-          </Box>
-        );
-      return thumbnail;
-    } catch {
-      // do nothing
-    }
-  };
   return (
     <StyledBox>
       <Box
@@ -209,12 +193,12 @@ export const FileDropZone = (props: FileUploaderProps) => {
         <Typography variant="subtitle2" marginBottom={2}>
           Drag and drop or upload files from your library
         </Typography>
-        {fileSelected.length > 0 && (
+        {currentFiles.length > 0 && (
           <Grid container spacing={2} justifyContent="space-around">
-            {fileSelected.map((file, index) => (
+            {currentFiles.map((file, index) => (
               <Grid item xs={6} key={index}>
                 <Box className="thumbnailCover">
-                  <>{showThumbnail(file.filename, index)}</>
+                  <Thumbnail file={file} />
                   <IconButton
                     onClick={() => {
                       starFile(index);
@@ -243,7 +227,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
                     <PIcon name="closeIcon" />
                   </IconButton>
                 </Box>
-                <Typography color={OverridesColors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
+                <Typography color={Colors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
                   {file.filename}
                 </Typography>
               </Grid>
@@ -262,4 +246,33 @@ export const FileDropZone = (props: FileUploaderProps) => {
       {error && <ErrorLabel errorText={error} />}
     </StyledBox>
   );
+};
+
+const Thumbnail = ({ file }: { file: CurrentFiles }) => {
+  const nameArray = file.filename.split('.');
+  const _name = nameArray[nameArray.length - 1];
+  if (_name === 'pdf') return <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
+  else if (file.imageUrl) return <StyledImg src={file.imageUrl} />;
+  else
+    return (
+      <Box position="relative" padding="0px">
+        <Typography
+          variant="body1"
+          color="white"
+          sx={{
+            padding: 0,
+            position: 'absolute',
+            top: '50%',
+            left: 0,
+            right: 0,
+            margin: 0,
+            transform: 'translateY(-50%)',
+            width: '50.156px',
+          }}
+        >
+          {_name}
+        </Typography>
+        <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
+      </Box>
+    );
 };

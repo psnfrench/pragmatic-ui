@@ -38,3 +38,14 @@ export type FileInfo = {
   origFileName: string;
   timeUploaded: number;
 };
+
+export type Image = {
+  bucket: string;
+  date: number;
+  filename: string;
+  filesize: number;
+  path: string;
+  uid: string;
+  signedUrl?: string;
+  base64?: unknown; // for blob previews
+};
