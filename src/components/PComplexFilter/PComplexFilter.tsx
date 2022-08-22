@@ -345,7 +345,7 @@ export function PComplexFilter({
       });
     }
 
-    setReturnedFilters && setReturnedFilters(filterArray);
+    if (setReturnedFilters) setReturnedFilters(filterArray);
   }, [currentFilters]);
 
   // clears all filters
