@@ -108,6 +108,7 @@ const ComplexFilterDemo = () => {
   const [currentSearch, setCurrentSearch] = useState<string>();
   const [filteredOptions, setFilteredOptions] = useState([...items]);
   const [searchedOptions, setSearchedOptions] = useState([...items]);
+  const [returnedFilters, setReturnedFilters] = useState<menuItemType[]>();
   let newItems: itemType[] = [];
   let newSearchItems: itemType[] = [];
 
@@ -128,6 +129,10 @@ const ComplexFilterDemo = () => {
       </Box>
     ));
   }
+
+  useEffect(() => {
+    console.log(returnedFilters);
+  }, [returnedFilters]);
 
   // Maps out all data including children (that are theoretically infinite)
   function displayDataParent(item: itemType[], child?: boolean) {
@@ -266,7 +271,9 @@ const ComplexFilterDemo = () => {
             // Having anchorEl & setAnchorEl here allows control over the popup appearing or disappearing
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
-            // Populated string array of all currently selected filters
+            // Returns the current filter objects. Handy for applying filter to data (useful when filtering multiple fields)
+            setReturnedFilters={setReturnedFilters}
+            // Populated string array of all currently selected filters (mostly useful when only filtering one field)
             currentFilterString={currentFilterString}
             setCurrentFilterString={setCurrentFilterString}
             // Example of sending props to the button to change its style
@@ -276,6 +283,7 @@ const ComplexFilterDemo = () => {
             // Example of changing the title
             titleProps={{ padding: 4 }}
             listItemProps={{ color: 'secondary' }}
+            // Example Method of seraching with the searchbar in this component
             handleDisplayedItemsSearch={handleDisplayedItemsSearch}
           />
         </Box>
