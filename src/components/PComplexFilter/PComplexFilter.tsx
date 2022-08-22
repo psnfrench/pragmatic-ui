@@ -105,6 +105,7 @@ export type PComplexFilterProps = {
   clearChipProps?: ChipProps;
   searchPlaceholder?: string;
   handleDisplayedItemsSearch?: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  returnAll?: boolean;
 };
 
 export function PComplexFilter({
@@ -133,6 +134,7 @@ export function PComplexFilter({
   clearChipProps,
   searchPlaceholder,
   handleDisplayedItemsSearch,
+  returnAll,
 }: PComplexFilterProps) {
   const [open, setOpen] = useState(Boolean(anchorEl));
   const [currentFilters, setCurrentFilters] = useState<menuItemType[]>([]);
@@ -323,21 +325,26 @@ export function PComplexFilter({
 
   // when currentItems changes, sets Filtered items as well
   useEffect(() => {
-    let filterArray: menuItemType[] = [];
     let _currentFilters = _.cloneDeep(currentFilters);
+    let filterArray: menuItemType[] = [];
 
-    _currentFilters.forEach((filter) => {
-      if (filter.children) {
-        let childrenArray: menuItemType[] = [];
-        filter.children.forEach((child) => {
-          if (child.selected) childrenArray.push(child);
-        });
-        filter.children = childrenArray;
-        filterArray.push(filter);
-      } else {
-        if (filter.selected) filterArray.push(filter);
-      }
-    });
+    if (returnAll) {
+      filterArray = _currentFilters;
+    } else {
+      _currentFilters.forEach((filter) => {
+        if (filter.children) {
+          let childrenArray: menuItemType[] = [];
+          filter.children.forEach((child) => {
+            if (child.selected) childrenArray.push(child);
+          });
+          filter.children = childrenArray;
+          filterArray.push(filter);
+        } else {
+          if (filter.selected) filterArray.push(filter);
+        }
+      });
+    }
+
     setReturnedFilters && setReturnedFilters(filterArray);
   }, [currentFilters]);
 
