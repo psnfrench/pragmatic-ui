@@ -130,10 +130,6 @@ const ComplexFilterDemo = () => {
     ));
   }
 
-  useEffect(() => {
-    console.log(returnedFilters);
-  }, [returnedFilters]);
-
   // Maps out all data including children (that are theoretically infinite)
   function displayDataParent(item: itemType[], child?: boolean) {
     return item.map((option, key) => (

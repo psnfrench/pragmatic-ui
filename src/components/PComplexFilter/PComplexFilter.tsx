@@ -325,7 +325,7 @@ export function PComplexFilter({
 
   // when currentItems changes, sets Filtered items as well
   useEffect(() => {
-    let _currentFilters = _.cloneDeep(currentFilters);
+    const _currentFilters = _.cloneDeep(currentFilters);
     let filterArray: menuItemType[] = [];
 
     if (returnAll) {
@@ -333,7 +333,7 @@ export function PComplexFilter({
     } else {
       _currentFilters.forEach((filter) => {
         if (filter.children) {
-          let childrenArray: menuItemType[] = [];
+          const childrenArray: menuItemType[] = [];
           filter.children.forEach((child) => {
             if (child.selected) childrenArray.push(child);
           });
