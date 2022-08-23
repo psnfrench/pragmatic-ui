@@ -8,6 +8,8 @@ import { PIcon } from '../images/PIcon';
 import { Colors } from '../constants/Colors';
 import { ErrorLabel } from './ErrorLabel';
 
+const ImageTypes: string[] = ['.apng', '.avif', '.giv', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.webp'];
+
 const StyledBox = styled(Box)(({ theme }) => ({
   '& .dropZone': {
     background: '#EFF0F6',
@@ -46,7 +48,7 @@ export type FileUploaderProps = {
   awsUrl?: string;
   maxFiles?: number;
   maxSize?: number;
-  fileFormat: Accept;
+  fileFormat?: Accept;
   featured?: boolean;
   onFilesChange?: () => void;
 };
@@ -251,8 +253,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
 const Thumbnail = ({ file }: { file: CurrentFiles }) => {
   const nameArray = file.filename.split('.');
   const _name = nameArray[nameArray.length - 1];
-  if (_name === 'pdf') return <PIcon sx={{ display: 'block' }} name="pdfFileIcon" />;
-  else if (file.imageUrl) return <StyledImg src={file.imageUrl} />;
+  if (ImageTypes.includes(file.filename)) return <StyledImg src={file.imageUrl} />;
   else
     return (
       <Box position="relative" padding="0px">
@@ -270,9 +271,9 @@ const Thumbnail = ({ file }: { file: CurrentFiles }) => {
             width: '50.156px',
           }}
         >
-          {_name}
+          {_name.toUpperCase()}
         </Typography>
-        <PIcon name="blankFileIcon" sx={{ objectFit: 'fill' }} />
+        <PIcon name="blankFileIcon" sx={{ objectFit: 'fill', color: 'primary.main' }} />
       </Box>
     );
 };
