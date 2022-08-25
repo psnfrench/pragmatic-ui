@@ -137,18 +137,14 @@ export const FileDropZone = (props: FileUploaderProps) => {
   );
 
   useEffect(() => {
-    setFieldValue(name, [...files]);
-  }, [files, setFieldValue]);
-
-  useEffect(() => {
-    setFieldValue(name, [...filesSync]);
-  }, [filesSync, name, setFieldValue]);
+    setFieldValue(name, [...filesSync, ...files]);
+  }, [files, filesSync, name, setFieldValue]);
 
   const removeFile = (fileIndex: number) => {
     const fileRemove = currentFiles[fileIndex];
     if (fileRemove.fileType === 'new') {
       const _files = [...files];
-      _files.splice(fileIndex, 1);
+      _files.splice(fileIndex - currentFiles.length, 1);
       setFiles([..._files]);
     } else {
       const _fileSync = [...filesSync];
@@ -164,18 +160,16 @@ export const FileDropZone = (props: FileUploaderProps) => {
   const starFile = (fileIndex: number) => {
     const fileStar = currentFiles[fileIndex];
     if (fileStar.fileType === 'new') {
-      const _files = [...files];
-      _files.splice(fileIndex, 1);
-      setFiles([files[fileIndex], ..._files]);
+      setError('Can only select existing items to be first. Coming in future update');
     } else {
       const _fileSync = [...filesSync];
       _fileSync.splice(fileIndex, 1);
       setFileSync([filesSync[fileIndex], ..._fileSync]);
+      const _fileSelected = [...currentFiles];
+      _fileSelected.splice(fileIndex, 1);
+      setCurrentFiles([fileStar, ..._fileSelected]);
+      setError('');
     }
-    const _fileSelected = [...currentFiles];
-    _fileSelected.splice(fileIndex, 1);
-    setCurrentFiles([fileStar, ..._fileSelected]);
-    setError('');
   };
 
   // eslint-disable-next-line object-shorthand
