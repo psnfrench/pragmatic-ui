@@ -137,7 +137,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
   );
 
   useEffect(() => {
-    setFieldValue(name, [...files, ...filesSync]);
+    setFieldValue('files', [...files]);
   }, [files, setFieldValue]);
 
   useEffect(() => {
