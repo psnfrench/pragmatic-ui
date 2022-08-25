@@ -252,10 +252,6 @@ const ComplexFilterDemo = () => {
     });
   };
 
-  useEffect(() => {
-    console.log(returnedFilters);
-  }, [returnedFilters]);
-
   return (
     <Box>
       <>

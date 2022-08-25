@@ -162,11 +162,11 @@ export function PComplexFilter({
     deSelect(items);
   }, []);
 
-  const countSelected = (items: menuItemType[], count?: number) => {
+  const countSelected = (itemsToCount: menuItemType[], count?: number) => {
     if (!count) {
       count = 0;
     }
-    for (const child of items) {
+    for (const child of itemsToCount) {
       if (child.children) {
         const newCount: number = countSelected(child.children, count);
         if (newCount) {
@@ -269,10 +269,8 @@ export function PComplexFilter({
         }
       } else if (menuParent) {
         let i = items.find((j, index) => j.text === currentTitles[0]);
-        console.log('i: ', i);
         if (i) {
           const empty = checkEmpty(i.children as menuItemType[]);
-          console.log('empty: ', empty);
           if (empty) {
             const newState = currentFilters.filter((menu) => {
               return menu.text !== (i as menuItemType).text;
@@ -311,7 +309,6 @@ export function PComplexFilter({
       setBack(true);
     } else {
       // selects item
-      console.log(menuParent);
       if (menuParent) {
         if (!menuParent.multiple) {
           const found: menuItemType[] = [];
@@ -343,7 +340,7 @@ export function PComplexFilter({
             setCurrentFilters((prev) => [...prev, menuParent]);
           }
         } else {
-          let i = itemsHistory[0].find((j, index) => j.text === currentTitles[1]);
+          const i = itemsHistory[0].find((j, index) => j.text === currentTitles[1]);
           if (i && currentFilters.includes(i) && open) {
             const newState: menuItemType[] = currentFilters.map((filter) => {
               if (filter.text === (i as menuItemType).text) {
@@ -358,8 +355,8 @@ export function PComplexFilter({
             setCurrentFilters((prev) => [...prev, i as menuItemType]);
             // if parent not exist, add to filters
           } else {
-            let _filters = [...currentFilters];
-            let _index = _filters.findIndex((filter) => filter.text === (i as menuItemType).text);
+            const _filters = [...currentFilters];
+            const _index = _filters.findIndex((filter) => filter.text === (i as menuItemType).text);
             _filters[_index] = i as menuItemType;
             setCurrentFilters(_filters);
           }
