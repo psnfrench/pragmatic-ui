@@ -83,9 +83,9 @@ export const FileDropZone = (props: FileUploaderProps) => {
   const { name, maxFiles = 0, maxSize, fileFormat, featured, awsUrl } = props;
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] }>();
   const [files, setFiles] = useState<File[]>([]);
-  const [filesSync, setFileSync] = useState<(Image | FileInfo)[]>(get(values, name, []));
+  const [filesSync, setFileSync] = useState<(Image | FileInfo | File)[]>(get(values, name, []));
   const [currentFiles, setCurrentFiles] = useState<CurrentFiles[]>(
-    get(values, name, []).map((value: FileInfo | Image, index: number) => {
+    get(values, name, []).map((value: FileInfo | Image | File, index: number) => {
       const file: FileInfo | undefined = (value as FileInfo).locationUrl ? (value as FileInfo) : undefined;
       const image: Image = value as Image;
       if (file) {
@@ -137,7 +137,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
   );
 
   useEffect(() => {
-    setFieldValue('files', [...files]);
+    setFieldValue(name, [...files]);
   }, [files, setFieldValue]);
 
   useEffect(() => {

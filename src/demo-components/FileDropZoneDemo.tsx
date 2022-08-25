@@ -1,5 +1,5 @@
 import { Box, Divider, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FileDropZone } from '../components/FileDropZone';
 
 const fileFormatExample = {
@@ -12,7 +12,7 @@ const FileDropZoneDemo = () => {
     <Box>
       <Typography variant="h4">File Dropzone</Typography>
       <Divider />
-      <FileDropZone name="images" maxFiles={0} featured />
+      <FileDropZone name="downloads" maxFiles={0} featured />
 
       <br />
     </Box>
