@@ -145,6 +145,7 @@ export function PComplexFilter({
   returnTree = true,
 }: PComplexFilterProps) {
   const [open, setOpen] = useState(Boolean(anchorEl));
+  const [mainOpen, setMainOpen] = useState(false);
   const [currentFilters, setCurrentFilters] = useState<menuItemType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [currentItems, setCurrentItems] = useState<menuItemType[]>([...items]);
@@ -183,6 +184,7 @@ export function PComplexFilter({
   const handleClick = (event: any) => {
     setOpen(!open);
     if (!open) {
+      setMainOpen(true);
       setItemsHistory([items]);
       setAnchorEl(event.currentTarget);
     } else {
@@ -192,6 +194,7 @@ export function PComplexFilter({
 
   // resets variables for menu
   const handleClose = () => {
+    setMainOpen(false);
     setBack(false);
     setOpen(false);
     setAnchorEl(null);
@@ -227,12 +230,12 @@ export function PComplexFilter({
   };
 
   const checkEmpty = (filter: menuItemType[]) => {
-    let i = true;
+    let i = [true];
     filter.forEach((item) => {
       if (item.children) {
-        i = checkEmpty(item.children);
+        i.push(...checkEmpty(item.children));
       } else if (item.selected) {
-        i = false;
+        i.push(false);
       }
     });
     return i;
@@ -248,12 +251,12 @@ export function PComplexFilter({
         // checks parent contains no selected items
         const empty = checkEmpty(menuParent.children as menuItemType[]);
         // if parent empty, remove from array
-        if (empty) {
+        if (!empty.includes(false)) {
           if (menuParent && currentFilters.includes(menuParent)) {
             const newState = currentFilters.filter((menu) => {
               return menu.text !== menuParent.text;
             });
-            if (!open) {
+            if (!mainOpen) {
               setCurrentIndex(-1);
               handleClose();
               setCurrentFilters(newState);
@@ -268,18 +271,26 @@ export function PComplexFilter({
           }
         }
       } else if (menuParent) {
-        const i = items.find((j, index) => j.text === currentTitles[0]);
+        const i = items.find((j, index) => {
+          if (mainOpen) {
+            return j.text === currentTitles[1];
+          } else {
+            return j.text === currentTitles[0];
+          }
+        });
         if (i) {
           const empty = checkEmpty(i.children as menuItemType[]);
-          if (empty) {
+          console.log('empty: ', empty);
+          if (!empty.includes(false)) {
             const newState = currentFilters.filter((menu) => {
               return menu.text !== (i as menuItemType).text;
             });
-            if (!open) {
+            console.log(i, newState, currentFilters);
+            if (!mainOpen) {
               setCurrentIndex(-1);
               handleClose();
-              setCurrentFilters(newState);
             }
+            setCurrentFilters(newState);
           } else {
             // if not empty, sets current filter to deselected
             if (setCurrentFilters) {
@@ -312,14 +323,15 @@ export function PComplexFilter({
       if (menuParent) {
         if (!menuParent.multiple) {
           const found: menuItemType[] = [];
-          (menuParent.children as menuItemType[]).forEach((child, index) =>
-            child.selected ? found.push(child) : null,
-          );
+          for (const child of menuParent.children as menuItemType[]) {
+            child.selected ? found.push(child) : null;
+          }
+
           if (found !== []) {
-            found.forEach((find) => {
+            for (const find of found) {
               setCurrentFilterString(currentFilterString.filter((e) => e !== find.text));
               find.selected = false;
-            });
+            }
           }
         }
         item.selected = true;
@@ -341,7 +353,7 @@ export function PComplexFilter({
           }
         } else {
           const i = itemsHistory[0].find((j, index) => j.text === currentTitles[1]);
-          if (i && currentFilters.includes(i) && open) {
+          if (i && currentFilters.includes(i) && mainOpen) {
             const newState: menuItemType[] = currentFilters.map((filter) => {
               if (filter.text === (i as menuItemType).text) {
                 return i as menuItemType;
@@ -351,7 +363,7 @@ export function PComplexFilter({
             });
 
             setCurrentFilters(newState);
-          } else if (i && open) {
+          } else if (i && mainOpen) {
             setCurrentFilters((prev) => [...prev, i as menuItemType]);
             // if parent not exist, add to filters
           } else {
@@ -416,22 +428,33 @@ export function PComplexFilter({
     if (returnAll) {
       filterArray = _currentFilters;
     } else {
-      _currentFilters.forEach((filter) => {
+      for (const filter of _currentFilters) {
         if (filter.children) {
-          const childrenArray: menuItemType[] = [];
-          filter.children.forEach((child) => {
-            if (child.selected) childrenArray.push(child);
-          });
-          filter.children = childrenArray;
+          const selectedObjects = getSelected(filter.children);
+          filter.children = selectedObjects;
           filterArray.push(filter);
         } else {
           if (filter.selected) filterArray.push(filter);
         }
-      });
+      }
     }
 
     if (setReturnedFilters) setReturnedFilters(filterArray);
   }, [currentFilters]);
+
+  const getSelected = (filter: menuItemType[]) => {
+    let i: menuItemType[] = [];
+    filter.forEach((item) => {
+      if (item.children) {
+        const j = getSelected(item.children);
+        item.children = j;
+        i.push(item);
+      } else if (item.selected) {
+        i.push(item);
+      }
+    });
+    return i;
+  };
 
   // clears all filters
   const handleClear = () => {
@@ -444,14 +467,14 @@ export function PComplexFilter({
 
   // deselects every item
   const deSelect = (itemsList: menuItemType[]) => {
-    itemsList.forEach((item) => {
+    for (const item of itemsList) {
       if (item.children) {
         deSelect(item.children);
       } else if (item.selected) {
         item.selected = false;
         setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
       }
-    });
+    }
   };
 
   // removes filter when Chip deleted
@@ -471,11 +494,11 @@ export function PComplexFilter({
     if (!returnTree) {
       let labelString = filter.text + ': ';
       const labelArray: string[] = [];
-      filter.children?.forEach((child) => {
+      for (const child of filter.children as menuItemType[]) {
         if (child.selected) {
           labelArray.push(child.text);
         }
-      });
+      }
       labelString = labelString + labelArray.join(', ');
       return labelString;
     } else {

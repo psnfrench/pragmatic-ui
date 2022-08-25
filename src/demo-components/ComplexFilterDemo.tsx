@@ -112,6 +112,10 @@ const ComplexFilterDemo = () => {
   let newItems: itemType[] = [];
   let newSearchItems: itemType[] = [];
 
+  useEffect(() => {
+    console.log(returnedFilters);
+  }, [returnedFilters]);
+
   // Maps out all data including children (that are theoretically infinite)
   function displayData(item: itemType[], child?: boolean) {
     return item.map((option, key) => (
@@ -270,7 +274,7 @@ const ComplexFilterDemo = () => {
             // Returns the current filter objects. Handy for applying filter to data (useful when filtering multiple fields)
             setReturnedFilters={setReturnedFilters}
             // Enable this setting to return the whole returned filters object. Without including this returns only the selected filters
-            returnAll
+            // returnAll
             // Populated string array of all currently selected filters (mostly useful when only filtering one field)
             currentFilterString={currentFilterString}
             setCurrentFilterString={setCurrentFilterString}
