@@ -142,7 +142,7 @@ export function PComplexFilter({
   searchPlaceholder,
   handleDisplayedItemsSearch,
   returnAll,
-  returnTree,
+  returnTree = true,
 }: PComplexFilterProps) {
   const [open, setOpen] = useState(Boolean(anchorEl));
   const [currentFilters, setCurrentFilters] = useState<menuItemType[]>([]);
