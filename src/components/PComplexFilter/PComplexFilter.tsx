@@ -280,12 +280,10 @@ export function PComplexFilter({
         });
         if (i) {
           const empty = checkEmpty(i.children as menuItemType[]);
-          console.log('empty: ', empty);
           if (!empty.includes(false)) {
             const newState = currentFilters.filter((menu) => {
               return menu.text !== (i as menuItemType).text;
             });
-            console.log(i, newState, currentFilters);
             if (!mainOpen) {
               setCurrentIndex(-1);
               handleClose();
@@ -443,7 +441,7 @@ export function PComplexFilter({
   }, [currentFilters]);
 
   const getSelected = (filter: menuItemType[]) => {
-    let i: menuItemType[] = [];
+    const i: menuItemType[] = [];
     filter.forEach((item) => {
       if (item.children) {
         const j = getSelected(item.children);
