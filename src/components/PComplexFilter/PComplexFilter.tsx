@@ -230,7 +230,7 @@ export function PComplexFilter({
   };
 
   const checkEmpty = (filter: menuItemType[]) => {
-    let i = [true];
+    const i = [true];
     filter.forEach((item) => {
       if (item.children) {
         i.push(...checkEmpty(item.children));
@@ -322,7 +322,7 @@ export function PComplexFilter({
         if (!menuParent.multiple) {
           const found: menuItemType[] = [];
           for (const child of menuParent.children as menuItemType[]) {
-            child.selected ? found.push(child) : null;
+            if (child.selected) found.push(child);
           }
 
           if (found !== []) {
