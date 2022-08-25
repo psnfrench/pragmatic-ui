@@ -268,7 +268,7 @@ export function PComplexFilter({
           }
         }
       } else if (menuParent) {
-        let i = items.find((j, index) => j.text === currentTitles[0]);
+        const i = items.find((j, index) => j.text === currentTitles[0]);
         if (i) {
           const empty = checkEmpty(i.children as menuItemType[]);
           if (empty) {
