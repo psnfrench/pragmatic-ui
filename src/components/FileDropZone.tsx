@@ -8,7 +8,19 @@ import { PIcon } from '../images/PIcon';
 import { Colors } from '../constants/Colors';
 import { ErrorLabel } from './ErrorLabel';
 
-const ImageTypes: string[] = ['.apng', '.avif', '.giv', '.jpg', '.jpeg', '.jfif', '.pjpeg', '.pjp', '.png', '.webp'];
+const ImageTypes: string[] = [
+  '.apng',
+  '.avif',
+  '.giv',
+  '.jpg',
+  '.jpeg',
+  '.jfif',
+  '.pjpeg',
+  '.pjp',
+  '.png',
+  '.webp',
+  '.svg',
+];
 
 const StyledBox = styled(Box)(({ theme }) => ({
   '& .dropZone': {

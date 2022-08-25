@@ -252,6 +252,10 @@ const ComplexFilterDemo = () => {
     });
   };
 
+  useEffect(() => {
+    console.log(returnedFilters);
+  }, [returnedFilters]);
+
   return (
     <Box>
       <>
@@ -283,6 +287,8 @@ const ComplexFilterDemo = () => {
             listItemProps={{ color: 'secondary' }}
             // Example Method of seraching with the searchbar in this component
             handleDisplayedItemsSearch={handleDisplayedItemsSearch}
+            // use this if you would like to return the chip as top level, as opposed to just one level above the filter.
+            returnTree
           />
         </Box>
         <br />

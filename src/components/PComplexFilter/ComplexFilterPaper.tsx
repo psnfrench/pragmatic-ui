@@ -19,7 +19,7 @@ import {
   TypographyProps,
 } from '@mui/material';
 import _ from 'lodash';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { menuItemType } from './PComplexFilter';
 import { Search } from '../Search';
 
@@ -62,8 +62,8 @@ export type ComplexFilterPaperProps = {
   maxItems: number;
   listItemProps?: CheckboxProps;
   searchProps?: Omit<TextFieldProps, 'InputProps'>;
-  itemsHistory?: menuItemType[][];
   filterParent?: menuItemType;
+  countSelected: (items: menuItemType[], count?: number) => number;
 };
 
 const ComplexFilterPaper = ({
@@ -86,26 +86,9 @@ const ComplexFilterPaper = ({
   maxItems,
   listItemProps,
   searchProps,
-  itemsHistory,
   filterParent,
+  countSelected,
 }: ComplexFilterPaperProps) => {
-  const countSelected = (items: menuItemType[], count?: number) => {
-    if (!count) {
-      count = 0;
-    }
-    for (const child of items) {
-      if (child.children) {
-        const newCount: number = countSelected(child.children, count);
-        if (newCount) {
-          count = newCount;
-        }
-      } else if (child.selected) {
-        count++;
-      }
-    }
-    return count;
-  };
-
   return (
     <Popper
       open={open}
@@ -143,7 +126,6 @@ const ComplexFilterPaper = ({
               overflow: 'auto',
             }}
           >
-            {/* {!filteredItems[0].children && searchable ? ( */}
             {searchable ? (
               <Box sx={{ paddingX: 2, paddingY: 0 }}>
                 <Search fullWidth onChange={handleSearchChange} {...searchProps} />
