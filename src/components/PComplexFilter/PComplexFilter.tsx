@@ -381,7 +381,7 @@ export function PComplexFilter({
       currentTitles.pop();
       const last = currentTitles[currentTitles.length - 1];
       setCurrentTitle(last);
-      currentTitles.at(-1) === title ? setBack(false) : setBack(true);
+      currentTitles.length === 1 ? setBack(false) : setBack(true);
     } else {
       setCurrentTitle(title);
     }
@@ -500,7 +500,8 @@ export function PComplexFilter({
       labelString = labelString + labelArray.join(', ');
       return labelString;
     } else {
-      return filter.text;
+      const counter = countSelected(filter.children as menuItemType[]);
+      return filter.text + ':  ' + counter + (counter === 1 ? ' filter' : ' filters');
     }
   };
 
@@ -592,11 +593,11 @@ export function PComplexFilter({
                         >
                           {formatLabel(filter)}
                         </Typography>
-                        <StyledAvatar>
+                        {/* <StyledAvatar sx={{ display: returnTree ? 'inline-flex' : 'none' }}>
                           <Typography variant="body1" color="primary.contrastText">
                             {countSelected([filter])}
                           </Typography>
-                        </StyledAvatar>
+                        </StyledAvatar> */}
                         <ChevronRight
                           sx={{
                             transform: index === currentIndex ? 'rotate(270deg)' : 'rotate(90deg)',

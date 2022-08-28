@@ -20,6 +20,16 @@ const ImageTypes: string[] = [
   '.png',
   '.webp',
   '.svg',
+  'apng',
+  'avif',
+  'giv',
+  'jpg',
+  'jpeg',
+  'jfif',
+  'pjpeg',
+  'pjp',
+  'png',
+  'webp',
 ];
 
 const StyledBox = styled(Box)(({ theme }) => ({
