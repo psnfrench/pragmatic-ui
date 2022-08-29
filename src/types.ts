@@ -49,3 +49,8 @@ export type Image = {
   signedUrl?: string;
   base64?: unknown; // for blob previews
 };
+
+export type S3Files = {
+  file: FileInfo | Image | File;
+  alteredName: string;
+}

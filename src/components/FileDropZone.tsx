@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone';
-import { FileInfo, Image } from '../types';
+import { FileInfo, Image, S3Files } from '../types';
 import { PIcon } from '../images/PIcon';
 import { Colors } from '../constants/Colors';
 import { ErrorLabel } from './ErrorLabel';
@@ -30,6 +30,7 @@ const ImageTypes: string[] = [
   'pjp',
   'png',
   'webp',
+  'svg',
 ];
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -77,6 +78,7 @@ export type FileUploaderProps = {
 
 export type CurrentFiles = {
   imageUrl?: string;
+  name?: string;
   filename: string;
   filePosition: number;
   fileType: 'new' | 'old';
@@ -91,12 +93,13 @@ const StyledImg = styled('img')(() => ({
 
 export const FileDropZone = (props: FileUploaderProps) => {
   const { name, maxFiles = 0, maxSize, fileFormat, featured, awsUrl } = props;
-  const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] }>();
+  const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
   const [files, setFiles] = useState<File[]>([]);
-  const [filesSync, setFileSync] = useState<(Image | FileInfo | File)[]>(get(values, name, []));
+  const [filesSync, setFileSync] = useState<(Image | FileInfo | File | S3Files)[]>(get(values, name, []));
   const [currentFiles, setCurrentFiles] = useState<CurrentFiles[]>(
-    get(values, name, []).map((value: FileInfo | Image | File, index: number) => {
+    get(values, name, []).map((value: FileInfo | Image | File | S3Files, index: number) => {
       const file: FileInfo | undefined = (value as FileInfo).locationUrl ? (value as FileInfo) : undefined;
+      const s3File: S3Files | undefined = (value as S3Files).file ? (value as S3Files) : undefined;
       const image: Image = value as Image;
       if (file) {
         return {
@@ -105,9 +108,17 @@ export const FileDropZone = (props: FileUploaderProps) => {
           filePosition: index,
           fileType: 'old',
         };
+      } else if (s3File) {
+        return {
+          imageUrl: awsUrl ? awsUrl + (s3File.file as Image).path : (s3File.file as Image).path,
+          filename: (s3File.file as Image).filename,
+          filePosition: index,
+          fileType: 'old',
+          name: s3File.alteredName,
+        };
       } else {
         return {
-          imageUrl: awsUrl ? awsUrl + '/' + image.path : image.path,
+          imageUrl: awsUrl ? awsUrl + image.path : image.path,
           filename: image.filename,
           filePosition: index,
           fileType: 'old',
@@ -269,7 +280,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
 const Thumbnail = ({ file }: { file: CurrentFiles }) => {
   const nameArray = file.filename.split('.');
   const _name = nameArray[nameArray.length - 1];
-  if (ImageTypes.includes(file.filename)) return <StyledImg src={file.imageUrl} />;
+  if (ImageTypes.includes(nameArray[nameArray.length - 1])) return <StyledImg src={file.imageUrl} />;
   else
     return (
       <Box position="relative" padding="0px">
