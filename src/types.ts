@@ -53,4 +53,4 @@ export type Image = {
 export type S3Files = {
   file: FileInfo | Image | File;
   alteredName: string;
-}
+};
