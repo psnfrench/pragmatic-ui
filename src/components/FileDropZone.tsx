@@ -78,7 +78,7 @@ export type FileUploaderProps = {
 
 export type CurrentFiles = {
   imageUrl?: string;
-  name?: string;
+  alteredName?: string;
   filename: string;
   filePosition: number;
   fileType: 'new' | 'old';
@@ -114,7 +114,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
           filename: (s3File.file as Image).filename,
           filePosition: index,
           fileType: 'old',
-          name: s3File.alteredName,
+          alteredName: s3File.alteredName,
         };
       } else {
         return {
@@ -257,7 +257,8 @@ export const FileDropZone = (props: FileUploaderProps) => {
                   </IconButton>
                 </Box>
                 <Typography color={Colors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
-                  {file.filename}
+                  {currentFiles[index].alteredName ? currentFiles[index].alteredName : file.filename}
+                  {/* {file.filename} */}
                 </Typography>
               </Grid>
             ))}
