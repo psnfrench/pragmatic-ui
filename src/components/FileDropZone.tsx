@@ -278,6 +278,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
   );
 };
 
+// TODO Find why this is breaking
 const Thumbnail = ({ file }: { file: CurrentFiles }) => {
   if (file.filename) {
     const nameArray = file.filename.split('.');
