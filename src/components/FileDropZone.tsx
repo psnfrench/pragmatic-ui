@@ -279,10 +279,33 @@ export const FileDropZone = (props: FileUploaderProps) => {
 };
 
 const Thumbnail = ({ file }: { file: CurrentFiles }) => {
-  const nameArray = file.filename.split('.');
-  const _name = nameArray[nameArray.length - 1];
-  if (ImageTypes.includes(nameArray[nameArray.length - 1])) return <StyledImg src={file.imageUrl} />;
-  else
+  if (file.filename) {
+    const nameArray = file.filename.split('.');
+    const _name = nameArray[nameArray.length - 1];
+    if (ImageTypes.includes(nameArray[nameArray.length - 1])) return <StyledImg src={file.imageUrl} />;
+    else
+      return (
+        <Box position="relative" padding="0px">
+          <Typography
+            variant="body1"
+            color="white"
+            sx={{
+              padding: 0,
+              position: 'absolute',
+              top: '50%',
+              left: 0,
+              right: 0,
+              margin: 0,
+              transform: 'translateY(-50%)',
+              width: '50.156px',
+            }}
+          >
+            {_name.toUpperCase()}
+          </Typography>
+          <PIcon name="blankFileIcon" sx={{ objectFit: 'fill', color: 'primary.main' }} />
+        </Box>
+      );
+  } else {
     return (
       <Box position="relative" padding="0px">
         <Typography
@@ -299,9 +322,10 @@ const Thumbnail = ({ file }: { file: CurrentFiles }) => {
             width: '50.156px',
           }}
         >
-          {_name.toUpperCase()}
+          undefined
         </Typography>
         <PIcon name="blankFileIcon" sx={{ objectFit: 'fill', color: 'primary.main' }} />
       </Box>
     );
+  }
 };
