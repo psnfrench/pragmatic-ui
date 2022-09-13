@@ -74,7 +74,8 @@ const SidebarDemo = () => {
       textVariant="body2"
       textSX={[{ color: 'black' }]}
       expandHint
-      listItemSx={{ backgroundColor: 'red' }}
+      listItemSx={{ backgroundColor: 'orange' }}
+      paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
     >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>

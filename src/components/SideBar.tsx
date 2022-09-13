@@ -13,6 +13,7 @@ import {
   TypographyTypeMap,
   SxProps,
   Tooltip,
+  PaperProps,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
+import { theme } from '../pragmatic-ui';
 
 export type SideBarItem = {
   key: string;
@@ -42,12 +44,19 @@ export type SideBarProps = {
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
   listItemSx?: SxProps<Theme>;
+  expandedWidth?: number;
+  paperProps?: PaperProps;
 };
 
-const drawerWidth = 340;
+let drawerWidth = 340;
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
+  '@media only screen and (max-width: 960px)': {
+    width: '100%',
+  },
+  '@media only screen and (min-width: 961px)': {
+    width: drawerWidth,
+  },
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -61,6 +70,12 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
+  '@media only screen and (max-width: 960px)': {
+    width: '100%',
+  },
+  '@media only screen and (min-width: 961px)': {
+    width: drawerWidth,
+  },
   width: `calc(90px)`,
   [theme.breakpoints.up('sm')]: {
     width: `100px`,
@@ -68,7 +83,12 @@ const closedMixin = (theme: Theme): CSSObject => ({
 });
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
-  width: drawerWidth,
+  '@media only screen and (max-width: 960px)': {
+    width: '100%',
+  },
+  '@media only screen and (min-width: 961px)': {
+    width: drawerWidth,
+  },
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
@@ -94,6 +114,8 @@ export const SideBar = ({
   textSX,
   listItemSx,
   defaultOpen = true,
+  expandedWidth,
+  paperProps,
 }: SideBarProps) => {
   const getSelectedMenu = () => {
     const location = useLocation();
@@ -120,6 +142,10 @@ export const SideBar = ({
     },
   }));
 
+  useEffect(() => {
+    if (expandedWidth) drawerWidth = expandedWidth;
+  }, [expandedWidth]);
+
   const [selectedKey, setSelectedKey] = useState<string>();
   const [open, setOpen] = useState(defaultOpen);
   const [closed, setClosed] = useState(!defaultOpen);
@@ -144,7 +170,7 @@ export const SideBar = ({
   };
 
   return (
-    <Drawer variant="permanent" open={open}>
+    <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
       <List>
         <ListItemButton
           onClick={toggleOpen}
