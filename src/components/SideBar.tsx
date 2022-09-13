@@ -23,7 +23,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
-import { theme } from '../pragmatic-ui';
 
 export type SideBarItem = {
   key: string;
