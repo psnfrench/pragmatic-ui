@@ -45,6 +45,7 @@ export type SideBarProps = {
   listItemSx?: SxProps<Theme>;
   expandedWidth?: number;
   paperProps?: PaperProps;
+  hamburgerIconSx?: SxProps<Theme>;
 };
 
 let drawerWidth = 340;
@@ -115,6 +116,7 @@ export const SideBar = ({
   defaultOpen = true,
   expandedWidth,
   paperProps,
+  hamburgerIconSx = { color: Colors.greyscale.light },
 }: SideBarProps) => {
   const getSelectedMenu = () => {
     const location = useLocation();
@@ -183,7 +185,7 @@ export const SideBar = ({
           <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', padding: 'none' }}>
             {open ? (
               <Box display="flex" flex={1} flexDirection="column">
-                <Box color={Colors.greyscale.light} sx={{ textAlign: 'right' }}>
+                <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
                   {collapsible && (
                     <>
                       <ChevronLeftIcon sx={{ marginRight: '-9px' }} />
@@ -205,7 +207,7 @@ export const SideBar = ({
                       left="20px"
                       right="auto"
                       justifyContent="center"
-                      color={Colors.greyscale.light}
+                      sx={{ ...hamburgerIconSx }}
                     >
                       <MenuIcon sx={{ marginRight: '-4.5px' }} />
                       <ChevronRightIcon sx={{ marginLeft: '-4.5px' }} />

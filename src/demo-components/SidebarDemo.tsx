@@ -76,6 +76,7 @@ const SidebarDemo = () => {
       expandHint
       listItemSx={{ backgroundColor: 'orange' }}
       paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
+      hamburgerIconSx={{ color: 'white' }}
     >
       <Box p={2}>
         <Typography variant="h6" whiteSpace={'normal'}>
