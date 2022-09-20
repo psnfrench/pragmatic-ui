@@ -16,13 +16,12 @@ import {
   PaperProps,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
-import { useLocation } from 'react-router-dom';
 
 export type SideBarItem = {
   key: string;
@@ -33,6 +32,7 @@ export type SideBarItem = {
 };
 export type SideBarProps = {
   items: SideBarItem[];
+  selectedMenuKey?: string;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
   collapsible?: boolean;
@@ -42,10 +42,10 @@ export type SideBarProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
-  listItemSx?: SxProps<Theme>;
   expandedWidth?: number;
   paperProps?: PaperProps;
   hamburgerIconSx?: SxProps<Theme>;
+  onOpenChanged?: (open: boolean) => void;
 };
 
 let drawerWidth = 340;
@@ -76,9 +76,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
   '@media only screen and (min-width: 961px)': {
     width: drawerWidth,
   },
-  width: `calc(90px)`,
+  width: 'calc(90px)',
   [theme.breakpoints.up('sm')]: {
-    width: `100px`,
+    width: '100px',
   },
 });
 
@@ -104,6 +104,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export const SideBar = ({
   items,
+  selectedMenuKey,
   logoCollapsed,
   logoExpanded,
   children,
@@ -112,21 +113,13 @@ export const SideBar = ({
   collapsible = true,
   expandHint = false,
   textSX,
-  listItemSx,
   defaultOpen = true,
   expandedWidth,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
+  onOpenChanged,
 }: SideBarProps) => {
-  const getSelectedMenu = () => {
-    const location = useLocation();
-    const path = location.pathname.split('/');
-    const selectedItem = items.find((n) => n.key === path[1]);
-    if (selectedItem) return selectedItem.key;
-    else return undefined;
-  };
-  const selectedMenuKey: string | undefined = getSelectedMenu();
-
+  const [open, setOpen] = useState(defaultOpen);
   useEffect(() => {
     let active = true;
     if (active) {
@@ -137,20 +130,19 @@ export const SideBar = ({
     };
   }, [selectedMenuKey]);
 
-  const StyledListItemButton = styled(ListItemButton)(() => ({
-    '&.Mui-selected, &.Mui-selected:hover': {
-      ...listItemSx,
-    },
-  }));
-
   useEffect(() => {
     if (expandedWidth) drawerWidth = expandedWidth;
   }, [expandedWidth]);
 
+  useEffect(() => {
+    if (onOpenChanged) {
+      onOpenChanged(open);
+    }
+  }, [onOpenChanged, open]);
+
   const [selectedKey, setSelectedKey] = useState<string>();
-  const [open, setOpen] = useState(defaultOpen);
   const [closed, setClosed] = useState(!defaultOpen);
-  const toggleOpen = () => {
+  const toggleOpen = useCallback(() => {
     if (collapsible) {
       setOpen((prev) => !prev);
       if (!closed) {
@@ -161,14 +153,14 @@ export const SideBar = ({
         setClosed((prev) => !prev);
       }
     }
-  };
+  }, [closed, collapsible]);
 
-  const handleItemClick = (item: SideBarItem) => {
+  const handleItemClick = useCallback((item: SideBarItem) => {
     setSelectedKey(item.key);
     if (item.onClick) {
       item.onClick();
     }
-  };
+  }, []);
 
   return (
     <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
@@ -220,10 +212,10 @@ export const SideBar = ({
           </Box>
         </ListItemButton>
 
-        {items.map((item, index) => (
+        {items.map((item) => (
           <React.Fragment key={item.key}>
             <ListItem disablePadding>
-              <StyledListItemButton
+              <ListItemButton
                 selected={selectedKey === item.key}
                 onClick={() => handleItemClick(item)}
                 sx={{
@@ -244,7 +236,7 @@ export const SideBar = ({
                   }
                   sx={{ display: open ? 'block' : 'none', margin: 0, ml: 3 }}
                 />
-              </StyledListItemButton>
+              </ListItemButton>
             </ListItem>
 
             {item.divider && (

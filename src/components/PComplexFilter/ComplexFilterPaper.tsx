@@ -18,8 +18,7 @@ import {
   Typography,
   TypographyProps,
 } from '@mui/material';
-import _ from 'lodash';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { menuItemType } from './PComplexFilter';
 import { Search } from '../Search';
 

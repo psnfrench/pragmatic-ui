@@ -7,7 +7,10 @@ export default function SimpleSnackbar(
 ) {
   const { open, setOpen, message, severity = 'success', onClose, ...otherProps } = props;
 
-  const handleClose = (event: Event | React.SyntheticEvent<any, Event>, reason: SnackbarCloseReason = 'timeout') => {
+  const handleClose = (
+    event: Event | React.SyntheticEvent<unknown, Event>,
+    reason: SnackbarCloseReason = 'timeout',
+  ) => {
     if (reason === 'clickaway') {
       return;
     }

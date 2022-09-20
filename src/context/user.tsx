@@ -1,8 +1,6 @@
 import { Box, CircularProgress } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
-import { menuItemType } from '../components/PComplexFilter/PComplexFilter';
+import React, { useCallback, useState } from 'react';
 import { User } from '../types';
-// import useAuthApiRoutes from '../hooks/api/useAuthApiRoutes';
 const UserContext = React.createContext<{
   user?: Partial<User>;
   isLoggedIn: boolean;
@@ -20,8 +18,7 @@ export default UserContext;
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<Partial<User> | undefined>(undefined);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  // const { getAuthState } = useAuthApiRoutes();
+  const [isLoading] = useState(true);
   // must use useCallback becasue if saveUser is in a dependency array in another component it will keep re-rendereing!
   const saveUser = useCallback((user: Partial<User> | undefined) => {
     if (user) {
@@ -36,16 +33,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     setIsLoggedIn(user !== undefined);
   }, []);
-
-  // useEffect(() => {
-  //   getAuthState()
-  //     .then((user) => {
-  //       if (user) {
-  //         saveUser(user);
-  //       }
-  //     })
-  //     .finally(() => setIsLoading(false));
-  // }, [getAuthState, saveUser]);
 
   return (
     <UserContext.Provider

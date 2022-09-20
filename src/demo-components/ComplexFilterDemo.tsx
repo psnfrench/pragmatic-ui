@@ -1,9 +1,7 @@
 import { ChevronRight } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
-import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { menuItemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter';
-import UserContext from '../context/user';
 import PIcon from '../images/PIcon';
 
 const options: menuItemType[] = [
@@ -109,33 +107,32 @@ const ComplexFilterDemo = () => {
   const [filteredOptions, setFilteredOptions] = useState([...items]);
   const [searchedOptions, setSearchedOptions] = useState([...items]);
   const [returnedFilters, setReturnedFilters] = useState<menuItemType[]>();
-  let newItems: itemType[] = [];
-  let newSearchItems: itemType[] = [];
+  const newSearchItems = useRef<itemType[]>([]);
 
   useEffect(() => {
     console.log(returnedFilters);
   }, [returnedFilters]);
 
   // Maps out all data including children (that are theoretically infinite)
-  function displayData(item: itemType[], child?: boolean) {
-    return item.map((option, key) => (
-      <Box key={key} display="flex" flexDirection="column">
-        <Box display="flex" flexDirection="row">
-          {child && '-'}
-          {option.icon}
-          {option.text}
-        </Box>
-        {option.children && (
-          <Box display="flex" flexDirection="row" paddingLeft="12px">
-            {displayData(option.children, true)}
-          </Box>
-        )}
-      </Box>
-    ));
-  }
+  // function displayData(item: itemType[], child?: boolean) {
+  //   return item.map((option, key) => (
+  //     <Box key={key} display="flex" flexDirection="column">
+  //       <Box display="flex" flexDirection="row">
+  //         {child && '-'}
+  //         {option.icon}
+  //         {option.text}
+  //       </Box>
+  //       {option.children && (
+  //         <Box display="flex" flexDirection="row" paddingLeft="12px">
+  //           {displayData(option.children, true)}
+  //         </Box>
+  //       )}
+  //     </Box>
+  //   ));
+  // }
 
   // Maps out all data including children (that are theoretically infinite)
-  function displayDataParent(item: itemType[], child?: boolean) {
+  function displayDataParent(item: itemType[]) {
     return item.map((option, key) => (
       <Box key={key} display="flex" flexDirection="column">
         <Box display="flex" flexDirection="row">
@@ -148,101 +145,103 @@ const ComplexFilterDemo = () => {
   }
 
   // maps through returned items, adds to new array if matches all filters
-  async function mapItems(items: itemType[]) {
-    // sets object to be filtered
-    let newOptions = [...items];
-    // maps new object
-    newOptions.map((option, key) => {
-      option.children ? mapItems(option.children) : null;
-      let include: boolean = true;
-      // if object exists in filter, adds to array
-      currentFilterString.forEach((filter) => {
-        let i = (option.categories as string[]).find((category) => category === filter);
-        if (!i) {
-          include = false;
-        }
-      });
-      if (include) {
-        newItems.push(option);
-      }
-      return;
-    });
-  }
+  // async function mapItems(items: itemType[]) {
+  //   // sets object to be filtered
+  //   const newOptions = [...items];
+  //   // maps new object
+  //   newOptions.map((option, key) => {
+  //     option.children ? mapItems(option.children) : null;
+  //     let include = true;
+  //     // if object exists in filter, adds to array
+  //     currentFilterString.forEach((filter) => {
+  //       const i = (option.categories as string[]).find((category) => category === filter);
+  //       if (!i) {
+  //         include = false;
+  //       }
+  //     });
+  //     if (include) {
+  //       newOptions.push(option);
+  //     }
+  //     return;
+  //   });
+  // }
 
   // maps through returned items, adds to new array if matches any
-  async function mapItemsAny(items: itemType[]) {
-    // sets object to be filtered
-    let newOptions = [...items];
-    // maps new object
-    newOptions.map((option, key) => {
-      option.children ? mapItemsAny(option.children) : null;
-      let include: boolean = false;
-      // if object exists in filter, adds to array
-      currentFilterString.forEach((filter) => {
-        if ((option.categories as string[]).find((category) => category === filter)) {
-          include = true;
-        }
-      });
-      if (include) {
-        newItems.push(option);
-      }
-      return;
-    });
-  }
+  // async function mapItemsAny(items: itemType[]) {
+  //   // sets object to be filtered
+  //   let newOptions = [...items];
+  //   // maps new object
+  //   newOptions.map((option, key) => {
+  //     option.children ? mapItemsAny(option.children) : null;
+  //     let include: boolean = false;
+  //     // if object exists in filter, adds to array
+  //     currentFilterString.forEach((filter) => {
+  //       if ((option.categories as string[]).find((category) => category === filter)) {
+  //         include = true;
+  //       }
+  //     });
+  //     if (include) {
+  //       newItems.push(option);
+  //     }
+  //     return;
+  //   });
+  // }
 
   // When currentFilters changes, resets options and rerenders options that match filter term.
-  useEffect(() => {
-    setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
-    if (currentFilterString.length === 0 && !currentSearch) {
-      setFilteredOptions([...items]);
-      setSearchedOptions([...items]);
-    } else if (currentSearch) {
-      mapItems([...items])
-        .then(() => setFilteredOptions([...newItems]))
-        .then(() => filterData([...newItems]))
-        .then(() => setSearchedOptions([...newSearchItems]));
-    } else {
-      mapItems([...items])
-        .then(() => setFilteredOptions([...newItems]))
-        .then(() => setSearchedOptions([...newItems]));
-    }
-  }, [currentFilterString]);
+  // useEffect(() => {
+  //   setFilteredOptions(filteredOptions.splice(0, filteredOptions.length));
+  //   if (currentFilterString.length === 0 && !currentSearch) {
+  //     setFilteredOptions([...items]);
+  //     setSearchedOptions([...items]);
+  //   } else if (currentSearch) {
+  //     mapItems([...items])
+  //       .then(() => setFilteredOptions([...newItems]))
+  //       .then(() => filterData([...newItems]))
+  //       .then(() => setSearchedOptions([...newSearchItems]));
+  //   } else {
+  //     mapItems([...items])
+  //       .then(() => setFilteredOptions([...newItems]))
+  //       .then(() => setSearchedOptions([...newItems]));
+  //   }
+  // }, [currentFilterString]);
+
+  const filterData = useCallback(
+    async (options: menuItemType[]) => {
+      options.forEach((option) => {
+        const val = option.text.toLowerCase().includes(currentSearch as string);
+        if (val) {
+          newSearchItems.current.push(option);
+        }
+      });
+    },
+    [currentSearch],
+  );
 
   //When the search value changes, filters data based on filters and search term
   useEffect(() => {
     if (currentSearch) {
-      newSearchItems = [];
-      filterData([...filteredOptions]).then(() => setSearchedOptions([...newSearchItems]));
+      newSearchItems.current = [];
+      filterData([...filteredOptions]).then(() => setSearchedOptions([...newSearchItems.current]));
     } else if (filteredOptions.length > 0) {
       setSearchedOptions([...filteredOptions]);
     } else {
       setFilteredOptions([...items]);
       setSearchedOptions([...items]);
     }
-  }, [currentSearch]);
-
-  // Returns each object in current options that includes the search term.
-  async function filterData(options: menuItemType[]) {
-    options.forEach((option, index) => {
-      const val = option.text.toLowerCase().includes(currentSearch as string);
-      if (val) {
-        newSearchItems.push(option);
-      }
-    });
-  }
+  }, [currentSearch, filterData, filteredOptions]);
 
   // alternative search filtering, iterates through all children
-  async function filterDataChildren(options: menuItemType[]) {
-    options.forEach((option, index) => {
-      if (option.children) {
-        filterData(option.children);
-      }
-      const val = option.text.toLowerCase().includes(currentSearch as string);
-      if (val) {
-        newSearchItems.push(option);
-      }
-    });
-  }
+  // async function filterDataChildren(options: menuItemType[]) {
+  //   options.forEach((option, index) => {
+  //     if (option.children) {
+  //       filterData(option.children);
+  //     }
+  //     const val = option.text.toLowerCase().includes(currentSearch as string);
+  //     if (val) {
+  //       newSearchItems.push(option);
+  //     }
+  //   });
+  // }
 
   // sets state when search changed
   const handleDisplayedItemsSearch = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -250,11 +249,11 @@ const ComplexFilterDemo = () => {
   };
 
   // deselects every item
-  const deSelect = (itemsList: menuItemType[]) => {
-    itemsList.forEach((item) => {
-      item.children ? deSelect(item.children) : (item.selected = false);
-    });
-  };
+  // const deSelect = (itemsList: menuItemType[]) => {
+  //   itemsList.forEach((item) => {
+  //     item.children ? deSelect(item.children) : (item.selected = false);
+  //   });
+  // };
 
   return (
     <Box>
@@ -271,9 +270,11 @@ const ComplexFilterDemo = () => {
             // Having anchorEl & setAnchorEl here allows control over the popup appearing or disappearing
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
-            // Returns the current filter objects. Handy for applying filter to data (useful when filtering multiple fields)
+            // Returns the current filter objects.
+            // Handy for applying filter to data (useful when filtering multiple fields)
             setReturnedFilters={setReturnedFilters}
-            // Enable this setting to return the whole returned filters object. Without including this returns only the selected filters
+            // Enable this setting to return the whole returned filters object.
+            // Without including this returns only the selected filters
             // returnAll
             // Populated string array of all currently selected filters (mostly useful when only filtering one field)
             currentFilterString={currentFilterString}
@@ -287,7 +288,8 @@ const ComplexFilterDemo = () => {
             listItemProps={{ color: 'secondary' }}
             // Example Method of seraching with the searchbar in this component
             handleDisplayedItemsSearch={handleDisplayedItemsSearch}
-            // use this if you would like to return the chip as top level, as opposed to just one level above the filter.
+            // use this if you would like to return the chip as top level,
+            // as opposed to just one level above the filter.
             returnTree
           />
         </Box>

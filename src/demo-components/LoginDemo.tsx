@@ -19,7 +19,7 @@ const ImageBottomLeft = require('../images/background_img_bottom_left.png');
 const LoginDemo = () => {
   const navigate = useNavigate();
   const { saveUser, isLoggedIn } = useContext(UserContext);
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(true);
   const [tabValue, setTabValue] = useState(0);
   const { showSnack } = useContext(SnackBarContext);
   const { showConfirmationModal, setOpenId } = useContext(ConfirmationServiceContext);

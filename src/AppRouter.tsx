@@ -1,4 +1,4 @@
-import { Button, Theme } from '@mui/material';
+import { Theme } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import './App.css';
@@ -9,7 +9,7 @@ import SnackBarDemo from './demo-components/SnackBarDemo';
 import ConfirmationDemo from './demo-components/ConfirmationDemo';
 import BorderRadiusDemo from './demo-components/BorderRadiusDemo';
 import DateDemo from './demo-components/DateDemo';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import LoginDemo from './demo-components/LoginDemo';
 import SearchDemo from './demo-components/SearchDemo';
@@ -30,7 +30,6 @@ export type AppRouterProps = {
 };
 
 export const AppRouter = ({ setTheme }: AppRouterProps) => {
-  const navigate = useNavigate();
   const handleSubmit = (values: typeof initialValues, { setSubmitting }: FormikHelpers<typeof initialValues>) => {
     console.log('values: ', values);
     setTimeout(() => {
@@ -39,6 +38,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
   };
 
   const validate = (values: typeof initialValues) => {
+    // eslint-disable-next-line no-unused-vars
     const errors: Partial<{ [key in keyof typeof initialValues]: string }> = {};
     (Object.keys(initialValues) as (keyof typeof initialValues)[]).forEach((k) => {
       if (!values[k]) {

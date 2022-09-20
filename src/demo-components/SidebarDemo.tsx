@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
 import BorderStyleIcon from '@mui/icons-material/BorderStyle';
@@ -10,10 +10,24 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { SideBar } from '../components/SideBar';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
-import { Box, Typography } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
+
+const myTheme = createTheme({
+  components: {
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: 'orange',
+          },
+        },
+      },
+    },
+  },
+});
 
 const SidebarDemo = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
@@ -62,28 +76,35 @@ const SidebarDemo = () => {
         onClick: () => navigate('/confirmation'),
       },
     ],
-    [],
+    [navigate],
   );
 
   return (
-    <SideBar
-      logoCollapsed={<DMCollapsed />}
-      logoExpanded={<DMExpanded />}
-      items={navItems}
-      childrenCollapsed={<CollapseText />}
-      textVariant="body2"
-      textSX={[{ color: 'black' }]}
-      expandHint
-      listItemSx={{ backgroundColor: 'orange' }}
-      paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
-      hamburgerIconSx={{ color: 'white' }}
+    <ThemeProvider
+      theme={(outerTheme) => ({
+        ...outerTheme, // merge in the outer theme
+        ...myTheme, // override spefiic parts of the Sidebar
+      })}
     >
-      <Box p={2}>
-        <Typography variant="h6" whiteSpace={'normal'}>
-          My Profile Info
-        </Typography>
-      </Box>
-    </SideBar>
+      <SideBar
+        logoCollapsed={<DMCollapsed />}
+        logoExpanded={<DMExpanded />}
+        items={navItems}
+        childrenCollapsed={<CollapseText />}
+        textVariant="body2"
+        textSX={[{ color: 'black' }]}
+        expandHint
+        paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
+        hamburgerIconSx={{ color: 'white' }}
+        selectedMenuKey={location.pathname.substring(1)}
+      >
+        <Box p={2}>
+          <Typography variant="h6" whiteSpace={'normal'}>
+            My Profile Info
+          </Typography>
+        </Box>
+      </SideBar>
+    </ThemeProvider>
   );
 };
 

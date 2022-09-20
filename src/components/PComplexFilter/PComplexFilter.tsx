@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   Button,
   ButtonProps,
@@ -6,7 +5,6 @@ import {
   styled,
   TextFieldProps,
   TypographyProps,
-  Avatar,
   PopperProps,
   ListProps,
   Box,
@@ -20,7 +18,7 @@ import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
 import PIcon from '../../images/PIcon';
 import ComplexFilterPaper from './ComplexFilterPaper';
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
 const options = [
   { text: 'None', categories: ['1'] },
@@ -58,13 +56,13 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   color: theme.palette.action.active,
 }));
 
-// Styles Avatar for totalCount
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  height: '24px',
-  width: '24px',
-  marginRight: theme.spacing(1),
-}));
+// // Styles Avatar for totalCount
+// const StyledAvatar = styled(Avatar)(({ theme }) => ({
+//   backgroundColor: theme.palette.primary.main,
+//   height: '24px',
+//   width: '24px',
+//   marginRight: theme.spacing(1),
+// }));
 
 // returns true if all children and childrens children are all leaves or all branches.
 function areChildrenOK(children: menuItemType[]) {
@@ -157,11 +155,25 @@ export function PComplexFilter({
   const [back, setBack] = useState(false);
   const [parent, setParent] = useState<menuItemType>();
   const valid = areChildrenOK(items);
-  const [totalCount, setTotalCount] = useState<number>();
+
+  // deselects every item
+  const deSelect = useCallback(
+    (itemsList: menuItemType[]) => {
+      for (const item of itemsList) {
+        if (item.children) {
+          deSelect(item.children);
+        } else if (item.selected) {
+          item.selected = false;
+          setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
+        }
+      }
+    },
+    [currentFilterString, setCurrentFilterString],
+  );
 
   useEffect(() => {
     deSelect(items);
-  }, []);
+  }, [deSelect, items]);
 
   const countSelected = (itemsToCount: menuItemType[], count?: number) => {
     if (!count) {
@@ -266,12 +278,12 @@ export function PComplexFilter({
           // if not empty, sets current filter to deselected
           if (menuParent && setCurrentFilters) {
             setCurrentFilters((prev) =>
-              prev.map((filter) => (filter.text === menuParent.text ? (filter = menuParent) : (filter = filter))),
+              prev.map((filter) => (filter.text === menuParent.text ? (filter = menuParent) : filter)),
             );
           }
         }
       } else if (menuParent) {
-        const i = items.find((j, index) => {
+        const i = items.find((j) => {
           if (mainOpen) {
             return j.text === currentTitles[1];
           } else {
@@ -294,7 +306,7 @@ export function PComplexFilter({
             if (setCurrentFilters) {
               setCurrentFilters((prev) =>
                 prev.map((filter) =>
-                  filter.text === (i as menuItemType).text ? (filter = i as menuItemType) : (filter = filter),
+                  filter.text === (i as menuItemType).text ? (filter = i as menuItemType) : filter,
                 ),
               );
             }
@@ -334,7 +346,8 @@ export function PComplexFilter({
         }
         item.selected = true;
         setCurrentFilterString((prev) => [...prev, item.text]);
-        // if parent exists in current filters, alters parent. If returning tree, returns whole tree, else returns just parent.
+        // if parent exists in current filters, alters parent.
+        // If returning tree, returns whole tree, else returns just parent.
         if (!returnTree) {
           if (currentFilters.includes(menuParent)) {
             const newState: menuItemType[] = currentFilters.map((filter) => {
@@ -418,6 +431,20 @@ export function PComplexFilter({
     setFilteredItems(currentItems);
   }, [currentItems]);
 
+  const getSelected = useCallback((filter: menuItemType[]) => {
+    const i: menuItemType[] = [];
+    filter.forEach((item) => {
+      if (item.children) {
+        const j = getSelected(item.children);
+        item.children = j;
+        i.push(item);
+      } else if (item.selected) {
+        i.push(item);
+      }
+    });
+    return i;
+  }, []);
+
   // when currentItems changes, sets Filtered items as well
   useEffect(() => {
     const _currentFilters = _.cloneDeep(currentFilters);
@@ -438,21 +465,7 @@ export function PComplexFilter({
     }
 
     if (setReturnedFilters) setReturnedFilters(filterArray);
-  }, [currentFilters]);
-
-  const getSelected = (filter: menuItemType[]) => {
-    const i: menuItemType[] = [];
-    filter.forEach((item) => {
-      if (item.children) {
-        const j = getSelected(item.children);
-        item.children = j;
-        i.push(item);
-      } else if (item.selected) {
-        i.push(item);
-      }
-    });
-    return i;
-  };
+  }, [currentFilters, getSelected, returnAll, setReturnedFilters]);
 
   // clears all filters
   const handleClear = () => {
@@ -461,18 +474,6 @@ export function PComplexFilter({
     deSelect(items);
     handleClose();
     setAnchorEl(null);
-  };
-
-  // deselects every item
-  const deSelect = (itemsList: menuItemType[]) => {
-    for (const item of itemsList) {
-      if (item.children) {
-        deSelect(item.children);
-      } else if (item.selected) {
-        item.selected = false;
-        setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
-      }
-    }
   };
 
   // removes filter when Chip deleted

@@ -6,13 +6,16 @@ import LandscapeIcon from '@mui/icons-material/Landscape';
 import { useNavigate } from 'react-router-dom';
 
 function SignUpDemo() {
-  const navigate = useNavigate(); 
-  const handleSubmit = () => {};
+  const navigate = useNavigate();
+  const handleSubmit = () => {
+    console.log('handleSubmit');
+  };
   const [selectedKey, setSelectedKey] = useState<string>();
   const goToLogin = () => {
-    selectedKey=='login';
+    selectedKey == 'login';
     setSelectedKey(selectedKey);
-    navigate('/login');};
+    navigate('/login');
+  };
 
   return (
     <Box>
