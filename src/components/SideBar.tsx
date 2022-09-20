@@ -16,12 +16,13 @@ import {
   PaperProps,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
+import debounce from 'lodash/debounce';
 
 export type SideBarItem = {
   key: string;
@@ -35,6 +36,9 @@ export type SideBarProps = {
   selectedMenuKey?: string;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
+  expandOnHover?: boolean;
+  expandOnHoverDelayOpen?: number;
+  expandOnHoverDelayClose?: number;
   collapsible?: boolean;
   expandHint?: boolean;
   defaultOpen?: boolean;
@@ -107,6 +111,9 @@ export const SideBar = ({
   selectedMenuKey,
   logoCollapsed,
   logoExpanded,
+  expandOnHover,
+  expandOnHoverDelayOpen = 500,
+  expandOnHoverDelayClose = 500,
   children,
   childrenCollapsed,
   textVariant = 'subtitle2',
@@ -120,6 +127,8 @@ export const SideBar = ({
   onOpenChanged,
 }: SideBarProps) => {
   const [open, setOpen] = useState(defaultOpen);
+  const isHovering = useRef(false);
+  const [openedByHover, setOpenedByHover] = useState(false);
   useEffect(() => {
     let active = true;
     if (active) {
@@ -144,6 +153,7 @@ export const SideBar = ({
   const [closed, setClosed] = useState(!defaultOpen);
   const toggleOpen = useCallback(() => {
     if (collapsible) {
+      setOpenedByHover(false);
       setOpen((prev) => !prev);
       if (!closed) {
         setTimeout(() => {
@@ -161,6 +171,45 @@ export const SideBar = ({
       item.onClick();
     }
   }, []);
+
+  // use debounced open/close functions so that multiple mouseenter/leave events do not trigger lots of actions
+  const delayedOpen = useMemo(
+    () =>
+      debounce(() => {
+        // make sure we are still hovering
+        if (isHovering.current === true) {
+          setOpen(true);
+          setOpenedByHover(true);
+        }
+      }, expandOnHoverDelayOpen),
+    [expandOnHoverDelayOpen],
+  );
+
+  const delayedClose = useMemo(
+    () =>
+      debounce(() => {
+        // only close if no longer hoverring on any button
+        // I.e. the mouse leave event may frie from on button, then a mouse enter event may fire from a second button
+        if (isHovering.current === false && openedByHover) {
+          toggleOpen();
+        }
+      }, expandOnHoverDelayClose),
+    [openedByHover, toggleOpen, expandOnHoverDelayClose],
+  );
+
+  const handleMouseEnter = useCallback(() => {
+    if (!expandOnHover) return;
+    isHovering.current = true;
+    if (open) return;
+    delayedOpen();
+  }, [delayedOpen, expandOnHover, isHovering, open]);
+  const handleMouseLeave = useCallback(() => {
+    if (!expandOnHover) return;
+    isHovering.current = false;
+    if (open && openedByHover) {
+      delayedClose();
+    }
+  }, [delayedClose, expandOnHover, open, openedByHover]);
 
   return (
     <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
@@ -211,11 +260,12 @@ export const SideBar = ({
             )}
           </Box>
         </ListItemButton>
-
         {items.map((item) => (
           <React.Fragment key={item.key}>
             <ListItem disablePadding>
               <ListItemButton
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 selected={selectedKey === item.key}
                 onClick={() => handleItemClick(item)}
                 sx={{

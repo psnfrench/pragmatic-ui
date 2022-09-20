@@ -79,6 +79,10 @@ const SidebarDemo = () => {
     [navigate],
   );
 
+  const handleOpenChanged = (open: boolean) => {
+    console.log('handleOpenChanged: ', open);
+  };
+
   return (
     <ThemeProvider
       theme={(outerTheme) => ({
@@ -97,6 +101,8 @@ const SidebarDemo = () => {
         paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
         hamburgerIconSx={{ color: 'white' }}
         selectedMenuKey={location.pathname.substring(1)}
+        onOpenChanged={handleOpenChanged}
+        expandOnHover={true}
       >
         <Box p={2}>
           <Typography variant="h6" whiteSpace={'normal'}>

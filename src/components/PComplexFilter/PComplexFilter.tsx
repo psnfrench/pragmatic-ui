@@ -171,9 +171,9 @@ export function PComplexFilter({
     [currentFilterString, setCurrentFilterString],
   );
 
-  useEffect(() => {
-    deSelect(items);
-  }, [deSelect, items]);
+  // useEffect(() => {
+  //   deSelect(items);
+  // }, [deSelect, items]);
 
   const countSelected = (itemsToCount: menuItemType[], count?: number) => {
     if (!count) {
@@ -463,7 +463,6 @@ export function PComplexFilter({
         }
       }
     }
-
     if (setReturnedFilters) setReturnedFilters(filterArray);
   }, [currentFilters, getSelected, returnAll, setReturnedFilters]);
 

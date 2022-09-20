@@ -118,3 +118,36 @@ describe('Togggling the collapsed state', () => {
     expect(collapsedSvg).toBeInTheDocument();
   });
 });
+
+describe('expand/collapse on hover', () => {
+  it('expands on hover', async () => {
+    const handleSubmitMock = jest.fn();
+    render(
+      <BrowserRouter>
+        <TestSideBar onClick={handleSubmitMock} SideBarProps={{ defaultOpen: false, expandOnHover: true }} />
+      </BrowserRouter>,
+    );
+
+    const link1: HTMLElement | null = screen.queryByTestId('link1');
+
+    expect(screen.queryByTestId('link1')).toBeInTheDocument();
+
+    if (link1) {
+      userEvent.hover(link1);
+    }
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('collapsedSvg')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('expandedSvg')).toBeInTheDocument();
+    });
+
+    if (link1) {
+      userEvent.unhover(link1);
+    }
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('collapsedSvg')).toBeInTheDocument();
+      expect(screen.queryByTestId('expandedSvg')).not.toBeInTheDocument();
+    });
+  });
+});
