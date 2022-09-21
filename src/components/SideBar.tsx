@@ -39,6 +39,7 @@ export type SideBarProps = {
   expandOnHover?: boolean;
   expandOnHoverDelayOpen?: number;
   expandOnHoverDelayClose?: number;
+  expandOnHoverCancelOnClick?: boolean;
   collapsible?: boolean;
   expandHint?: boolean;
   defaultOpen?: boolean;
@@ -114,6 +115,7 @@ export const SideBar = ({
   expandOnHover,
   expandOnHoverDelayOpen = 500,
   expandOnHoverDelayClose = 500,
+  expandOnHoverCancelOnClick = false,
   children,
   childrenCollapsed,
   textVariant = 'subtitle2',
@@ -128,6 +130,7 @@ export const SideBar = ({
 }: SideBarProps) => {
   const [open, setOpen] = useState(defaultOpen);
   const isHovering = useRef(false);
+  const hasCanceledExpand = useRef(false);
   const [openedByHover, setOpenedByHover] = useState(false);
   useEffect(() => {
     let active = true;
@@ -165,19 +168,25 @@ export const SideBar = ({
     }
   }, [closed, collapsible]);
 
-  const handleItemClick = useCallback((item: SideBarItem) => {
-    setSelectedKey(item.key);
-    if (item.onClick) {
-      item.onClick();
-    }
-  }, []);
+  const handleItemClick = useCallback(
+    (item: SideBarItem) => {
+      if (expandOnHoverCancelOnClick) {
+        hasCanceledExpand.current = true;
+      }
+      setSelectedKey(item.key);
+      if (item.onClick) {
+        item.onClick();
+      }
+    },
+    [expandOnHoverCancelOnClick],
+  );
 
   // use debounced open/close functions so that multiple mouseenter/leave events do not trigger lots of actions
   const delayedOpen = useMemo(
     () =>
       debounce(() => {
-        // make sure we are still hovering
-        if (isHovering.current === true) {
+        // make sure we are still hovering and has not been canceled
+        if (isHovering.current === true && hasCanceledExpand.current === false) {
           setOpen(true);
           setOpenedByHover(true);
         }
@@ -199,6 +208,7 @@ export const SideBar = ({
 
   const handleMouseEnter = useCallback(() => {
     if (!expandOnHover) return;
+    hasCanceledExpand.current = false;
     isHovering.current = true;
     if (open) return;
     delayedOpen();

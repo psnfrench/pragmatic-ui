@@ -103,6 +103,7 @@ const SidebarDemo = () => {
         selectedMenuKey={location.pathname.substring(1)}
         onOpenChanged={handleOpenChanged}
         expandOnHover={true}
+        expandOnHoverCancelOnClick={true}
       >
         <Box p={2}>
           <Typography variant="h6" whiteSpace={'normal'}>
