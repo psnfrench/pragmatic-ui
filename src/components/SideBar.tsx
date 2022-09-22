@@ -16,13 +16,13 @@ import {
   PaperProps,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
-import { useLocation } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 
 export type SideBarItem = {
   key: string;
@@ -33,8 +33,13 @@ export type SideBarItem = {
 };
 export type SideBarProps = {
   items: SideBarItem[];
+  selectedMenuKey?: string;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
+  expandOnHover?: boolean;
+  expandOnHoverDelayOpen?: number;
+  expandOnHoverDelayClose?: number;
+  expandOnHoverCancelOnClick?: boolean;
   collapsible?: boolean;
   expandHint?: boolean;
   defaultOpen?: boolean;
@@ -42,10 +47,10 @@ export type SideBarProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
-  listItemSx?: SxProps<Theme>;
   expandedWidth?: number;
   paperProps?: PaperProps;
   hamburgerIconSx?: SxProps<Theme>;
+  onOpenChanged?: (open: boolean) => void;
 };
 
 let drawerWidth = 340;
@@ -76,9 +81,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
   '@media only screen and (min-width: 961px)': {
     width: drawerWidth,
   },
-  width: `calc(90px)`,
+  width: 'calc(90px)',
   [theme.breakpoints.up('sm')]: {
-    width: `100px`,
+    width: '100px',
   },
 });
 
@@ -104,29 +109,29 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export const SideBar = ({
   items,
+  selectedMenuKey,
   logoCollapsed,
   logoExpanded,
+  expandOnHover,
+  expandOnHoverDelayOpen = 500,
+  expandOnHoverDelayClose = 500,
+  expandOnHoverCancelOnClick = false,
   children,
   childrenCollapsed,
   textVariant = 'subtitle2',
   collapsible = true,
   expandHint = false,
   textSX,
-  listItemSx,
   defaultOpen = true,
   expandedWidth,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
+  onOpenChanged,
 }: SideBarProps) => {
-  const getSelectedMenu = () => {
-    const location = useLocation();
-    const path = location.pathname.split('/');
-    const selectedItem = items.find((n) => n.key === path[1]);
-    if (selectedItem) return selectedItem.key;
-    else return undefined;
-  };
-  const selectedMenuKey: string | undefined = getSelectedMenu();
-
+  const [open, setOpen] = useState(defaultOpen);
+  const isHovering = useRef(false);
+  const hasCanceledExpand = useRef(false);
+  const [openedByHover, setOpenedByHover] = useState(false);
   useEffect(() => {
     let active = true;
     if (active) {
@@ -137,21 +142,21 @@ export const SideBar = ({
     };
   }, [selectedMenuKey]);
 
-  const StyledListItemButton = styled(ListItemButton)(() => ({
-    '&.Mui-selected, &.Mui-selected:hover': {
-      ...listItemSx,
-    },
-  }));
-
   useEffect(() => {
     if (expandedWidth) drawerWidth = expandedWidth;
   }, [expandedWidth]);
 
+  useEffect(() => {
+    if (onOpenChanged) {
+      onOpenChanged(open);
+    }
+  }, [onOpenChanged, open]);
+
   const [selectedKey, setSelectedKey] = useState<string>();
-  const [open, setOpen] = useState(defaultOpen);
   const [closed, setClosed] = useState(!defaultOpen);
-  const toggleOpen = () => {
+  const toggleOpen = useCallback(() => {
     if (collapsible) {
+      setOpenedByHover(false);
       setOpen((prev) => !prev);
       if (!closed) {
         setTimeout(() => {
@@ -161,14 +166,60 @@ export const SideBar = ({
         setClosed((prev) => !prev);
       }
     }
-  };
+  }, [closed, collapsible]);
 
-  const handleItemClick = (item: SideBarItem) => {
-    setSelectedKey(item.key);
-    if (item.onClick) {
-      item.onClick();
+  const handleItemClick = useCallback(
+    (item: SideBarItem) => {
+      if (expandOnHoverCancelOnClick) {
+        hasCanceledExpand.current = true;
+      }
+      setSelectedKey(item.key);
+      if (item.onClick) {
+        item.onClick();
+      }
+    },
+    [expandOnHoverCancelOnClick],
+  );
+
+  // use debounced open/close functions so that multiple mouseenter/leave events do not trigger lots of actions
+  const delayedOpen = useMemo(
+    () =>
+      debounce(() => {
+        // make sure we are still hovering and has not been canceled
+        if (isHovering.current === true && hasCanceledExpand.current === false) {
+          setOpen(true);
+          setOpenedByHover(true);
+        }
+      }, expandOnHoverDelayOpen),
+    [expandOnHoverDelayOpen],
+  );
+
+  const delayedClose = useMemo(
+    () =>
+      debounce(() => {
+        // only close if no longer hoverring on any button
+        // I.e. the mouse leave event may frie from on button, then a mouse enter event may fire from a second button
+        if (isHovering.current === false && openedByHover) {
+          toggleOpen();
+        }
+      }, expandOnHoverDelayClose),
+    [openedByHover, toggleOpen, expandOnHoverDelayClose],
+  );
+
+  const handleMouseEnter = useCallback(() => {
+    if (!expandOnHover) return;
+    hasCanceledExpand.current = false;
+    isHovering.current = true;
+    if (open) return;
+    delayedOpen();
+  }, [delayedOpen, expandOnHover, isHovering, open]);
+  const handleMouseLeave = useCallback(() => {
+    if (!expandOnHover) return;
+    isHovering.current = false;
+    if (open && openedByHover) {
+      delayedClose();
     }
-  };
+  }, [delayedClose, expandOnHover, open, openedByHover]);
 
   return (
     <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
@@ -219,11 +270,12 @@ export const SideBar = ({
             )}
           </Box>
         </ListItemButton>
-
-        {items.map((item, index) => (
+        {items.map((item) => (
           <React.Fragment key={item.key}>
             <ListItem disablePadding>
-              <StyledListItemButton
+              <ListItemButton
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
                 selected={selectedKey === item.key}
                 onClick={() => handleItemClick(item)}
                 sx={{
@@ -244,7 +296,7 @@ export const SideBar = ({
                   }
                   sx={{ display: open ? 'block' : 'none', margin: 0, ml: 3 }}
                 />
-              </StyledListItemButton>
+              </ListItemButton>
             </ListItem>
 
             {item.divider && (

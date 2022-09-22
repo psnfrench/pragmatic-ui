@@ -5,7 +5,7 @@ import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export type PDatePickerProps = Omit<DatePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & {
+export type PDatePickerProps = Omit<DatePickerProps<unknown, unknown>, 'renderInput' | 'value' | 'onChange'> & {
   TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
 } & Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
@@ -20,14 +20,14 @@ export const PDatePicker = (props: PDatePickerProps) => {
 };
 
 const PDatePickerWithFormikComp = (
-  props: Omit<DatePickerProps<any, any>, 'renderInput' | 'onChange'> &
+  props: Omit<DatePickerProps<unknown, unknown>, 'renderInput' | 'onChange'> &
     RequiredFormikTextFields & {
       TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
     } & Required<Pick<TextFieldProps, 'name' | 'value'>> &
     Pick<TextFieldProps, 'variant'>,
 ) => {
-  const { name, value, handleChange, setFieldValue, variant, ...otherProps } = props;
-  const handleDateChange = (dateValue: unknown, keyboardInputValue?: string | undefined) => {
+  const { name, value, setFieldValue, variant, ...otherProps } = props;
+  const handleDateChange = (dateValue: unknown) => {
     setFieldValue(name, dateValue);
   };
   return name ? (

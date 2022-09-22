@@ -24,8 +24,8 @@ const PTimePickerWithFormikComp = (
     Required<Pick<TextFieldProps, 'value' | 'name'>> &
     Pick<TextFieldProps, 'variant'>,
 ) => {
-  const { name, value, handleChange, setFieldValue, variant, ...otherProps } = props;
-  const handleTimeChange = (timeValue: unknown, keyboardInputValue?: string | undefined) => {
+  const { name, value, setFieldValue, variant, ...otherProps } = props;
+  const handleTimeChange = (timeValue: unknown) => {
     setFieldValue(name, timeValue);
   };
   return name ? (

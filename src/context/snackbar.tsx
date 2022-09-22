@@ -16,6 +16,7 @@ export const SnackBarProvider = ({ children }: { children: React.ReactNode }) =>
     message: '',
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const showSnack = useCallback((message: string | any, severity: AlertColor, options: SnackbarProps = {}) => {
     let textMessage = '';
     if (typeof message === 'string') {
@@ -26,7 +27,7 @@ export const SnackBarProvider = ({ children }: { children: React.ReactNode }) =>
       textMessage = JSON.stringify(message);
     }
 
-    setSnackStatus({ message: textMessage, severity, ...options });
+    setSnackStatus({ message: textMessage, severity: severity, ...options });
     setSnackOpen(true);
   }, []);
 

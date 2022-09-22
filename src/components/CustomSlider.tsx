@@ -39,7 +39,7 @@ export type CustomSliderItem = {
   sliderBoxProps?: BoxProps;
 };
 
-export const CustomSlider = ({ items, children, ...otherProps }: CustomSliderProps) => {
+export const CustomSlider = ({ items, ...otherProps }: CustomSliderProps) => {
   const settings = {
     dots: true,
     infinite: true,

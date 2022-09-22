@@ -57,7 +57,9 @@ export const OnBoardingCarosel = ({
       <StyledBox className="imageTopRight">
         <img src={imageTopRight} />
       </StyledBox>
-      <CustomSlider items={items} children={children} {...otherProps} />
+      <CustomSlider items={items} {...otherProps}>
+        {children}
+      </CustomSlider>
       <StyledBox className="imageBottomLeft">
         <img src={imageBottomLeft} />
       </StyledBox>

@@ -7,16 +7,16 @@ export type BorderDemoProps = {
 };
 
 function BorderRadiusDemo({ setTheme }: BorderDemoProps) {
-  const defaultBorderRadius: number = 12;
+  const defaultBorderRadius = 12;
   const [borderRadius, setBorderRadius] = useState(defaultBorderRadius);
 
   const handleBorderRadiusChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-    value != '' ? setBorderRadius(parseInt(value)) : console.log("Number can't be blank");
+    value != '' ? setBorderRadius(parseInt(value)) : console.log('Number cannot be blank');
   };
 
   useEffect(() => {
     setTheme(createPragmaticTheme({ borderRadius }));
-  }, [borderRadius]);
+  }, [borderRadius, setTheme]);
   return (
     <Box>
       <Typography variant="h4">Border Radius</Typography>

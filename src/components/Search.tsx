@@ -1,9 +1,9 @@
-import { TextField, TextFieldProps, styled, InputProps } from '@mui/material';
+import { TextField, TextFieldProps, styled } from '@mui/material';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
 import { PIcon } from '../images/PIcon';
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)(() => ({
   '&.textField': {
     paddingTop: '0px !important',
   },

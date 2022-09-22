@@ -16,13 +16,16 @@ export const PSwitch = (props: ThemedSwitchProps) => {
 
 const PSwitchWithFormikComp = (props: ThemedSwitchProps & RequiredFormikSwitchFields & { checked: boolean }) => {
   const { name, label, checked, setFieldValue, ...otherProps } = props;
-  const handleSwitchChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(target.name, target.checked);
-  };
+  const handleSwitchChange = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(target.name, target.checked);
+    },
+    [setFieldValue],
+  );
 
   const renderSwitch = useCallback(() => {
     return <Switch name={name} checked={checked} onChange={handleSwitchChange} {...otherProps} />;
-  }, [name, checked, handleSwitchChange]);
+  }, [name, checked, handleSwitchChange, otherProps]);
 
   return name ? label ? <FormControlLabel control={renderSwitch()} label={label} /> : renderSwitch() : null;
 };

@@ -83,7 +83,7 @@ export const createPragmaticTheme = ({
           MuiFilledInput: {
             styleOverrides: {
               root: {
-                borderRadius,
+                borderRadius: borderRadius,
                 backgroundColor: Colors.greyscale.input,
                 borderWidth: 2,
                 borderStyle: 'solid',
@@ -211,7 +211,7 @@ export const createPragmaticTheme = ({
             styleOverrides: {
               root: {
                 backgroundColor: Colors.primary.background,
-                borderRadius,
+                borderRadius: borderRadius,
                 '&  ul > li.MuiMenuItem-root:hover': {
                   color: Colors.primary.main,
                   backgroundColor: Colors.primary.background,

@@ -25,7 +25,7 @@ function ConfirmationDemo() {
         showSnack('User has clicked outside of modal or press escape', 'info');
       }
     },
-    [],
+    [setOpenId, showSnack],
   );
 
   const showMessage = async () => {

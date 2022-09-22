@@ -16,13 +16,16 @@ export const PCheckbox = (props: ThemedCheckboxProps) => {
 
 const PCheckboxWithFormikComp = (props: ThemedCheckboxProps & RequiredFormikCheckboxFields & { checked: boolean }) => {
   const { name, label, checked, setFieldValue, ...otherProps } = props;
-  const handleCheckBoxChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldValue(target.name, target.checked);
-  };
+  const handleCheckBoxChange = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(target.name, target.checked);
+    },
+    [setFieldValue],
+  );
 
   const renderCheckBox = useCallback(() => {
     return <Checkbox name={name} checked={checked} onChange={handleCheckBoxChange} {...otherProps} />;
-  }, [name, checked, handleCheckBoxChange]);
+  }, [name, checked, handleCheckBoxChange, otherProps]);
 
   return name ? label ? <FormControlLabel control={renderCheckBox()} label={label} /> : renderCheckBox() : null;
 };
