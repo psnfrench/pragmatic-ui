@@ -24,7 +24,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
 import { theme } from '../../constants/theme';
 import { PTextField } from '../PTextField';
-import { width } from '@mui/system';
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -116,9 +115,9 @@ export type PComplexFilterProps = {
   handleDisplayedItemsSearch?: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   returnAll?: boolean;
   returnTree?: boolean;
-  startDate: number;
+  startDate?: number;
   setStartDate?: React.Dispatch<React.SetStateAction<number>>;
-  endDate: number;
+  endDate?: number;
   setEndDate?: React.Dispatch<React.SetStateAction<number>>;
 };
 
@@ -173,11 +172,11 @@ export function PComplexFilter({
 
   // When local time state changes, so does the original
   useEffect(() => {
-    setEndDate && setEndDate(localEndDate);
+    setEndDate && localEndDate && setEndDate(localEndDate);
   }, [localEndDate, setEndDate]);
 
   useEffect(() => {
-    setStartDate && setStartDate(localStartDate);
+    setStartDate && localStartDate && setStartDate(localStartDate);
   }, [localStartDate, setStartDate]);
 
   // deselects every item
