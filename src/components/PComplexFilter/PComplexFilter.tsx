@@ -13,15 +13,18 @@ import {
   CheckboxProps,
   Typography,
   ChipProps,
+  FilledInputProps,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
 import PIcon from '../../images/PIcon';
 import ComplexFilterPaper from './ComplexFilterPaper';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
-import { PDatePicker } from '../PDatePicker';
 import { theme } from '../../constants/theme';
+import { PTextField } from '../PTextField';
+import { width } from '@mui/system';
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -113,7 +116,9 @@ export type PComplexFilterProps = {
   handleDisplayedItemsSearch?: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   returnAll?: boolean;
   returnTree?: boolean;
+  startDate: number;
   setStartDate?: React.Dispatch<React.SetStateAction<number>>;
+  endDate: number;
   setEndDate?: React.Dispatch<React.SetStateAction<number>>;
 };
 
@@ -145,7 +150,9 @@ export function PComplexFilter({
   handleDisplayedItemsSearch,
   returnAll,
   returnTree = true,
+  startDate,
   setStartDate,
+  endDate,
   setEndDate,
 }: PComplexFilterProps) {
   const [open, setOpen] = useState(Boolean(anchorEl));
@@ -161,6 +168,17 @@ export function PComplexFilter({
   const [back, setBack] = useState(false);
   const [parent, setParent] = useState<menuItemType>();
   const valid = areChildrenOK(items);
+  const [localStartDate, setLocalStartDate] = useState(startDate);
+  const [localEndDate, setLocalEndDate] = useState(endDate);
+
+  // When local time state changes, so does the original
+  useEffect(() => {
+    setEndDate && setEndDate(localEndDate);
+  }, [localEndDate, setEndDate]);
+
+  useEffect(() => {
+    setStartDate && setStartDate(localStartDate);
+  }, [localStartDate, setStartDate]);
 
   // deselects every item
   const deSelect = useCallback(
@@ -514,8 +532,9 @@ export function PComplexFilter({
   };
 
   // removes the time from the date pickers
-  function removeTime(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  function removeTime(date: Date | number) {
+    const _date = new Date(date);
+    return new Date(_date.getFullYear(), _date.getMonth(), _date.getDate());
   }
 
   return valid ? (
@@ -702,25 +721,53 @@ export function PComplexFilter({
           )}
         </Box>
         {setStartDate && (
-          <PDatePicker
+          <DatePicker
             label={<Typography variant="caption">Start Date:</Typography>}
-            InputProps={{ sx: { width: '170px' } }}
-            name="startDate"
-            variant="filled"
-            onAccept={(event) => {
-              setStartDate(removeTime(event as Date).getTime());
+            value={localStartDate}
+            onChange={(e) => setLocalStartDate(removeTime(e as number).getTime())}
+            renderInput={({ InputProps, ...params }) => {
+              (InputProps as Partial<FilledInputProps>).disableUnderline = true;
+              (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
+              (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
+              return (
+                <PTextField
+                  variant="filled"
+                  name="localStartDate"
+                  value={new Intl.DateTimeFormat('en-NZ', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                  }).format(localStartDate)}
+                  InputProps={{ ...InputProps }}
+                  {...params}
+                />
+              );
             }}
           />
         )}
         {setEndDate && (
           <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)}>
-            <PDatePicker
+            <DatePicker
               label={<Typography variant="caption">End Date:</Typography>}
-              InputProps={{ sx: { width: '170px' } }}
-              name="endDate"
-              variant="filled"
-              onAccept={(event) => {
-                setEndDate(removeTime(event as Date).getTime() + 24 * 60 * 60 * 1000);
+              value={localEndDate}
+              onChange={(e) => setLocalEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000)}
+              renderInput={({ InputProps, ...params }) => {
+                (InputProps as Partial<FilledInputProps>).disableUnderline = true;
+                (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
+                (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
+                return (
+                  <PTextField
+                    variant="filled"
+                    name="localEndDate"
+                    value={new Intl.DateTimeFormat('en-NZ', {
+                      year: '2-digit',
+                      month: '2-digit',
+                      day: '2-digit',
+                    }).format(localEndDate)}
+                    InputProps={{ ...InputProps }}
+                    {...params}
+                  />
+                );
               }}
             />
           </Box>
