@@ -749,7 +749,7 @@ export function PComplexFilter({
             <DatePicker
               label={<Typography variant="caption">End Date:</Typography>}
               value={localEndDate}
-              onChange={(e) => setLocalEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000)}
+              onChange={(e) => setLocalEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000 - 1)}
               renderInput={({ InputProps, ...params }) => {
                 (InputProps as Partial<FilledInputProps>).disableUnderline = true;
                 (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
