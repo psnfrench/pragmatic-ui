@@ -10,6 +10,7 @@ export * from './components/PTimePicker';
 export * from './components/PSwitch';
 export * from './components/PTextField';
 export * from './components/PRadioGroup';
+export * from './components/PCheckbox';
 export * from './components/Search';
 export * from './components/SimpleSnackbar';
 export * from './components/SignUpCard';
