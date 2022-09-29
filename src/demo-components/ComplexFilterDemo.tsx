@@ -115,13 +115,6 @@ const ComplexFilterDemo = () => {
     console.log(returnedFilters);
   }, [returnedFilters]);
 
-  useEffect(() => {
-    console.log(startDate);
-  }, [startDate]);
-  useEffect(() => {
-    console.log(endDate);
-  }, [endDate]);
-
   // Maps out all data including children (that are theoretically infinite)
   // function displayData(item: itemType[], child?: boolean) {
   //   return item.map((option, key) => (
@@ -301,7 +294,9 @@ const ComplexFilterDemo = () => {
             // as opposed to just one level above the filter.
             returnTree
             // Will show a Date Picker and set the value of this number
+            startDate={startDate}
             setStartDate={setStartDate}
+            endDate={endDate}
             setEndDate={setEndDate}
           />
         </Box>

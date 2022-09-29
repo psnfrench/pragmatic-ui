@@ -55,19 +55,21 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
       <Route
         path="/demos"
         element={
-          <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
-            {({ handleSubmit, isSubmitting }) => (
-              <form onSubmit={handleSubmit}>
-                <ComplexFilterDemo />
-                <TextDemo />
-                <DateDemo />
-                <RadioDemo />
-                <SearchDemo />
-                <FileDropZoneDemo />
-                <SubmitButton text="Submit Button" variant="contained" color="primary" loading={isSubmitting} />
-              </form>
-            )}
-          </Formik>
+          <>
+            <ComplexFilterDemo />
+            <Formik initialValues={initialValues} onSubmit={handleSubmit} validate={validate}>
+              {({ handleSubmit, isSubmitting }) => (
+                <form onSubmit={handleSubmit}>
+                  <TextDemo />
+                  <DateDemo />
+                  <RadioDemo />
+                  <SearchDemo />
+                  <FileDropZoneDemo />
+                  <SubmitButton text="Submit Button" variant="contained" color="primary" loading={isSubmitting} />
+                </form>
+              )}
+            </Formik>
+          </>
         }
       />
       <Route path="/demos/test-sidebar" element={<SnackBarDemo />} />

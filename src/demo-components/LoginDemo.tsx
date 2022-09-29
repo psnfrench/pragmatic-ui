@@ -25,7 +25,6 @@ const LoginDemo = () => {
   const { showConfirmationModal, setOpenId } = useContext(ConfirmationServiceContext);
 
   const handleLogin = (values: LoginFormValues, { setSubmitting }: FormikHelpers<LoginFormValues>) => {
-    console.log('values: ', values);
     saveUser(values);
     setSubmitting(false);
   };

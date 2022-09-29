@@ -14,6 +14,7 @@ import {
   Typography,
   ChipProps,
   FilledInputProps,
+  TextField,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
@@ -729,9 +730,8 @@ export function PComplexFilter({
               (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
               (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
               return (
-                <PTextField
+                <TextField
                   variant="filled"
-                  name="localStartDate"
                   value={new Intl.DateTimeFormat('en-NZ', {
                     year: '2-digit',
                     month: '2-digit',
@@ -755,9 +755,8 @@ export function PComplexFilter({
                 (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
                 (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
                 return (
-                  <PTextField
+                  <TextField
                     variant="filled"
-                    name="localEndDate"
                     value={new Intl.DateTimeFormat('en-NZ', {
                       year: '2-digit',
                       month: '2-digit',
