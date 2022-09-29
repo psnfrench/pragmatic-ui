@@ -20,6 +20,8 @@ import PIcon from '../../images/PIcon';
 import ComplexFilterPaper from './ComplexFilterPaper';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
+import { PDatePicker } from '../PDatePicker';
+import { theme } from '../../constants/theme';
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -111,6 +113,8 @@ export type PComplexFilterProps = {
   handleDisplayedItemsSearch?: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   returnAll?: boolean;
   returnTree?: boolean;
+  setStartDate?: React.Dispatch<React.SetStateAction<number>>;
+  setEndDate?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export function PComplexFilter({
@@ -141,6 +145,8 @@ export function PComplexFilter({
   handleDisplayedItemsSearch,
   returnAll,
   returnTree = true,
+  setStartDate,
+  setEndDate,
 }: PComplexFilterProps) {
   const [open, setOpen] = useState(Boolean(anchorEl));
   const [mainOpen, setMainOpen] = useState(false);
@@ -193,6 +199,7 @@ export function PComplexFilter({
   };
 
   // triggers when filter button pressed. Opens/closes poppers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClick = (event: any) => {
     setOpen(!open);
     if (!open) {
@@ -218,6 +225,7 @@ export function PComplexFilter({
   };
 
   // shows/hides popper for each chip
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChipClick = (item: menuItemType, index: number) => (event: any) => {
     if (index === currentIndex) {
       handleChipClose(index);
@@ -363,7 +371,7 @@ export function PComplexFilter({
             setCurrentFilters((prev) => [...prev, menuParent]);
           }
         } else {
-          const i = itemsHistory[0].find((j, index) => j.text === currentTitles[1]);
+          const i = itemsHistory[0].find((j) => j.text === currentTitles[1]);
           if (i && currentFilters.includes(i) && mainOpen) {
             const newState: menuItemType[] = currentFilters.map((filter) => {
               if (filter.text === (i as menuItemType).text) {
@@ -505,6 +513,11 @@ export function PComplexFilter({
     }
   };
 
+  // removes the time from the date pickers
+  function removeTime(date: Date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
   return valid ? (
     <Box display="flex" flexDirection="column" flex={1}>
       <Box display="flex" flexDirection="row" flex={1}>
@@ -571,118 +584,146 @@ export function PComplexFilter({
           </Box>
         </ClickAwayListener>
       </Box>
-      <Box
-        display={currentFilterString.length > 0 ? 'flex' : 'none'}
-        paddingTop={2}
-        flexDirection="row"
-        flexWrap="wrap"
-      >
-        {currentFilters?.map(
-          (filter, index) =>
-            filter.children && (
-              <ClickAwayListener onClickAway={() => handleChipClose(index)} key={index}>
-                <Box key={index}>
-                  <StyledChip
-                    label={
-                      <Box display="flex" flexDirection="row" alignItems="center" textAlign="center">
-                        <Typography
-                          variant="subtitle2"
-                          color="action.active"
-                          sx={{ paddingRight: 1 }}
-                          {...chipTextProps}
-                        >
-                          {formatLabel(filter)}
-                        </Typography>
-                        {/* <StyledAvatar sx={{ display: returnTree ? 'inline-flex' : 'none' }}>
+      <Box display="flex" flexDirection="row" flex={1}>
+        <Box display={currentFilterString.length > 0 ? 'none' : 'flex'} paddingTop={2} flex={1} />
+        <Box
+          display={currentFilterString.length > 0 ? 'flex' : 'none'}
+          paddingTop={2}
+          flexDirection="row"
+          flexWrap="wrap"
+          flex={1}
+        >
+          {currentFilters?.map(
+            (filter, index) =>
+              filter.children && (
+                <ClickAwayListener onClickAway={() => handleChipClose(index)} key={index}>
+                  <Box key={index}>
+                    <StyledChip
+                      label={
+                        <Box display="flex" flexDirection="row" alignItems="center" textAlign="center">
+                          <Typography
+                            variant="subtitle2"
+                            color="action.active"
+                            sx={{ paddingRight: 1 }}
+                            {...chipTextProps}
+                          >
+                            {formatLabel(filter)}
+                          </Typography>
+                          {/* <StyledAvatar sx={{ display: returnTree ? 'inline-flex' : 'none' }}>
                           <Typography variant="body1" color="primary.contrastText">
                             {countSelected([filter])}
                           </Typography>
                         </StyledAvatar> */}
-                        <ChevronRight
-                          sx={{
-                            transform: index === currentIndex ? 'rotate(270deg)' : 'rotate(90deg)',
-                            fontSize: '1.3rem',
-                          }}
-                        />
-                      </Box>
-                    }
-                    variant={index === currentIndex ? 'filled' : 'outlined'}
-                    onClick={handleChipClick(filter, index)}
-                    deleteIcon={
-                      <Box onClick={() => handleChipDelete(filter)}>
-                        <PIcon name="crossSmallIcon" />
-                      </Box>
-                    }
-                    onDelete={() => handleChipDelete(filter)}
-                    {...chipProps}
-                  />
-                  <Box
-                    sx={{
-                      zIndex: 999999,
-                      position: 'relative',
-                      mt: '12px',
-                      '&::before': {
-                        backgroundColor: 'white',
-                        content: '""',
-                        display: Boolean(anchorEl) && index === currentIndex ? 'block' : 'none',
-                        position: 'absolute',
-                        width: 16,
-                        height: 16,
-                        top: -8,
-                        transform: 'rotate(225deg)',
-                        left: 'calc(50% - 8px)',
-                        boxShadow: '3px 3px 6px -3px rgba(0,0,0,0.2)',
-                      },
-                    }}
-                  />
-                  <ComplexFilterPaper
-                    open={anchorEl !== null && Boolean(anchorEl) && index === currentIndex}
-                    anchorEl={anchorEl}
-                    id={filter.text}
-                    popperProps={popperProps}
-                    paperProps={paperProps}
-                    titleProps={titleProps}
-                    currentTitle={currentTitle}
-                    back={back}
-                    backButton={backButton}
-                    backButtonProps={backButtonProps}
-                    searchable={searchable}
-                    handleBack={handleBack}
-                    handleSearchChange={(event) => handleSearchChange(event, filter.children)}
-                    handleSelected={handleSelected}
-                    filteredItems={filteredItems}
-                    filterParent={parent}
-                    itemHeight={itemHeight}
-                    maxItems={maxItems}
-                    listItemProps={listItemProps}
-                    searchProps={searchProps}
-                    countSelected={countSelected}
-                  />
-                </Box>
-              </ClickAwayListener>
-            ),
+                          <ChevronRight
+                            sx={{
+                              transform: index === currentIndex ? 'rotate(270deg)' : 'rotate(90deg)',
+                              fontSize: '1.3rem',
+                            }}
+                          />
+                        </Box>
+                      }
+                      variant={index === currentIndex ? 'filled' : 'outlined'}
+                      onClick={handleChipClick(filter, index)}
+                      deleteIcon={
+                        <Box onClick={() => handleChipDelete(filter)}>
+                          <PIcon name="crossSmallIcon" />
+                        </Box>
+                      }
+                      onDelete={() => handleChipDelete(filter)}
+                      {...chipProps}
+                    />
+                    <Box
+                      sx={{
+                        zIndex: 999999,
+                        position: 'relative',
+                        mt: '12px',
+                        '&::before': {
+                          backgroundColor: 'white',
+                          content: '""',
+                          display: Boolean(anchorEl) && index === currentIndex ? 'block' : 'none',
+                          position: 'absolute',
+                          width: 16,
+                          height: 16,
+                          top: -8,
+                          transform: 'rotate(225deg)',
+                          left: 'calc(50% - 8px)',
+                          boxShadow: '3px 3px 6px -3px rgba(0,0,0,0.2)',
+                        },
+                      }}
+                    />
+                    <ComplexFilterPaper
+                      open={anchorEl !== null && Boolean(anchorEl) && index === currentIndex}
+                      anchorEl={anchorEl}
+                      id={filter.text}
+                      popperProps={popperProps}
+                      paperProps={paperProps}
+                      titleProps={titleProps}
+                      currentTitle={currentTitle}
+                      back={back}
+                      backButton={backButton}
+                      backButtonProps={backButtonProps}
+                      searchable={searchable}
+                      handleBack={handleBack}
+                      handleSearchChange={(event) => handleSearchChange(event, filter.children)}
+                      handleSelected={handleSelected}
+                      filteredItems={filteredItems}
+                      filterParent={parent}
+                      itemHeight={itemHeight}
+                      maxItems={maxItems}
+                      listItemProps={listItemProps}
+                      searchProps={searchProps}
+                      countSelected={countSelected}
+                    />
+                  </Box>
+                </ClickAwayListener>
+              ),
+          )}
+          {currentFilters && currentFilters[0] && (
+            <>
+              <StyledChip
+                color="primary"
+                label={
+                  <Typography
+                    variant="subtitle2"
+                    color="primary.contrastText"
+                    sx={{ paddingRight: 1 }}
+                    {...chipTextProps}
+                  >
+                    Clear All
+                  </Typography>
+                }
+                onClick={handleClear}
+                onDelete={handleClear}
+                {...clearChipProps}
+              />
+              <br />
+              <br />
+            </>
+          )}
+        </Box>
+        {setStartDate && (
+          <PDatePicker
+            label={<Typography variant="caption">Start Date:</Typography>}
+            InputProps={{ sx: { width: '170px' } }}
+            name="startDate"
+            variant="filled"
+            onAccept={(event) => {
+              setStartDate(removeTime(event as Date).getTime());
+            }}
+          />
         )}
-        {currentFilters && currentFilters[0] && (
-          <>
-            <StyledChip
-              color="primary"
-              label={
-                <Typography
-                  variant="subtitle2"
-                  color="primary.contrastText"
-                  sx={{ paddingRight: 1 }}
-                  {...chipTextProps}
-                >
-                  Clear All
-                </Typography>
-              }
-              onClick={handleClear}
-              onDelete={handleClear}
-              {...clearChipProps}
+        {setEndDate && (
+          <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)}>
+            <PDatePicker
+              label={<Typography variant="caption">End Date:</Typography>}
+              InputProps={{ sx: { width: '170px' } }}
+              name="endDate"
+              variant="filled"
+              onAccept={(event) => {
+                setEndDate(removeTime(event as Date).getTime() + 24 * 60 * 60 * 1000);
+              }}
             />
-            <br />
-            <br />
-          </>
+          </Box>
         )}
       </Box>
     </Box>

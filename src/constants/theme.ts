@@ -13,6 +13,7 @@ export const createPragmaticTheme = ({
   createTheme(
     merge<ThemeOptions, ThemeOptions | undefined>(
       {
+        spacing: 6,
         palette: {
           primary: Colors.primary,
           secondary: Colors.secondary,

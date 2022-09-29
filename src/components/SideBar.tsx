@@ -47,20 +47,18 @@ export type SideBarProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
-  expandedWidth?: number;
+  expandedWidth?: string;
+  closedWidth?: string;
   paperProps?: PaperProps;
   hamburgerIconSx?: SxProps<Theme>;
   onOpenChanged?: (open: boolean) => void;
 };
-
-let drawerWidth = 340;
-
 const openedMixin = (theme: Theme): CSSObject => ({
-  '@media only screen and (max-width: 960px)': {
+  '@media only screen and (max-width: 600px)': {
     width: '100%',
   },
-  '@media only screen and (min-width: 961px)': {
-    width: drawerWidth,
+  '@media only screen and (min-width: 601px)': {
+    width: theme.spacing(42.5),
   },
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -75,25 +73,16 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  '@media only screen and (max-width: 960px)': {
-    width: '100%',
+  '@media only screen and (max-width: 600px)': {
+    width: theme.spacing(12.5),
   },
-  '@media only screen and (min-width: 961px)': {
-    width: drawerWidth,
-  },
-  width: 'calc(90px)',
   [theme.breakpoints.up('sm')]: {
-    width: '100px',
+    width: theme.spacing(12.5),
   },
 });
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
-  '@media only screen and (max-width: 960px)': {
-    width: '100%',
-  },
-  '@media only screen and (min-width: 961px)': {
-    width: drawerWidth,
-  },
+  width: '100%',
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
@@ -123,7 +112,6 @@ export const SideBar = ({
   expandHint = false,
   textSX,
   defaultOpen = true,
-  expandedWidth,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
   onOpenChanged,
@@ -141,10 +129,6 @@ export const SideBar = ({
       active = false;
     };
   }, [selectedMenuKey]);
-
-  useEffect(() => {
-    if (expandedWidth) drawerWidth = expandedWidth;
-  }, [expandedWidth]);
 
   useEffect(() => {
     if (onOpenChanged) {
@@ -233,42 +217,38 @@ export const SideBar = ({
             transition: '1s',
           }}
         >
-          <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', padding: 'none' }}>
-            {open ? (
-              <Box display="flex" flex={1} flexDirection="column">
-                <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
-                  {collapsible && (
-                    <>
-                      <ChevronLeftIcon sx={{ marginRight: '-9px' }} />
-                      <MenuIcon />
-                    </>
-                  )}
-                </Box>
-                {logoExpanded}
+          {open ? (
+            <Box display="flex" flex={1} flexDirection="column">
+              <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
+                {collapsible && (
+                  <>
+                    <ChevronLeftIcon sx={{ marginRight: '-9px' }} />
+                    <MenuIcon />
+                  </>
+                )}
               </Box>
-            ) : (
-              <Tooltip title={<ChevronRight />} arrow placement="top">
+              {logoExpanded}
+            </Box>
+          ) : (
+            <Tooltip title={expandHint ? <ChevronRight /> : ''} arrow placement="top">
+              <Box
+                display="flex"
+                justifyContent="center"
+                flexDirection="column"
+                alignContent="space-between"
+                className="poppycock"
+                sx={{ height: '124px' }}
+              >
+                <Box display="flex" justifyContent="center" height="100%" marginLeft="6px" sx={{ ...hamburgerIconSx }}>
+                  <MenuIcon sx={{ marginRight: '-4.5px' }} />
+                  <ChevronRightIcon sx={{ marginLeft: '-4.5px' }} />
+                </Box>
                 <Box display="flex" justifyContent="center">
-                  {expandHint ? (
-                    <Box
-                      display="flex"
-                      flex={1}
-                      position="absolute"
-                      top="0px"
-                      left="20px"
-                      right="auto"
-                      justifyContent="center"
-                      sx={{ ...hamburgerIconSx }}
-                    >
-                      <MenuIcon sx={{ marginRight: '-4.5px' }} />
-                      <ChevronRightIcon sx={{ marginLeft: '-4.5px' }} />
-                    </Box>
-                  ) : null}
                   {logoCollapsed}
                 </Box>
-              </Tooltip>
-            )}
-          </Box>
+              </Box>
+            </Tooltip>
+          )}
         </ListItemButton>
         {items.map((item) => (
           <React.Fragment key={item.key}>
@@ -279,12 +259,11 @@ export const SideBar = ({
                 selected={selectedKey === item.key}
                 onClick={() => handleItemClick(item)}
                 sx={{
-                  justifyContent: !closed ? 'initial' : 'center',
                   px: 2.5,
                   borderRadius: 0.5,
                 }}
               >
-                <ListItemIcon sx={textSX}>{item.icon}</ListItemIcon>
+                <ListItemIcon sx={{ ...textSX, display: 'flex', justifyContent: 'center' }}>{item.icon}</ListItemIcon>
                 <ListItemText
                   primary={
                     <Typography
@@ -307,7 +286,9 @@ export const SideBar = ({
           </React.Fragment>
         ))}
       </List>
-      <Box sx={{ display: 'flex', flex: 1, alignItems: 'flex-end' }}>{open ? children : childrenCollapsed}</Box>
+      <Box sx={{ display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+        {open ? children : childrenCollapsed}
+      </Box>
     </Drawer>
   );
 };

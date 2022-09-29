@@ -6,6 +6,7 @@ import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
 export const PDateTimePicker = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & {
     TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
   } & Required<Pick<TextFieldProps, 'name'>> &
@@ -20,6 +21,7 @@ export const PDateTimePicker = (
 };
 
 const PDateTimePickerWithFormikComp = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'onChange'> & {
     TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
   } & Required<Pick<TextFieldProps, 'name' | 'value'>> &

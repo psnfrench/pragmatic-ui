@@ -108,10 +108,19 @@ const ComplexFilterDemo = () => {
   const [searchedOptions, setSearchedOptions] = useState([...items]);
   const [returnedFilters, setReturnedFilters] = useState<menuItemType[]>();
   const newSearchItems = useRef<itemType[]>([]);
+  const [startDate, setStartDate] = useState(Date.now());
+  const [endDate, setEndDate] = useState(Date.now());
 
   useEffect(() => {
     console.log(returnedFilters);
   }, [returnedFilters]);
+
+  useEffect(() => {
+    console.log(startDate);
+  }, [startDate]);
+  useEffect(() => {
+    console.log(endDate);
+  }, [endDate]);
 
   // Maps out all data including children (that are theoretically infinite)
   // function displayData(item: itemType[], child?: boolean) {
@@ -291,6 +300,9 @@ const ComplexFilterDemo = () => {
             // use this if you would like to return the chip as top level,
             // as opposed to just one level above the filter.
             returnTree
+            // Will show a Date Picker and set the value of this number
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
           />
         </Box>
         <br />
