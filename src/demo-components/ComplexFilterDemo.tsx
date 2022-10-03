@@ -12,7 +12,7 @@ const options: menuItemType[] = [
     children: [
       {
         text: 'Vehicle',
-        children: [{ text: 'Car' }, { text: 'Truck' }, { text: 'Ute' }],
+        children: [{ text: 'Car', selected: true }, { text: 'Truck' }, { text: 'Ute' }],
         multiple: false,
       },
       {

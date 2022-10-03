@@ -24,7 +24,6 @@ import ComplexFilterPaper from './ComplexFilterPaper';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
 import { theme } from '../../constants/theme';
-import { PTextField } from '../PTextField';
 const options = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -85,6 +84,8 @@ function areChildrenOK(children: menuItemType[]) {
   }
   return countBranches === 0 || countLeaves === 0;
 }
+
+const arr: string[] = [];
 
 // Props for filter component
 export type PComplexFilterProps = {
@@ -170,6 +171,7 @@ export function PComplexFilter({
   const valid = areChildrenOK(items);
   const [localStartDate, setLocalStartDate] = useState(startDate);
   const [localEndDate, setLocalEndDate] = useState(endDate);
+  const [loaded, setLoaded] = useState(false);
 
   // When local time state changes, so does the original
   useEffect(() => {
@@ -230,7 +232,7 @@ export function PComplexFilter({
   };
 
   // resets variables for menu
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setMainOpen(false);
     setBack(false);
     setOpen(false);
@@ -240,7 +242,7 @@ export function PComplexFilter({
     setCurrentItems([...items]);
     setFilteredItems([...currentItems]);
     setItemsHistory([items]);
-  };
+  }, [currentItems, items, setAnchorEl, title]);
 
   // shows/hides popper for each chip
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -267,7 +269,7 @@ export function PComplexFilter({
     }
   };
 
-  const checkEmpty = (filter: menuItemType[]) => {
+  const checkEmpty = useCallback((filter: menuItemType[]) => {
     const i = [true];
     filter.forEach((item) => {
       if (item.children) {
@@ -277,142 +279,179 @@ export function PComplexFilter({
       }
     });
     return i;
-  };
+  }, []);
 
   // handles when a menu item is selected
-  const handleSelected = (item: menuItemType, menuParent?: menuItemType) => {
-    // if item already selected, deselects item
-    if (item.selected) {
-      item.selected = false;
-      setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
-      if (!returnTree && menuParent) {
-        // checks parent contains no selected items
-        const empty = checkEmpty(menuParent.children as menuItemType[]);
-        // if parent empty, remove from array
-        if (!empty.includes(false)) {
-          if (menuParent && currentFilters.includes(menuParent)) {
-            const newState = currentFilters.filter((menu) => {
-              return menu.text !== menuParent.text;
-            });
-            if (!mainOpen) {
-              setCurrentIndex(-1);
-              handleClose();
-              setCurrentFilters(newState);
-            }
-          }
-        } else {
-          // if not empty, sets current filter to deselected
-          if (menuParent && setCurrentFilters) {
-            setCurrentFilters((prev) =>
-              prev.map((filter) => (filter.text === menuParent.text ? (filter = menuParent) : filter)),
-            );
-          }
-        }
-      } else if (menuParent) {
-        const i = items.find((j) => {
-          if (mainOpen) {
-            return j.text === currentTitles[1];
-          } else {
-            return j.text === currentTitles[0];
-          }
-        });
-        if (i) {
-          const empty = checkEmpty(i.children as menuItemType[]);
+  const handleSelected = useCallback(
+    (item: menuItemType, menuParent?: menuItemType) => {
+      // if item already selected, deselects item
+      if (item.selected) {
+        item.selected = false;
+        setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
+        if (!returnTree && menuParent) {
+          // checks parent contains no selected items
+          const empty = checkEmpty(menuParent.children as menuItemType[]);
+          // if parent empty, remove from array
           if (!empty.includes(false)) {
-            const newState = currentFilters.filter((menu) => {
-              return menu.text !== (i as menuItemType).text;
-            });
-            if (!mainOpen) {
-              setCurrentIndex(-1);
-              handleClose();
+            if (menuParent && currentFilters.includes(menuParent)) {
+              const newState = currentFilters.filter((menu) => {
+                return menu.text !== menuParent.text;
+              });
+              if (!mainOpen) {
+                setCurrentIndex(-1);
+                handleClose();
+                setCurrentFilters(newState);
+              }
             }
-            setCurrentFilters(newState);
           } else {
             // if not empty, sets current filter to deselected
-            if (setCurrentFilters) {
+            if (menuParent && setCurrentFilters) {
               setCurrentFilters((prev) =>
-                prev.map((filter) =>
-                  filter.text === (i as menuItemType).text ? (filter = i as menuItemType) : filter,
-                ),
+                prev.map((filter) => (filter.text === menuParent.text ? (filter = menuParent) : filter)),
               );
             }
           }
-        }
-      }
-
-      // if item has children
-    } else if (item.children && item.children.length > 0) {
-      // adds parent name to title array
-      setCurrentTitles((prev) => [...prev, item.text]);
-      // changes current items to children
-      setCurrentItems(item.children);
-      // adds children to itemHistory to give ability for backtracking
-      setItemsHistory([...itemsHistory, item.children]);
-      // sets the current title
-      setCurrentTitle(item.text);
-      // sets the parent
-      setParent(item);
-      // enables going back
-      setBack(true);
-    } else {
-      // selects item
-      if (menuParent) {
-        if (!menuParent.multiple) {
-          const found: menuItemType[] = [];
-          for (const child of menuParent.children as menuItemType[]) {
-            if (child.selected) found.push(child);
-          }
-
-          if (found !== []) {
-            for (const find of found) {
-              setCurrentFilterString(currentFilterString.filter((e) => e !== find.text));
-              find.selected = false;
+        } else if (menuParent) {
+          const i = items.find((j) => {
+            if (mainOpen) {
+              return j.text === currentTitles[1];
+            } else {
+              return j.text === currentTitles[0];
+            }
+          });
+          if (i) {
+            const empty = checkEmpty(i.children as menuItemType[]);
+            if (!empty.includes(false)) {
+              const newState = currentFilters.filter((menu) => {
+                return menu.text !== (i as menuItemType).text;
+              });
+              if (!mainOpen) {
+                setCurrentIndex(-1);
+                handleClose();
+              }
+              setCurrentFilters(newState);
+            } else {
+              // if not empty, sets current filter to deselected
+              if (setCurrentFilters) {
+                setCurrentFilters((prev) =>
+                  prev.map((filter) =>
+                    filter.text === (i as menuItemType).text ? (filter = i as menuItemType) : filter,
+                  ),
+                );
+              }
             }
           }
         }
-        item.selected = true;
-        setCurrentFilterString((prev) => [...prev, item.text]);
-        // if parent exists in current filters, alters parent.
-        // If returning tree, returns whole tree, else returns just parent.
-        if (!returnTree) {
-          if (currentFilters.includes(menuParent)) {
-            const newState: menuItemType[] = currentFilters.map((filter) => {
-              if (filter.text === menuParent.text) {
-                return menuParent;
-              }
-              return filter;
-            });
 
-            setCurrentFilters(newState);
-            // if parent not exist, add to filters
-          } else {
-            setCurrentFilters((prev) => [...prev, menuParent]);
+        // if item has children
+      } else if (item.children && item.children.length > 0) {
+        // adds parent name to title array
+        setCurrentTitles((prev) => [...prev, item.text]);
+        // changes current items to children
+        setCurrentItems(item.children);
+        // adds children to itemHistory to give ability for backtracking
+        setItemsHistory([...itemsHistory, item.children]);
+        // sets the current title
+        setCurrentTitle(item.text);
+        // sets the parent
+        setParent(item);
+        // enables going back
+        setBack(true);
+      } else {
+        // selects item
+        if (menuParent) {
+          if (!menuParent.multiple) {
+            const found: menuItemType[] = [];
+            for (const child of menuParent.children as menuItemType[]) {
+              if (child.selected) found.push(child);
+            }
+
+            if (found !== []) {
+              for (const find of found) {
+                setCurrentFilterString(currentFilterString.filter((e) => e !== find.text));
+                find.selected = false;
+              }
+            }
           }
-        } else {
-          const i = itemsHistory[0].find((j) => j.text === currentTitles[1]);
-          if (i && currentFilters.includes(i) && mainOpen) {
-            const newState: menuItemType[] = currentFilters.map((filter) => {
-              if (filter.text === (i as menuItemType).text) {
-                return i as menuItemType;
-              } else {
+          item.selected = true;
+          setCurrentFilterString((prev) => [...prev, item.text]);
+          // if parent exists in current filters, alters parent.
+          // If returning tree, returns whole tree, else returns just parent.
+          if (!returnTree) {
+            if (currentFilters.includes(menuParent)) {
+              const newState: menuItemType[] = currentFilters.map((filter) => {
+                if (filter.text === menuParent.text) {
+                  return menuParent;
+                }
                 return filter;
-              }
-            });
+              });
 
-            setCurrentFilters(newState);
-          } else if (i && mainOpen) {
-            setCurrentFilters((prev) => [...prev, i as menuItemType]);
-            // if parent not exist, add to filters
+              setCurrentFilters(newState);
+              // if parent not exist, add to filters
+            } else {
+              setCurrentFilters((prev) => [...prev, menuParent]);
+            }
           } else {
-            const _filters = [...currentFilters];
-            const _index = _filters.findIndex((filter) => filter.text === (i as menuItemType).text);
-            _filters[_index] = i as menuItemType;
-            setCurrentFilters(_filters);
+            const i = itemsHistory[0].find((j) => j.text === currentTitles[1]);
+            if (i && currentFilters.includes(i) && mainOpen) {
+              const newState: menuItemType[] = currentFilters.map((filter) => {
+                if (filter.text === (i as menuItemType).text) {
+                  return i as menuItemType;
+                } else {
+                  return filter;
+                }
+              });
+
+              setCurrentFilters(newState);
+            } else if (i && mainOpen) {
+              setCurrentFilters((prev) => [...prev, i as menuItemType]);
+              // if parent not exist, add to filters
+            } else {
+              const _filters = [...currentFilters];
+              const _index = _filters.findIndex((filter) => i && filter.text === i.text);
+              _filters[_index] = i as menuItemType;
+              setCurrentFilters(_filters);
+            }
           }
         }
       }
+    },
+    [
+      checkEmpty,
+      currentFilterString,
+      currentFilters,
+      currentTitles,
+      handleClose,
+      items,
+      itemsHistory,
+      mainOpen,
+      returnTree,
+      setCurrentFilterString,
+    ],
+  );
+
+  useEffect(() => {
+    let menuItem: menuItemType;
+    if (!loaded) {
+      setLoaded(true);
+      initSelected(items);
     }
-  };
+
+    function initSelected(items: menuItemType[], menuParent?: menuItemType) {
+      for (const item of items) {
+        if (item.children) {
+          if (!returnTree || !menuItem) menuItem = item;
+          initSelected(item.children, item);
+        } else if (item.selected && menuParent && !returnTree) {
+          setCurrentFilters((prev) => [...prev, menuParent]);
+        } else if (item.selected && menuParent && !arr.includes(item.text)) {
+          arr.push(item.text);
+          setCurrentFilterString((prev) => [...prev, item.text]);
+          setCurrentFilters((prev) => [...prev, menuItem]);
+        }
+      }
+    }
+  }, [currentFilterString, items, loaded, returnTree, setCurrentFilterString]);
 
   // sets menu to previous state (i.e one step up the tree)
   function handleBack() {
