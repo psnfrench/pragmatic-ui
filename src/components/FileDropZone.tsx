@@ -283,7 +283,7 @@ const Thumbnail = ({ file }: { file: CurrentFiles }) => {
   if (file.filename) {
     const nameArray = file.filename.split('.');
     const _name = nameArray[nameArray.length - 1];
-    if (ImageTypes.includes(nameArray[nameArray.length - 1])) return <StyledImg src={file.imageUrl} />;
+    if (ImageTypes.includes(_name.toLowerCase())) return <StyledImg src={file.imageUrl} />;
     else
       return (
         <Box position="relative" padding="0px">

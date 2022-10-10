@@ -5,13 +5,12 @@ import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export const PDateTimePicker = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Omit<DateTimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> & {
-    TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
-  } & Required<Pick<TextFieldProps, 'name'>> &
-    Pick<TextFieldProps, 'variant'>,
-) => {
+export type PDateTimePickerProps = Omit<DateTimePickerProps<unknown, unknown>, 'renderInput' | 'value' | 'onChange'> & {
+  TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
+} & Required<Pick<TextFieldProps, 'name'>> &
+  Pick<TextFieldProps, 'variant'>;
+
+export const PDateTimePicker = (props: PDateTimePickerProps) => {
   const getFormikTextFields = useGetFormikTextFields();
   const _props = useFormikContext();
   const formikProps = getFormikTextFields(_props);
