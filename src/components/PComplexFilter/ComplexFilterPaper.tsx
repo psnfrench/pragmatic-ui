@@ -144,7 +144,9 @@ const ComplexFilterPaper = ({
                         padding: 4,
                         borderRadius: 0,
                       }}
-                      onClick={() => handleSelected(item, filterParent)}
+                      onClick={() => {
+                        handleSelected(item, filterParent);
+                      }}
                     >
                       <Box
                         display="flex"
@@ -190,7 +192,19 @@ const ComplexFilterPaper = ({
                         <StyledCheckbox
                           sx={{ marginY: -4 }}
                           checked={item.selected || false}
-                          onClick={() => handleSelected(item, filterParent)}
+                          onClick={() => {
+                            // setFilteredItems((prev) => {
+                            //   const arr: menuItemType[] = [];
+                            //   prev.map((i) => {
+                            //     if (item.text === i.text) {
+                            //       i.selected = !i.selected;
+                            //     }
+                            //     arr.push(i);
+                            //   });
+                            //   return arr;
+                            // });
+                            handleSelected(item, filterParent);
+                          }}
                           name={item.text}
                           value={item}
                           {...listItemProps}
@@ -199,7 +213,19 @@ const ComplexFilterPaper = ({
                         <StyledRadio
                           sx={{ marginY: -4 }}
                           checked={item.selected || false}
-                          onClick={() => handleSelected(item, filterParent)}
+                          onClick={() => {
+                            // setFilteredItems((prev) => {
+                            //   const arr: menuItemType[] = [];
+                            //   prev.map((i) => {
+                            //     if (item.text === i.text) {
+                            //       i.selected = !i.selected;
+                            //     }
+                            //     arr.push(i);
+                            //   });
+                            //   return arr;
+                            // });
+                            handleSelected(item, filterParent);
+                          }}
                           name={item.text}
                           value={item}
                           {...listItemProps}

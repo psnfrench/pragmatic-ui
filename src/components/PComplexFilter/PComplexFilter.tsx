@@ -431,27 +431,34 @@ export function PComplexFilter({
   );
 
   useEffect(() => {
-    let menuItem: menuItemType;
     if (!loaded) {
       setLoaded(true);
-      initSelected(items);
+      for (const item of items) {
+        const menuItem: menuItemType = item;
+        initSelected(item, undefined, menuItem);
+      }
     }
 
-    function initSelected(items: menuItemType[], menuParent?: menuItemType) {
-      for (const item of items) {
-        if (item.children) {
-          if (!returnTree || !menuItem) menuItem = item;
-          initSelected(item.children, item);
-        } else if (item.selected && menuParent && !returnTree) {
-          setCurrentFilters((prev) => [...prev, menuParent]);
-        } else if (item.selected && menuParent && !arr.includes(item.text)) {
-          arr.push(item.text);
-          setCurrentFilterString((prev) => [...prev, item.text]);
-          setCurrentFilters((prev) => [...prev, menuItem]);
+    function initSelected(item: menuItemType, menuParent?: menuItemType, menuItem?: menuItemType) {
+      if (item.children) {
+        if (!returnTree || !menuItem) menuItem = item;
+        for (const child of item.children) {
+          initSelected(child, item, menuItem);
         }
+      } else if (item.selected && menuParent && !returnTree) {
+        setCurrentFilters((prev) => [...prev, menuParent]);
+      } else if (item.selected && menuParent && !arr.includes(item.text)) {
+        arr.push(item.text);
+        setCurrentFilterString((prev) => [...prev, item.text]);
+        setCurrentFilters((prev) => [...prev, menuParent]);
+        setParent(menuParent);
       }
     }
   }, [currentFilterString, items, loaded, returnTree, setCurrentFilterString]);
+
+  useEffect(() => {
+    console.log('currentFilters:', currentFilters);
+  }, [currentFilters]);
 
   // sets menu to previous state (i.e one step up the tree)
   function handleBack() {
@@ -484,7 +491,7 @@ export function PComplexFilter({
     }
   };
 
-  // returns an item if included, or a dummy to be removed if not
+  // returns an item if included
   const mapFind = (item: menuItemType, text: string) => {
     if (item.text.toLowerCase().includes(text)) {
       return item;
