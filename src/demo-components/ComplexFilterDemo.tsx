@@ -106,10 +106,10 @@ const ComplexFilterDemo = () => {
   const [currentSearch, setCurrentSearch] = useState<string>();
   const [filteredOptions, setFilteredOptions] = useState([...items]);
   const [searchedOptions, setSearchedOptions] = useState([...items]);
-  const [returnedFilters, setReturnedFilters] = useState<menuItemType[]>();
+  const [returnedFilters, setReturnedFilters] = useState<menuItemType[]>([]);
   const newSearchItems = useRef<itemType[]>([]);
-  const [startDate, setStartDate] = useState(Date.now());
-  const [endDate, setEndDate] = useState(Date.now());
+  const [startDate, setStartDate] = useState<number | undefined>(Date.now());
+  const [endDate, setEndDate] = useState<number | undefined>(Date.now());
 
   useEffect(() => {
     console.log(returnedFilters);
@@ -265,16 +265,19 @@ const ComplexFilterDemo = () => {
         <Box display="flex" flexDirection="row">
           <PComplexFilter
             // the array that will populate the filter
-            items={options}
+            menuItems={options}
+            // Returns the active filters. Can be used to start with an initial filter also
+            activeFilters={returnedFilters}
+            setActiveFilters={setReturnedFilters}
+            // creates a searchbar at the top of the dropdown component
             searchable={true}
+            // Example Method of seraching with the searchbar in this component
+            handleDisplayedItemsSearch={handleDisplayedItemsSearch}
             // sets the title at the top of the menu
             title={'Filter Search'}
             // Having anchorEl & setAnchorEl here allows control over the popup appearing or disappearing
             anchorEl={anchorEl}
             setAnchorEl={setAnchorEl}
-            // Returns the current filter objects.
-            // Handy for applying filter to data (useful when filtering multiple fields)
-            setReturnedFilters={setReturnedFilters}
             // Enable this setting to return the whole returned filters object.
             // Without including this returns only the selected filters
             // returnAll
@@ -288,12 +291,10 @@ const ComplexFilterDemo = () => {
             // Example of changing the title
             titleProps={{ padding: 4 }}
             listItemProps={{ color: 'secondary' }}
-            // Example Method of seraching with the searchbar in this component
-            handleDisplayedItemsSearch={handleDisplayedItemsSearch}
             // use this if you would like to return the chip as top level,
             // as opposed to just one level above the filter.
             returnTree
-            // Will show a Date Picker and set the value of this number
+            // Will show a Date Picker and set the value of this number if present
             startDate={startDate}
             setStartDate={setStartDate}
             endDate={endDate}

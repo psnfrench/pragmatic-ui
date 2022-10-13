@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   ButtonProps,
@@ -15,16 +16,17 @@ import {
   ChipProps,
   FilledInputProps,
   TextField,
+  IconButton,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
-import PIcon from '../../images/PIcon';
 import ComplexFilterPaper from './ComplexFilterPaper';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
+import PIcon from '../../images/PIcon';
 import { theme } from '../../constants/theme';
-const options = [
+const InitialOptions = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
   { text: 'Callisto', categories: ['1'] },
@@ -41,7 +43,7 @@ const options = [
   { text: 'Umbriel', categories: ['1'] },
 ];
 
-// type of item in the menu
+// type of option in the menu
 export type menuItemType = {
   text: string;
   secondary?: string;
@@ -58,6 +60,11 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   minHeight: '44px',
   borderRadius: '12px',
   color: theme.palette.action.active,
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  top: theme.spacing(-1.5),
+  right: '0px',
 }));
 
 // // Styles Avatar for totalCount
@@ -85,11 +92,9 @@ function areChildrenOK(children: menuItemType[]) {
   return countBranches === 0 || countLeaves === 0;
 }
 
-const arr: string[] = [];
-
 // Props for filter component
 export type PComplexFilterProps = {
-  items: menuItemType[];
+  menuItems: menuItemType[];
   setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
   anchorEl: HTMLElement | null;
   title?: string;
@@ -100,7 +105,8 @@ export type PComplexFilterProps = {
   searchable?: boolean;
   currentFilterString: string[];
   setCurrentFilterString: React.Dispatch<React.SetStateAction<string[]>>;
-  setReturnedFilters?: React.Dispatch<React.SetStateAction<menuItemType[] | undefined>>;
+  activeFilters: menuItemType[];
+  setActiveFilters?: React.Dispatch<React.SetStateAction<menuItemType[]>>;
   buttonProps?: ButtonProps;
   backButton?: React.ReactNode;
   backButtonProps?: ButtonProps;
@@ -117,14 +123,14 @@ export type PComplexFilterProps = {
   handleDisplayedItemsSearch?: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   returnAll?: boolean;
   returnTree?: boolean;
-  startDate?: number;
-  setStartDate?: React.Dispatch<React.SetStateAction<number>>;
-  endDate?: number;
-  setEndDate?: React.Dispatch<React.SetStateAction<number>>;
+  startDate?: number | undefined;
+  setStartDate?: React.Dispatch<React.SetStateAction<number | undefined>>;
+  endDate?: number | undefined;
+  setEndDate?: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 
 export function PComplexFilter({
-  items = options,
+  menuItems = InitialOptions,
   anchorEl,
   setAnchorEl,
   title,
@@ -135,7 +141,8 @@ export function PComplexFilter({
   searchable = false,
   currentFilterString,
   setCurrentFilterString,
-  setReturnedFilters,
+  activeFilters,
+  setActiveFilters,
   buttonProps,
   backButton = <ChevronLeft />,
   backButtonProps,
@@ -160,52 +167,106 @@ export function PComplexFilter({
   const [mainOpen, setMainOpen] = useState(false);
   const [currentFilters, setCurrentFilters] = useState<menuItemType[]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const [currentItems, setCurrentItems] = useState<menuItemType[]>([...items]);
+  const [copyOfItems, setCopyOfItems] = useState<menuItemType[]>([]);
+  const [currentItems, setCurrentItems] = useState<menuItemType[]>([]);
   const [filteredItems, setFilteredItems] = useState<menuItemType[]>([...currentItems]);
   const [currentTitle, setCurrentTitle] = useState(title);
   const [currentTitles, setCurrentTitles] = useState([title]);
-  const history: menuItemType[][] = [items];
-  const [itemsHistory, setItemsHistory] = useState(history);
+  const history: menuItemType[][] = [menuItems];
+  const [menuItemsHistory, setMenuItemsHistory] = useState(history);
   const [back, setBack] = useState(false);
   const [parent, setParent] = useState<menuItemType>();
-  const valid = areChildrenOK(items);
-  const [localStartDate, setLocalStartDate] = useState(startDate);
-  const [localEndDate, setLocalEndDate] = useState(endDate);
-  const [loaded, setLoaded] = useState(false);
+  const [localEndDate, setLocalEndDate] = useState(_.cloneDeep(endDate));
+  const [localStartDate, setLocalStartDate] = useState(_.cloneDeep(startDate));
+  // {
+  //   text: currentTitle ? currentTitle : '',
+  //   children: menuItems,
+  //   multiple: true,
+  // }
+  const valid = areChildrenOK(_.cloneDeep(menuItems));
+  const [loading, setLoading] = useState(true);
 
-  // When local time state changes, so does the original
   useEffect(() => {
-    setEndDate && localEndDate && setEndDate(localEndDate);
-  }, [localEndDate, setEndDate]);
+    if (loading) {
+      menuItems = InitializeComponent(menuItems, activeFilters);
+      console.log('menuItems', menuItems);
+      setCopyOfItems(_.cloneDeep(menuItems));
+      setCurrentItems(menuItems);
+      setLoading(false);
+    }
+  }, []);
+
+  const InitializeComponent = (options: menuItemType[], filters: menuItemType[]) => {
+    const x: menuItemType[] = [];
+    for (const option of options) {
+      for (const filter of filters) {
+        if (option.text === filter.text && option.children && filter.children) {
+          option.children = InitializeComponent(option.children, filter.children);
+        } else if (option.text === filter.text) {
+          option.selected = true;
+        }
+      }
+      x.push(option);
+    }
+    return x;
+  };
 
   useEffect(() => {
-    setStartDate && localStartDate && setStartDate(localStartDate);
-  }, [localStartDate, setStartDate]);
+    if (!loading) generateCurrentFilters();
+  }, [copyOfItems, loading]);
 
-  // deselects every item
+  const generateCurrentFilters = () => {
+    const arr: menuItemType[] = [];
+    copyOfItems.forEach((menuItem) => {
+      if (menuItem && menuItem.children && checkEmpty(menuItem.children).includes(false)) {
+        arr.push(menuItem);
+        console.log(menuItem);
+      }
+    });
+    setCurrentFilters(arr);
+    console.log('currentFilters', arr);
+    generateReturnedFilters(_.cloneDeep(arr));
+  };
+
+  const generateReturnedFilters = (filters: menuItemType[]) => {
+    let filterArray: menuItemType[] = [];
+    if (returnAll) {
+      filterArray = filters;
+    } else {
+      for (const filter of filters) {
+        if (filter.children) {
+          const selectedObjects = getSelected(filter.children);
+          filter.children = selectedObjects;
+          filterArray.push(filter);
+        } else {
+          if (filter.selected) filterArray.push(filter);
+        }
+      }
+    }
+    if (filterArray.length < activeFilters.length) handleClose();
+    if (setActiveFilters) setActiveFilters(filterArray);
+  };
+
+  // deselects every menuItem
   const deSelect = useCallback(
-    (itemsList: menuItemType[]) => {
-      for (const item of itemsList) {
-        if (item.children) {
-          deSelect(item.children);
-        } else if (item.selected) {
-          item.selected = false;
-          setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
+    (menuItemsList: menuItemType[]) => {
+      for (const menuItem of menuItemsList) {
+        if (menuItem.children) {
+          deSelect(menuItem.children);
+        } else if (menuItem.selected) {
+          menuItem.selected = false;
+          setCurrentFilterString(currentFilterString.filter((e) => e !== menuItem.text));
         }
       }
     },
     [currentFilterString, setCurrentFilterString],
   );
 
-  // useEffect(() => {
-  //   deSelect(items);
-  // }, [deSelect, items]);
-
-  const countSelected = (itemsToCount: menuItemType[], count?: number) => {
+  const countSelected = (menuItemsToCount: menuItemType[], count?: number) => {
     if (!count) {
       count = 0;
     }
-    for (const child of itemsToCount) {
+    for (const child of menuItemsToCount) {
       if (child.children) {
         const newCount: number = countSelected(child.children, count);
         if (newCount) {
@@ -224,7 +285,7 @@ export function PComplexFilter({
     setOpen(!open);
     if (!open) {
       setMainOpen(true);
-      setItemsHistory([items]);
+      setMenuItemsHistory([menuItems]);
       setAnchorEl(event.currentTarget);
     } else {
       handleClose();
@@ -239,24 +300,25 @@ export function PComplexFilter({
     setAnchorEl(null);
     setCurrentTitle(title);
     setCurrentTitles([title]);
-    setCurrentItems([...items]);
+    setCurrentItems(menuItems);
     setFilteredItems([...currentItems]);
-    setItemsHistory([items]);
-  }, [currentItems, items, setAnchorEl, title]);
+    setMenuItemsHistory([menuItems]);
+  }, [currentItems, menuItems, setAnchorEl, title]);
 
   // shows/hides popper for each chip
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChipClick = (item: menuItemType, index: number) => (event: any) => {
+  const handleChipClick = (menuItem: menuItemType, index: number) => (event: any) => {
     if (index === currentIndex) {
       handleChipClose(index);
     } else if (anchorEl) {
       handleClose();
     } else {
-      setItemsHistory([item.children as menuItemType[]]);
+      setParent(menuItem);
+      setMenuItemsHistory([menuItem.children as menuItemType[]]);
       setCurrentIndex(index);
-      setCurrentTitle(item.text);
-      setCurrentTitles([item.text]);
-      setFilteredItems(item.children as menuItemType[]);
+      setCurrentTitle(menuItem.text);
+      setCurrentTitles([menuItem.text]);
+      setFilteredItems(menuItem.children as menuItemType[]);
       setAnchorEl(event.currentTarget);
     }
   };
@@ -270,95 +332,53 @@ export function PComplexFilter({
   };
 
   const checkEmpty = useCallback((filter: menuItemType[]) => {
-    const i = [true];
-    filter.forEach((item) => {
-      if (item.children) {
-        i.push(...checkEmpty(item.children));
-      } else if (item.selected) {
+    let i = [true];
+    filter.forEach((menuItem) => {
+      if (menuItem.children) {
+        i = checkEmpty(menuItem.children);
+      } else if (menuItem.selected) {
         i.push(false);
+        console.log('yessir');
       }
     });
     return i;
   }, []);
 
-  // handles when a menu item is selected
-  const handleSelected = useCallback(
-    (item: menuItemType, menuParent?: menuItemType) => {
-      // if item already selected, deselects item
-      if (item.selected) {
-        item.selected = false;
-        setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
-        if (!returnTree && menuParent) {
-          // checks parent contains no selected items
-          const empty = checkEmpty(menuParent.children as menuItemType[]);
-          // if parent empty, remove from array
-          if (!empty.includes(false)) {
-            if (menuParent && currentFilters.includes(menuParent)) {
-              const newState = currentFilters.filter((menu) => {
-                return menu.text !== menuParent.text;
-              });
-              if (!mainOpen) {
-                setCurrentIndex(-1);
-                handleClose();
-                setCurrentFilters(newState);
-              }
-            }
-          } else {
-            // if not empty, sets current filter to deselected
-            if (menuParent && setCurrentFilters) {
-              setCurrentFilters((prev) =>
-                prev.map((filter) => (filter.text === menuParent.text ? (filter = menuParent) : filter)),
-              );
-            }
-          }
-        } else if (menuParent) {
-          const i = items.find((j) => {
-            if (mainOpen) {
-              return j.text === currentTitles[1];
-            } else {
-              return j.text === currentTitles[0];
-            }
-          });
-          if (i) {
-            const empty = checkEmpty(i.children as menuItemType[]);
-            if (!empty.includes(false)) {
-              const newState = currentFilters.filter((menu) => {
-                return menu.text !== (i as menuItemType).text;
-              });
-              if (!mainOpen) {
-                setCurrentIndex(-1);
-                handleClose();
-              }
-              setCurrentFilters(newState);
-            } else {
-              // if not empty, sets current filter to deselected
-              if (setCurrentFilters) {
-                setCurrentFilters((prev) =>
-                  prev.map((filter) =>
-                    filter.text === (i as menuItemType).text ? (filter = i as menuItemType) : filter,
-                  ),
-                );
-              }
-            }
-          }
-        }
+  const SelectItem = (_menuItems: menuItemType[], text: string, select: boolean, parentText?: string) => {
+    return _menuItems.map((item) => {
+      if (item.text === text && parentText === currentTitle) {
+        item.selected = select;
+      } else if (item.children) {
+        item.children = SelectItem(item.children, text, select, item.text);
+      }
+      return item;
+    });
+  };
 
-        // if item has children
-      } else if (item.children && item.children.length > 0) {
+  // handles when a menu menuItem is selected
+  const handleSelected = useCallback(
+    (menuItem: menuItemType, menuParent?: menuItemType) => {
+      // if menuItem already selected, deselects menuItem
+      if (menuItem.selected) {
+        menuItem.selected = false;
+        setCopyOfItems(SelectItem(menuItems, menuItem.text, false, menuParent?.text));
+        setCurrentFilterString(currentFilterString.filter((e) => e !== menuItem.text));
+        // if menuItem has children
+      } else if (menuItem.children && menuItem.children.length > 0) {
         // adds parent name to title array
-        setCurrentTitles((prev) => [...prev, item.text]);
-        // changes current items to children
-        setCurrentItems(item.children);
-        // adds children to itemHistory to give ability for backtracking
-        setItemsHistory([...itemsHistory, item.children]);
+        setCurrentTitles((prev) => [...prev, menuItem.text]);
+        // changes current menuItems to children
+        setCurrentItems(menuItem.children);
+        // adds children to menuItemHistory to give ability for backtracking
+        setMenuItemsHistory([...menuItemsHistory, menuItem.children]);
         // sets the current title
-        setCurrentTitle(item.text);
+        setCurrentTitle(menuItem.text);
         // sets the parent
-        setParent(item);
+        setParent(menuItem);
         // enables going back
         setBack(true);
       } else {
-        // selects item
+        // selects menuItem
         if (menuParent) {
           if (!menuParent.multiple) {
             const found: menuItemType[] = [];
@@ -373,92 +393,24 @@ export function PComplexFilter({
               }
             }
           }
-          item.selected = true;
-          setCurrentFilterString((prev) => [...prev, item.text]);
-          // if parent exists in current filters, alters parent.
-          // If returning tree, returns whole tree, else returns just parent.
-          if (!returnTree) {
-            if (currentFilters.includes(menuParent)) {
-              const newState: menuItemType[] = currentFilters.map((filter) => {
-                if (filter.text === menuParent.text) {
-                  return menuParent;
-                }
-                return filter;
-              });
-
-              setCurrentFilters(newState);
-              // if parent not exist, add to filters
-            } else {
-              setCurrentFilters((prev) => [...prev, menuParent]);
-            }
-          } else {
-            const i = itemsHistory[0].find((j) => j.text === currentTitles[1]);
-            if (i && currentFilters.includes(i) && mainOpen) {
-              const newState: menuItemType[] = currentFilters.map((filter) => {
-                if (filter.text === (i as menuItemType).text) {
-                  return i as menuItemType;
-                } else {
-                  return filter;
-                }
-              });
-
-              setCurrentFilters(newState);
-            } else if (i && mainOpen) {
-              setCurrentFilters((prev) => [...prev, i as menuItemType]);
-              // if parent not exist, add to filters
-            } else {
-              const _filters = [...currentFilters];
-              const _index = _filters.findIndex((filter) => i && filter.text === i.text);
-              _filters[_index] = i as menuItemType;
-              setCurrentFilters(_filters);
-            }
-          }
+          menuItem.selected = true;
+          setCopyOfItems(SelectItem(menuItems, menuItem.text, true, menuParent?.text));
+          setCurrentFilterString((prev) => [...prev, menuItem.text]);
         }
       }
     },
     [
-      checkEmpty,
       currentFilterString,
       currentFilters,
       currentTitles,
       handleClose,
-      items,
-      itemsHistory,
+      menuItems,
+      menuItemsHistory,
       mainOpen,
       returnTree,
       setCurrentFilterString,
     ],
   );
-
-  useEffect(() => {
-    if (!loaded) {
-      setLoaded(true);
-      for (const item of items) {
-        const menuItem: menuItemType = item;
-        initSelected(item, undefined, menuItem);
-      }
-    }
-
-    function initSelected(item: menuItemType, menuParent?: menuItemType, menuItem?: menuItemType) {
-      if (item.children) {
-        if (!returnTree || !menuItem) menuItem = item;
-        for (const child of item.children) {
-          initSelected(child, item, menuItem);
-        }
-      } else if (item.selected && menuParent && !returnTree) {
-        setCurrentFilters((prev) => [...prev, menuParent]);
-      } else if (item.selected && menuParent && !arr.includes(item.text)) {
-        arr.push(item.text);
-        setCurrentFilterString((prev) => [...prev, item.text]);
-        setCurrentFilters((prev) => [...prev, menuParent]);
-        setParent(menuParent);
-      }
-    }
-  }, [currentFilterString, items, loaded, returnTree, setCurrentFilterString]);
-
-  useEffect(() => {
-    console.log('currentFilters:', currentFilters);
-  }, [currentFilters]);
 
   // sets menu to previous state (i.e one step up the tree)
   function handleBack() {
@@ -470,18 +422,18 @@ export function PComplexFilter({
     } else {
       setCurrentTitle(title);
     }
-    itemsHistory.pop();
-    const lastItem = itemsHistory[itemsHistory.length - 1];
+    menuItemsHistory.pop();
+    const lastItem = menuItemsHistory[menuItemsHistory.length - 1];
     setCurrentItems(lastItem);
   }
 
-  // handles the search event and returns all current items that include the search term
+  // handles the search event and returns all current menuItems that include the search term
   const handleSearchChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     menus?: menuItemType[],
   ) => {
     if (menus) {
-      let foundArray = menus.map((item) => mapFind(item, event.target.value.toLowerCase()));
+      let foundArray = menus.map((menuItem) => mapFind(menuItem, event.target.value.toLowerCase()));
       foundArray = foundArray.filter((element) => {
         return element !== undefined;
       });
@@ -491,58 +443,40 @@ export function PComplexFilter({
     }
   };
 
-  // returns an item if included
-  const mapFind = (item: menuItemType, text: string) => {
-    if (item.text.toLowerCase().includes(text)) {
-      return item;
+  // returns an menuItem if included
+  const mapFind = (menuItem: menuItemType, text: string) => {
+    if (menuItem.text.toLowerCase().includes(text)) {
+      return menuItem;
     }
   };
 
-  // when currentItems changes, sets Filtered items as well
+  // when currentItems changes, sets Filtered menuItems as well
   useEffect(() => {
-    setFilteredItems(currentItems);
-  }, [currentItems]);
+    if (!loading) setFilteredItems(currentItems);
+  }, [currentItems, loading]);
 
   const getSelected = useCallback((filter: menuItemType[]) => {
     const i: menuItemType[] = [];
-    filter.forEach((item) => {
-      if (item.children) {
-        const j = getSelected(item.children);
-        item.children = j;
-        i.push(item);
-      } else if (item.selected) {
-        i.push(item);
+    filter.map((menuItem) => {
+      if (menuItem.selected) i.push(menuItem);
+      else if (menuItem.children) {
+        menuItem.children = getSelected(menuItem.children);
+        i.push(menuItem);
       }
     });
     return i;
   }, []);
 
-  // when currentItems changes, sets Filtered items as well
   useEffect(() => {
-    const _currentFilters = _.cloneDeep(currentFilters);
-    let filterArray: menuItemType[] = [];
-
-    if (returnAll) {
-      filterArray = _currentFilters;
-    } else {
-      for (const filter of _currentFilters) {
-        if (filter.children) {
-          const selectedObjects = getSelected(filter.children);
-          filter.children = selectedObjects;
-          filterArray.push(filter);
-        } else {
-          if (filter.selected) filterArray.push(filter);
-        }
-      }
-    }
-    if (setReturnedFilters) setReturnedFilters(filterArray);
-  }, [currentFilters, getSelected, returnAll, setReturnedFilters]);
+    console.log('menuItems', menuItems);
+  }, [menuItems]);
 
   // clears all filters
   const handleClear = () => {
     setCurrentFilters([]);
     setCurrentFilterString([]);
-    deSelect(items);
+    deSelect(menuItems);
+    generateCurrentFilters();
     handleClose();
     setAnchorEl(null);
   };
@@ -553,7 +487,8 @@ export function PComplexFilter({
     if (filter.children) {
       deSelect(filter.children);
     }
-    setCurrentFilters((prev: menuItemType[]) => prev.filter((e) => e.text !== filter.text));
+    // setCurrentFilters((prev: menuItemType[]) => prev.filter((e) => e.text !== filter.text));
+    generateCurrentFilters();
 
     handleClose();
     setAnchorEl(null);
@@ -767,35 +702,15 @@ export function PComplexFilter({
           )}
         </Box>
         {setStartDate && (
-          <DatePicker
-            label={<Typography variant="caption">Start Date:</Typography>}
-            value={localStartDate}
-            onChange={(e) => setLocalStartDate(removeTime(e as number).getTime())}
-            renderInput={({ InputProps, ...params }) => {
-              (InputProps as Partial<FilledInputProps>).disableUnderline = true;
-              (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
-              (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
-              return (
-                <TextField
-                  variant="filled"
-                  value={new Intl.DateTimeFormat('en-NZ', {
-                    year: '2-digit',
-                    month: '2-digit',
-                    day: '2-digit',
-                  }).format(localStartDate)}
-                  InputProps={{ ...InputProps }}
-                  {...params}
-                />
-              );
-            }}
-          />
-        )}
-        {setEndDate && (
-          <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)}>
+          <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)} position="relative">
             <DatePicker
-              label={<Typography variant="caption">End Date:</Typography>}
-              value={localEndDate}
-              onChange={(e) => setLocalEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000 - 1)}
+              label={<Typography variant="caption">Start Date:</Typography>}
+              value={startDate}
+              disabled={startDate ? false : true}
+              onChange={(e) => {
+                setStartDate(removeTime(e as number).getTime());
+                setLocalStartDate(removeTime(e as number).getTime());
+              }}
               renderInput={({ InputProps, ...params }) => {
                 (InputProps as Partial<FilledInputProps>).disableUnderline = true;
                 (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
@@ -807,13 +722,69 @@ export function PComplexFilter({
                       year: '2-digit',
                       month: '2-digit',
                       day: '2-digit',
-                    }).format(localEndDate)}
+                    }).format(startDate)}
                     InputProps={{ ...InputProps }}
                     {...params}
                   />
                 );
               }}
             />
+            <StyledIconButton
+              onClick={() => {
+                startDate ? setStartDate(undefined) : setStartDate(localStartDate);
+                console.log(startDate, localStartDate);
+              }}
+              sx={{
+                position: 'absolute',
+                color: startDate ? 'red' : 'green',
+                transform: !startDate ? 'rotate(45deg) !important' : 'rotate(0deg)',
+              }}
+            >
+              <PIcon name="crossSmallIcon" />
+            </StyledIconButton>
+          </Box>
+        )}
+        {setEndDate && (
+          <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)} position="relative">
+            <DatePicker
+              label={<Typography variant="caption">End Date:</Typography>}
+              value={endDate}
+              disabled={endDate ? false : true}
+              onChange={(e) => {
+                setEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000 - 1);
+                setLocalEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000 - 1);
+              }}
+              renderInput={({ InputProps, ...params }) => {
+                (InputProps as Partial<FilledInputProps>).disableUnderline = true;
+                (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
+                (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
+                return (
+                  <TextField
+                    variant="filled"
+                    value={new Intl.DateTimeFormat('en-NZ', {
+                      year: '2-digit',
+                      month: '2-digit',
+                      day: '2-digit',
+                    }).format(endDate)}
+                    InputProps={{ ...InputProps }}
+                    {...params}
+                  />
+                );
+              }}
+            />
+            <StyledIconButton
+              onClick={() => {
+                endDate ? setEndDate(undefined) : setEndDate(localEndDate);
+                console.log(endDate, localEndDate);
+              }}
+              sx={{
+                position: 'absolute',
+                color: endDate ? 'red' : 'green',
+                transform: !endDate ? 'rotate(45deg) !important' : 'rotate(0deg)',
+              }}
+            >
+              <PIcon name="crossSmallIcon" />
+            </StyledIconButton>
           </Box>
         )}
       </Box>

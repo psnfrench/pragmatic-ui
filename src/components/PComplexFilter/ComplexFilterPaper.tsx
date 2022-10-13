@@ -55,7 +55,7 @@ export type ComplexFilterPaperProps = {
   searchable?: boolean;
   handleBack: () => void;
   handleSearchChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
-  handleSelected: (item: menuItemType, parent?: menuItemType) => void;
+  handleSelected: (menuItem: menuItemType, parent?: menuItemType) => void;
   filteredItems: menuItemType[];
   itemHeight: number;
   maxItems: number;
@@ -131,11 +131,11 @@ const ComplexFilterPaper = ({
               </Box>
             ) : null}
             {filteredItems &&
-              filteredItems.map((item, index) =>
-                item.children ? (
+              filteredItems.map((menuItem, index) =>
+                menuItem.children ? (
                   <React.Fragment key={index}>
                     <Button
-                      key={item.text}
+                      key={menuItem.text}
                       sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -145,7 +145,7 @@ const ComplexFilterPaper = ({
                         borderRadius: 0,
                       }}
                       onClick={() => {
-                        handleSelected(item, filterParent);
+                        handleSelected(menuItem, filterParent);
                       }}
                     >
                       <Box
@@ -157,21 +157,21 @@ const ComplexFilterPaper = ({
                       >
                         <Box display="flex" flexDirection="column" flex={1}>
                           <Typography variant="body1" color="primary.main" textAlign="left">
-                            {item.text}
+                            {menuItem.text}
                           </Typography>
-                          {item.secondary && (
+                          {menuItem.secondary && (
                             <Typography variant="body2" color="action.active" textAlign="left">
-                              {item.secondary}
+                              {menuItem.secondary}
                             </Typography>
                           )}
                         </Box>
                         <StyledAvatar
                           sx={{
-                            display: countSelected(item.children) === 0 ? 'none' : 'inline-flex',
+                            display: countSelected(menuItem.children) === 0 ? 'none' : 'inline-flex',
                           }}
                         >
                           <Typography variant="body1" color="primary.contrastText">
-                            {countSelected(item.children)}
+                            {countSelected(menuItem.children)}
                           </Typography>
                         </StyledAvatar>
                       </Box>
@@ -181,7 +181,7 @@ const ComplexFilterPaper = ({
                   </React.Fragment>
                 ) : (
                   <FormControlLabel
-                    key={item.text}
+                    key={menuItem.text}
                     sx={{
                       margin: 1,
                       height: itemHeight,
@@ -191,55 +191,31 @@ const ComplexFilterPaper = ({
                       (filterParent as menuItemType).multiple ? (
                         <StyledCheckbox
                           sx={{ marginY: -4 }}
-                          checked={item.selected || false}
-                          onClick={() => {
-                            // setFilteredItems((prev) => {
-                            //   const arr: menuItemType[] = [];
-                            //   prev.map((i) => {
-                            //     if (item.text === i.text) {
-                            //       i.selected = !i.selected;
-                            //     }
-                            //     arr.push(i);
-                            //   });
-                            //   return arr;
-                            // });
-                            handleSelected(item, filterParent);
-                          }}
-                          name={item.text}
-                          value={item}
+                          checked={menuItem.selected || false}
+                          onClick={() => handleSelected(menuItem, filterParent)}
+                          name={menuItem.text}
+                          value={menuItem}
                           {...listItemProps}
                         />
                       ) : (
                         <StyledRadio
                           sx={{ marginY: -4 }}
-                          checked={item.selected || false}
-                          onClick={() => {
-                            // setFilteredItems((prev) => {
-                            //   const arr: menuItemType[] = [];
-                            //   prev.map((i) => {
-                            //     if (item.text === i.text) {
-                            //       i.selected = !i.selected;
-                            //     }
-                            //     arr.push(i);
-                            //   });
-                            //   return arr;
-                            // });
-                            handleSelected(item, filterParent);
-                          }}
-                          name={item.text}
-                          value={item}
+                          checked={menuItem.selected || false}
+                          onClick={() => handleSelected(menuItem, filterParent)}
+                          name={menuItem.text}
+                          value={menuItem}
                           {...listItemProps}
                         />
                       )
                     }
                     label={
                       <React.Fragment>
-                        <Typography variant="body1" color={item.selected ? 'primary.main' : 'text.primary'}>
-                          {item.text}
+                        <Typography variant="body1" color={menuItem.selected ? 'primary.main' : 'text.primary'}>
+                          {menuItem.text}
                         </Typography>
-                        {item.secondary && (
+                        {menuItem.secondary && (
                           <Typography variant="body2" color="action.active">
-                            {item.secondary}
+                            {menuItem.secondary}
                           </Typography>
                         )}
                       </React.Fragment>

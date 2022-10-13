@@ -31,7 +31,6 @@ export type AppRouterProps = {
 
 export const AppRouter = ({ setTheme }: AppRouterProps) => {
   const handleSubmit = (values: typeof initialValues, { setSubmitting }: FormikHelpers<typeof initialValues>) => {
-    console.log('values: ', values);
     setTimeout(() => {
       setSubmitting(false);
     }, 2000);
