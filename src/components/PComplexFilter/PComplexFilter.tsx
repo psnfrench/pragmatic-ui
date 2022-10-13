@@ -329,10 +329,10 @@ export function PComplexFilter({
   };
 
   const checkEmpty = useCallback((filter: menuItemType[]) => {
-    let i = [true];
+    const i = [true];
     filter.forEach((menuItem) => {
       if (menuItem.children) {
-        i = checkEmpty(menuItem.children);
+        i.push(...checkEmpty(menuItem.children));
       } else if (menuItem.selected) {
         i.push(false);
       }
