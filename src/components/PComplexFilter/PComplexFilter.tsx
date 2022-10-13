@@ -236,7 +236,10 @@ export function PComplexFilter({
           filter.children = selectedObjects;
           filterArray.push(filter);
         } else {
-          if (filter.selected) filterArray.push(filter);
+          if (filter.selected) {
+            filterArray.push(filter);
+            setCurrentFilterString((prev) => [...prev, filter.text]);
+          }
         }
       }
     }
@@ -577,9 +580,9 @@ export function PComplexFilter({
         </ClickAwayListener>
       </Box>
       <Box display="flex" flexDirection="row" flex={1}>
-        <Box display={currentFilterString.length > 0 ? 'none' : 'flex'} paddingTop={2} flex={1} />
+        <Box display={currentFilters.length > 0 ? 'none' : 'flex'} paddingTop={2} flex={1} />
         <Box
-          display={currentFilterString.length > 0 ? 'flex' : 'none'}
+          display={currentFilters.length > 0 ? 'flex' : 'none'}
           paddingTop={2}
           flexDirection="row"
           flexWrap="wrap"
