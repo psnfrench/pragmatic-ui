@@ -26,6 +26,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
 import PIcon from '../../images/PIcon';
 import { theme } from '../../constants/theme';
+
 const InitialOptions = [
   { text: 'None', categories: ['1'] },
   { text: 'Atria', categories: ['1'] },
@@ -67,14 +68,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   right: '0px',
 }));
 
-// // Styles Avatar for totalCount
-// const StyledAvatar = styled(Avatar)(({ theme }) => ({
-//   backgroundColor: theme.palette.primary.main,
-//   height: '24px',
-//   width: '24px',
-//   marginRight: theme.spacing(1),
-// }));
-
 // returns true if all children and childrens children are all leaves or all branches.
 function areChildrenOK(children: menuItemType[]) {
   let countBranches = 0;
@@ -106,7 +99,7 @@ export type PComplexFilterProps = {
   currentFilterString: string[];
   setCurrentFilterString: React.Dispatch<React.SetStateAction<string[]>>;
   activeFilters: menuItemType[];
-  setActiveFilters?: React.Dispatch<React.SetStateAction<menuItemType[]>>;
+  setActiveFilters: React.Dispatch<React.SetStateAction<menuItemType[]>>;
   buttonProps?: ButtonProps;
   backButton?: React.ReactNode;
   backButtonProps?: ButtonProps;
@@ -178,11 +171,6 @@ export function PComplexFilter({
   const [parent, setParent] = useState<menuItemType>();
   const [localEndDate, setLocalEndDate] = useState(_.cloneDeep(endDate));
   const [localStartDate, setLocalStartDate] = useState(_.cloneDeep(startDate));
-  // {
-  //   text: currentTitle ? currentTitle : '',
-  //   children: menuItems,
-  //   multiple: true,
-  // }
   const valid = areChildrenOK(_.cloneDeep(menuItems));
   const [loading, setLoading] = useState(true);
 
@@ -250,14 +238,15 @@ export function PComplexFilter({
   // deselects every menuItem
   const deSelect = useCallback(
     (menuItemsList: menuItemType[]) => {
-      for (const menuItem of menuItemsList) {
-        if (menuItem.children) {
-          deSelect(menuItem.children);
-        } else if (menuItem.selected) {
-          menuItem.selected = false;
-          setCurrentFilterString(currentFilterString.filter((e) => e !== menuItem.text));
+      return menuItemsList.map((item) => {
+        if (item.children) {
+          item.children = deSelect(item.children);
+        } else if (item.selected) {
+          item.selected = false;
+          setCurrentFilterString(currentFilterString.filter((e) => e !== item.text));
         }
-      }
+        return item;
+      });
     },
     [currentFilterString, setCurrentFilterString],
   );
@@ -379,18 +368,11 @@ export function PComplexFilter({
       } else {
         // selects menuItem
         if (menuParent) {
-          if (!menuParent.multiple) {
-            const found: menuItemType[] = [];
-            for (const child of menuParent.children as menuItemType[]) {
-              if (child.selected) found.push(child);
+          if (!menuParent.multiple && menuParent.children) {
+            for (const child of menuParent.children) {
+              setCopyOfItems(SelectItem(menuItems, child.text, false, menuParent?.text));
             }
-
-            if (found !== []) {
-              for (const find of found) {
-                setCurrentFilterString(currentFilterString.filter((e) => e !== find.text));
-                find.selected = false;
-              }
-            }
+            deSelect(menuParent.children);
           }
           menuItem.selected = true;
           setCopyOfItems(SelectItem(menuItems, menuItem.text, true, menuParent?.text));
@@ -468,9 +450,10 @@ export function PComplexFilter({
 
   // clears all filters
   const handleClear = () => {
+    setActiveFilters([]);
     setCurrentFilters([]);
     setCurrentFilterString([]);
-    deSelect(menuItems);
+    setCopyOfItems(deSelect(menuItems));
     generateCurrentFilters();
     handleClose();
     setAnchorEl(null);
