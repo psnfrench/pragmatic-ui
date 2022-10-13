@@ -189,7 +189,6 @@ export function PComplexFilter({
   useEffect(() => {
     if (loading) {
       menuItems = InitializeComponent(menuItems, activeFilters);
-      console.log('menuItems', menuItems);
       setCopyOfItems(_.cloneDeep(menuItems));
       setCurrentItems(menuItems);
       setLoading(false);
@@ -220,11 +219,9 @@ export function PComplexFilter({
     copyOfItems.forEach((menuItem) => {
       if (menuItem && menuItem.children && checkEmpty(menuItem.children).includes(false)) {
         arr.push(menuItem);
-        console.log(menuItem);
       }
     });
     setCurrentFilters(arr);
-    console.log('currentFilters', arr);
     generateReturnedFilters(_.cloneDeep(arr));
   };
 
@@ -338,7 +335,6 @@ export function PComplexFilter({
         i = checkEmpty(menuItem.children);
       } else if (menuItem.selected) {
         i.push(false);
-        console.log('yessir');
       }
     });
     return i;
@@ -466,10 +462,6 @@ export function PComplexFilter({
     });
     return i;
   }, []);
-
-  useEffect(() => {
-    console.log('menuItems', menuItems);
-  }, [menuItems]);
 
   // clears all filters
   const handleClear = () => {
@@ -732,7 +724,6 @@ export function PComplexFilter({
             <StyledIconButton
               onClick={() => {
                 startDate ? setStartDate(undefined) : setStartDate(localStartDate);
-                console.log(startDate, localStartDate);
               }}
               sx={{
                 position: 'absolute',
@@ -775,7 +766,6 @@ export function PComplexFilter({
             <StyledIconButton
               onClick={() => {
                 endDate ? setEndDate(undefined) : setEndDate(localEndDate);
-                console.log(endDate, localEndDate);
               }}
               sx={{
                 position: 'absolute',
