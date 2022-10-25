@@ -15,15 +15,20 @@ import {
   Tooltip,
   PaperProps,
   useTheme,
+  AppBar,
+  Button,
+  IconButton,
+  Toolbar,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
 import debounce from 'lodash/debounce';
+import MenuIcon from '@mui/icons-material/Menu';
+import { getWindowSize } from './WindowSize';
 
 export type SideBarItem = {
   key: string;
@@ -32,7 +37,7 @@ export type SideBarItem = {
   divider?: boolean;
   onClick?: () => void;
 };
-export type SideBarProps = {
+export type SideBarMobileProps = {
   items: SideBarItem[];
   selectedMenuKey?: string;
   logoCollapsed?: React.ReactNode;
@@ -53,12 +58,14 @@ export type SideBarProps = {
   paperProps?: PaperProps;
   hamburgerIconSx?: SxProps<Theme>;
   onOpenChanged?: (open: boolean) => void;
+  menuBackgroundColor?: string;
+  menuTextColor?: string;
 };
 const openedMixin = (theme: Theme): CSSObject => ({
-  '@media only screen and (max-width: 600px)': {
+  '@media only screen and (max-width: 899px)': {
     width: '100%',
   },
-  '@media only screen and (min-width: 601px)': {
+  '@media only screen and (min-width: 900px)': {
     width: theme.spacing(42.5),
   },
   transition: theme.transitions.create('width', {
@@ -74,12 +81,13 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  '@media only screen and (max-width: 600px)': {
-    width: theme.spacing(12.5),
-  },
-  [theme.breakpoints.up('sm')]: {
-    width: theme.spacing(12.5),
-  },
+  width: theme.spacing(12.5),
+  // '@media only screen and (max-width: 599px)': {
+  //   width: theme.spacing(12.5),
+  // },
+  // [theme.breakpoints.up('md')]: {
+  //   width: theme.spacing(12.5),
+  // },
 });
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -97,7 +105,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 }));
 
-export const SideBar = ({
+export const SideBarMobile = ({
   items,
   selectedMenuKey,
   logoCollapsed,
@@ -115,13 +123,26 @@ export const SideBar = ({
   defaultOpen = true,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
+  menuBackgroundColor = 'primary',
+  menuTextColor = 'primary',
   onOpenChanged,
-}: SideBarProps) => {
-  const [open, setOpen] = useState(defaultOpen);
+}: SideBarMobileProps) => {
+  const [windowSize, setWindowSize] = useState(getWindowSize());
+  const [open, setOpen] = useState(windowSize.innerWidth < 900 ? false : defaultOpen);
   const isHovering = useRef(false);
   const hasCanceledExpand = useRef(false);
   const [openedByHover, setOpenedByHover] = useState(false);
   const theme = useTheme();
+
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowSize(getWindowSize());
+    }
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -209,95 +230,126 @@ export const SideBar = ({
   }, [delayedClose, expandOnHover, open, openedByHover]);
 
   return (
-    <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
-      <List>
-        <ListItemButton
-          onClick={toggleOpen}
-          sx={{
-            minHeight: 140,
-            justifyContent: open ? 'initial' : 'center',
-            borderRadius: 1,
-            transition: '1s',
-          }}
-        >
-          {open ? (
-            <Box display="flex" flex={1} flexDirection="column">
-              <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
-                {collapsible && (
-                  <>
-                    <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
-                    <MenuIcon />
-                  </>
-                )}
+    <>
+      <Box sx={{ flexGrow: 1, display: { xs: open ? 'none' : 'block', md: 'none' } }}>
+        <AppBar position="static" sx={{ backgroundColor: `${menuBackgroundColor} !important` }}>
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={() => setOpen(!open)}
+            >
+              {logoCollapsed}
+              <MenuIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </Box>
+      <Drawer
+        variant="permanent"
+        open={open}
+        PaperProps={{ ...paperProps, sx: { ...paperProps?.sx, backgroundColor: `${menuBackgroundColor} !important` } }}
+        sx={{
+          display: { xs: open ? 'block' : 'none', md: 'block' },
+        }}
+      >
+        <List>
+          <ListItemButton
+            onClick={toggleOpen}
+            sx={{
+              minHeight: 140,
+              justifyContent: open ? 'initial' : 'center',
+              borderRadius: 1,
+              transition: '1s',
+            }}
+          >
+            {open ? (
+              <Box display="flex" flex={1} flexDirection="column">
+                <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
+                  {collapsible && (
+                    <>
+                      <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
+                      <MenuIcon />
+                    </>
+                  )}
+                </Box>
+                {logoExpanded}
               </Box>
-              {logoExpanded}
-            </Box>
-          ) : (
-            <Tooltip title={expandHint ? <ChevronRight /> : ''} arrow placement="top">
-              <Box
-                display="flex"
-                justifyContent="center"
-                flexDirection="column"
-                alignContent="space-between"
-                className="poppycock"
-                sx={{ height: '124px' }}
-              >
+            ) : (
+              <Tooltip title={expandHint ? <ChevronRight /> : ''} arrow placement="top">
                 <Box
                   display="flex"
                   justifyContent="center"
-                  height="100%"
-                  marginLeft={theme.spacing(0.8)}
-                  sx={{ ...hamburgerIconSx }}
+                  flexDirection="column"
+                  alignContent="space-between"
+                  sx={{ height: '124px' }}
                 >
-                  <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
-                  <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    height="100%"
+                    marginLeft={theme.spacing(0.8)}
+                    sx={{ ...hamburgerIconSx }}
+                  >
+                    <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
+                    <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                  </Box>
+                  <Box display="flex" justifyContent="center">
+                    {logoCollapsed}
+                  </Box>
                 </Box>
-                <Box display="flex" justifyContent="center">
-                  {logoCollapsed}
-                </Box>
-              </Box>
-            </Tooltip>
-          )}
-        </ListItemButton>
-        {items.map((item) => (
-          <React.Fragment key={item.key}>
-            <ListItem disablePadding>
-              <ListItemButton
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                selected={selectedKey === item.key}
-                onClick={() => handleItemClick(item)}
-                sx={{
-                  px: 2.5,
-                  borderRadius: 0.5,
-                }}
-              >
-                <ListItemIcon sx={{ ...textSX, display: 'flex', justifyContent: 'center' }}>{item.icon}</ListItemIcon>
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant={textVariant}
-                      sx={[{ textAlign: 'left' }, ...(Array.isArray(textSX) ? textSX : [textSX])]}
-                    >
-                      {item.text}
-                    </Typography>
-                  }
-                  sx={{ display: open ? 'block' : 'none', margin: 0, ml: 3 }}
-                />
-              </ListItemButton>
-            </ListItem>
-
-            {item.divider && (
-              <>
-                <br /> <Divider />
-              </>
+              </Tooltip>
             )}
-          </React.Fragment>
-        ))}
-      </List>
-      <Box sx={{ display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-        {open ? children : childrenCollapsed}
-      </Box>
-    </Drawer>
+          </ListItemButton>
+          {items.map((item) => (
+            <React.Fragment key={item.key}>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  selected={selectedKey === item.key}
+                  onClick={() => handleItemClick(item)}
+                  sx={{
+                    px: 2.5,
+                    borderRadius: 0.5,
+                  }}
+                >
+                  <ListItemIcon sx={{ display: 'flex', justifyContent: 'center', color: menuTextColor, ...textSX }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant={textVariant}
+                        color={menuTextColor}
+                        sx={[
+                          { textAlign: 'left', color: menuTextColor },
+                          ...(Array.isArray(textSX) ? textSX : [textSX]),
+                        ]}
+                      >
+                        {item.text}
+                      </Typography>
+                    }
+                    sx={{ display: open ? 'block' : 'none', margin: 0, ml: 3 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+
+              {item.divider && (
+                <>
+                  <br /> <Divider />
+                </>
+              )}
+            </React.Fragment>
+          ))}
+        </List>
+        <Box sx={{ display: 'flex', flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+          {open ? children : childrenCollapsed}
+        </Box>
+      </Drawer>
+    </>
   );
 };

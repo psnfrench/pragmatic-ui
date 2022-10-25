@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
@@ -7,10 +7,11 @@ import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
-import { SideBar } from '../components/SideBar';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
 import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
+import { SideBarMobile } from '../components/SideBarMobile';
+import { getWindowSize } from '../components/WindowSize';
 
 const myTheme = createTheme({
   components: {
@@ -18,7 +19,7 @@ const myTheme = createTheme({
       styleOverrides: {
         root: {
           '&.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: 'orange',
+            backgroundColor: 'lavender',
           },
         },
       },
@@ -26,9 +27,26 @@ const myTheme = createTheme({
   },
 });
 
-const SidebarDemo = () => {
+export type SidebarDemoProps = {
+  children: JSX.Element;
+};
+
+const SidebarDemo = ({ children }: SidebarDemoProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [windowSize, setWindowSize] = useState(getWindowSize());
+  const [smallWindow, setSmallWindow] = useState<boolean>();
+
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowSize(getWindowSize());
+    }
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
     () => [
@@ -83,35 +101,55 @@ const SidebarDemo = () => {
     console.log('handleOpenChanged: ', open);
   };
 
+  useEffect(() => {
+    if (windowSize.innerWidth < 900) setSmallWindow(true);
+    else if (windowSize.innerWidth >= 900) setSmallWindow(false);
+    console.log('smallWindow:', true);
+  }, [smallWindow, windowSize]);
+
   return (
-    <ThemeProvider
-      theme={(outerTheme) => ({
-        ...outerTheme, // merge in the outer theme
-        ...myTheme, // override spefiic parts of the Sidebar
-      })}
+    <Box
+      sx={{
+        justifyContent: 'flex-start',
+        display: 'inline-flex',
+        flexDirection: smallWindow ? 'column' : 'row',
+        alignContent: 'flex-start',
+        width: smallWindow ? '100%' : '80%',
+      }}
     >
-      <SideBar
-        logoCollapsed={<DMCollapsed />}
-        logoExpanded={<DMExpanded />}
-        items={navItems}
-        childrenCollapsed={<CollapseText />}
-        textVariant="body2"
-        textSX={[{ color: 'black' }]}
-        expandHint
-        paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
-        hamburgerIconSx={{ color: 'white' }}
-        selectedMenuKey={location.pathname.substring(1)}
-        onOpenChanged={handleOpenChanged}
-        expandOnHover={true}
-        expandOnHoverCancelOnClick={true}
-      >
-        <Box p={2}>
-          <Typography variant="h6" whiteSpace={'normal'}>
-            My Profile Info
-          </Typography>
-        </Box>
-      </SideBar>
-    </ThemeProvider>
+      <Box flexGrow={1}>
+        <ThemeProvider
+          theme={(outerTheme) => ({
+            ...outerTheme, // merge in the outer theme
+            ...myTheme, // override spefiic parts of the Sidebar
+          })}
+        >
+          <SideBarMobile
+            logoCollapsed={<DMCollapsed />}
+            logoExpanded={<DMExpanded />}
+            items={navItems}
+            childrenCollapsed={<CollapseText />}
+            textVariant="body2"
+            expandHint
+            selectedMenuKey={location.pathname.substring(1)}
+            onOpenChanged={handleOpenChanged}
+            expandOnHover={true}
+            expandOnHoverCancelOnClick={true}
+            paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
+            menuBackgroundColor="Blue"
+            menuTextColor="white"
+            hamburgerIconSx={{ color: 'white' }}
+          >
+            <Box p={2}>
+              <Typography variant="h6" whiteSpace={'normal'}>
+                My Profile Info
+              </Typography>
+            </Box>
+          </SideBarMobile>
+        </ThemeProvider>
+      </Box>
+      {children}
+    </Box>
   );
 };
 
