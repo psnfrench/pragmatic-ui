@@ -61,6 +61,7 @@ export type SideBarMobileProps = {
   menuTextColor?: string;
   mobileLogo?: React.ReactNode;
   topNavChildren?: React.ReactNode;
+  close?: boolean;
 };
 const openedMixin = (theme: Theme): CSSObject => ({
   '@media only screen and (max-width: 899px)': {
@@ -129,6 +130,7 @@ export const SideBarMobile = ({
   topNavChildren,
   mobileLogo,
   onOpenChanged,
+  close,
 }: SideBarMobileProps) => {
   const [windowSize, setWindowSize] = useState(getWindowSize());
   const [open, setOpen] = useState(windowSize.innerWidth < 900 ? false : defaultOpen);
@@ -136,6 +138,11 @@ export const SideBarMobile = ({
   const hasCanceledExpand = useRef(false);
   const [openedByHover, setOpenedByHover] = useState(false);
   const theme = useTheme();
+
+  // Allows sidebar to be closed externally
+  useEffect(() => {
+    if (close) setOpen(false);
+  }, [close]);
 
   useEffect(() => {
     function handleWindowResize() {
@@ -249,7 +256,6 @@ export const SideBarMobile = ({
                 mobileLogo
               ) : (
                 <>
-                  {logoCollapsed}
                   <MenuIcon />
                 </>
               )}

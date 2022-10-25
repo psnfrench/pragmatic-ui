@@ -38,16 +38,6 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
   const [windowSize, setWindowSize] = useState(getWindowSize());
   const [smallWindow, setSmallWindow] = useState<boolean>();
 
-  useEffect(() => {
-    function handleWindowResize() {
-      setWindowSize(getWindowSize());
-    }
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
-
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
     () => [
