@@ -16,7 +16,6 @@ import {
   PaperProps,
   useTheme,
   AppBar,
-  Button,
   IconButton,
   Toolbar,
 } from '@mui/material';
