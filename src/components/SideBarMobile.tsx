@@ -59,6 +59,8 @@ export type SideBarMobileProps = {
   onOpenChanged?: (open: boolean) => void;
   menuBackgroundColor?: string;
   menuTextColor?: string;
+  mobileLogo?: React.ReactNode;
+  topNavChildren?: React.ReactNode;
 };
 const openedMixin = (theme: Theme): CSSObject => ({
   '@media only screen and (max-width: 899px)': {
@@ -124,6 +126,8 @@ export const SideBarMobile = ({
   hamburgerIconSx = { color: Colors.greyscale.light },
   menuBackgroundColor = 'primary',
   menuTextColor = 'primary',
+  topNavChildren,
+  mobileLogo,
   onOpenChanged,
 }: SideBarMobileProps) => {
   const [windowSize, setWindowSize] = useState(getWindowSize());
@@ -241,9 +245,16 @@ export const SideBarMobile = ({
               sx={{ mr: 2 }}
               onClick={() => setOpen(!open)}
             >
-              {logoCollapsed}
-              <MenuIcon />
+              {mobileLogo ? (
+                mobileLogo
+              ) : (
+                <>
+                  {logoCollapsed}
+                  <MenuIcon />
+                </>
+              )}
             </IconButton>
+            {topNavChildren}
           </Toolbar>
         </AppBar>
       </Box>

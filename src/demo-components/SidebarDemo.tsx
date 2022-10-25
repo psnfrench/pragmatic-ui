@@ -9,7 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
-import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
+import { Box, Button, createTheme, ThemeProvider, Typography, useTheme } from '@mui/material';
 import { SideBarMobile } from '../components/SideBarMobile';
 import { getWindowSize } from '../components/WindowSize';
 
@@ -34,6 +34,7 @@ export type SidebarDemoProps = {
 const SidebarDemo = ({ children }: SidebarDemoProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
   const [windowSize, setWindowSize] = useState(getWindowSize());
   const [smallWindow, setSmallWindow] = useState<boolean>();
 
@@ -139,6 +140,17 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             menuBackgroundColor="Blue"
             menuTextColor="white"
             hamburgerIconSx={{ color: 'white' }}
+            mobileLogo={<DMCollapsed />}
+            topNavChildren={
+              <Box display="flex" flex={1} flexDirection="row-reverse">
+                <Button size="large" variant="contained" sx={{ margin: theme.spacing(2) }}>
+                  Hi
+                </Button>
+                <Button size="large" variant="contained" sx={{ margin: theme.spacing(2) }}>
+                  Hi
+                </Button>
+              </Box>
+            }
           >
             <Box p={2}>
               <Typography variant="h6" whiteSpace={'normal'}>
