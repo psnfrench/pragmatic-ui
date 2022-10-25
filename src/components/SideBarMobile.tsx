@@ -29,7 +29,7 @@ import debounce from 'lodash/debounce';
 import MenuIcon from '@mui/icons-material/Menu';
 import { getWindowSize } from './WindowSize';
 
-export type SideBarItem = {
+export type SideBarMobileItem = {
   key: string;
   text: string;
   icon: React.ReactNode;
@@ -37,7 +37,7 @@ export type SideBarItem = {
   onClick?: () => void;
 };
 export type SideBarMobileProps = {
-  items: SideBarItem[];
+  items: SideBarMobileItem[];
   selectedMenuKey?: string;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
@@ -176,7 +176,7 @@ export const SideBarMobile = ({
   }, [closed, collapsible]);
 
   const handleItemClick = useCallback(
-    (item: SideBarItem) => {
+    (item: SideBarMobileItem) => {
       if (expandOnHoverCancelOnClick) {
         hasCanceledExpand.current = true;
       }

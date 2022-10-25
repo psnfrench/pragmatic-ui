@@ -16,6 +16,7 @@ export * from './components/SimpleSnackbar';
 export * from './components/SignUpCard';
 export * from './components/SignInCard';
 export * from './components/SideBar';
+export * from './components/SideBarMobile';
 export * from './components/SubmitButton';
 export * from './context/snackbar';
 export * from './context/confirmation';
