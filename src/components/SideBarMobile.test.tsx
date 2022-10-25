@@ -4,7 +4,6 @@
 
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SideBar, SideBarProps } from './SideBar';
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
@@ -14,15 +13,17 @@ import EggAltIcon from '@mui/icons-material/EggAlt';
 import HomeIcon from '@mui/icons-material/Home';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { BrowserRouter } from 'react-router-dom';
+import { SideBarMobile, SideBarMobileProps } from './SideBarMobile';
+
 const TestSideBar = ({
   onClick,
   SideBarProps,
 }: {
   onClick?: () => void;
-  SideBarProps?: Omit<SideBarProps, 'items' | 'logoExpanded' | 'logoCollapsed'>;
+  SideBarProps?: Omit<SideBarMobileProps, 'items' | 'logoExpanded' | 'logoCollapsed'>;
 }) => {
   return (
-    <SideBar
+    <SideBarMobile
       logoCollapsed={<LogoDevIcon data-testid="collapsedSvg" />}
       logoExpanded={<LogoDevIcon data-testid="expandedSvg" />}
       items={[
@@ -65,7 +66,7 @@ const TestSideBar = ({
         },
       ]}
       {...SideBarProps}
-    ></SideBar>
+    ></SideBarMobile>
   );
 };
 
@@ -123,13 +124,7 @@ describe('expand/collapse on hover', () => {
     const handleSubmitMock = jest.fn();
     render(
       <BrowserRouter>
-        <TestSideBar
-          onClick={handleSubmitMock}
-          SideBarProps={{
-            defaultOpen: false,
-            expandOnHover: true,
-          }}
-        />
+        <TestSideBar onClick={handleSubmitMock} SideBarProps={{ defaultOpen: false, expandOnHover: true }} />
       </BrowserRouter>,
     );
 
@@ -153,6 +148,32 @@ describe('expand/collapse on hover', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('collapsedSvg')).toBeInTheDocument();
       expect(screen.queryByTestId('expandedSvg')).not.toBeInTheDocument();
+    });
+  });
+});
+
+describe('close when item is clicked (simulating mobile view)', () => {
+  it('closes on item selected', async () => {
+    const handleSubmitMock = jest.fn();
+    render(
+      <BrowserRouter>
+        <TestSideBar
+          onClick={handleSubmitMock}
+          SideBarProps={{ defaultOpen: true, close: false, mobileLogo: <LogoDevIcon data-testid="mobileLogo" /> }}
+        />
+      </BrowserRouter>,
+    );
+    global.innerWidth = 700;
+    const link2: HTMLElement | null = screen.queryByTestId('link2');
+
+    expect(screen.queryByTestId('link2')).toBeInTheDocument();
+
+    if (link2) {
+      userEvent.click(link2);
+    }
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('mobileLogo')).toBeInTheDocument();
     });
   });
 });

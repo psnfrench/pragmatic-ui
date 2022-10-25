@@ -125,7 +125,7 @@ export const SideBarMobile = ({
   defaultOpen = true,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
-  menuBackgroundColor = 'primary',
+  menuBackgroundColor = 'background.paper',
   menuTextColor = 'primary',
   topNavChildren,
   mobileLogo,
@@ -194,9 +194,10 @@ export const SideBarMobile = ({
       setSelectedKey(item.key);
       if (item.onClick) {
         item.onClick();
+        if (windowSize.innerWidth < 900) setOpen(false);
       }
     },
-    [expandOnHoverCancelOnClick],
+    [expandOnHoverCancelOnClick, windowSize.innerWidth],
   );
 
   // use debounced open/close functions so that multiple mouseenter/leave events do not trigger lots of actions
@@ -242,7 +243,7 @@ export const SideBarMobile = ({
   return (
     <>
       <Box sx={{ flexGrow: 1, display: { xs: open ? 'none' : 'block', md: 'none' } }}>
-        <AppBar position="static" sx={{ backgroundColor: `${menuBackgroundColor} !important` }}>
+        <AppBar position="static" sx={{ backgroundColor: 'background.paper', borderRadius: 0 }}>
           <Toolbar>
             <IconButton
               size="large"
@@ -250,13 +251,13 @@ export const SideBarMobile = ({
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
-              onClick={() => setOpen(!open)}
+              onClick={() => toggleOpen()}
             >
               {mobileLogo ? (
                 mobileLogo
               ) : (
                 <>
-                  <MenuIcon />
+                  <MenuIcon sx={{ color: theme.palette.primary.dark }} />
                 </>
               )}
             </IconButton>
@@ -329,7 +330,7 @@ export const SideBarMobile = ({
                   selected={selectedKey === item.key}
                   onClick={() => handleItemClick(item)}
                   sx={{
-                    px: 2.5,
+                    // px: 2.5,
                     borderRadius: 0.5,
                   }}
                 >

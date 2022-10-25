@@ -130,7 +130,7 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             menuBackgroundColor="Blue"
             menuTextColor="white"
             hamburgerIconSx={{ color: 'white' }}
-            mobileLogo={<DMCollapsed />}
+            // mobileLogo={<DMCollapsed />}
             topNavChildren={
               <Box display="flex" flex={1} flexDirection="row-reverse">
                 <Button size="large" variant="contained" sx={{ margin: theme.spacing(2) }}>
