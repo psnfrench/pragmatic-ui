@@ -52,8 +52,8 @@ export type SideBarMobileProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
-  listIconSx: SxProps<Theme>;
-  listItemSx: SxProps<Theme>;
+  listIconSx?: SxProps<Theme>;
+  listItemSx?: SxProps<Theme>;
   expandedWidth?: string;
   closedWidth?: string;
   paperProps?: PaperProps;
