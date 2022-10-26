@@ -52,6 +52,7 @@ export type SideBarMobileProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
+  listItemSx: SxProps<Theme>;
   expandedWidth?: string;
   closedWidth?: string;
   paperProps?: PaperProps;
@@ -122,6 +123,7 @@ export const SideBarMobile = ({
   collapsible = true,
   expandHint = false,
   textSX,
+  listItemSx,
   defaultOpen = true,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
@@ -330,8 +332,9 @@ export const SideBarMobile = ({
                   selected={selectedKey === item.key}
                   onClick={() => handleItemClick(item)}
                   sx={{
-                    // px: 2.5,
+                    px: 2.5,
                     borderRadius: 0.5,
+                    ...listItemSx,
                   }}
                 >
                   <ListItemIcon sx={{ display: 'flex', justifyContent: 'center', color: menuTextColor, ...textSX }}>

@@ -129,8 +129,12 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
             menuBackgroundColor="Blue"
             menuTextColor="white"
+            // Allows changing the potision of the list item (Changing the width caused issues with this)
+            listItemSx={{}}
             hamburgerIconSx={{ color: 'white' }}
-            // mobileLogo={<DMCollapsed />}
+            // If present, shows logo on app bar on small screens. Menu icon shows if not
+            mobileLogo={<DMCollapsed />}
+            // Data will appear in Appbar on small screens
             topNavChildren={
               <Box display="flex" flex={1} flexDirection="row-reverse">
                 <Button size="large" variant="contained" sx={{ margin: theme.spacing(2) }}>
