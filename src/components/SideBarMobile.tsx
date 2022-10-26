@@ -52,6 +52,7 @@ export type SideBarMobileProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
+  listIconSx: SxProps<Theme>;
   listItemSx: SxProps<Theme>;
   expandedWidth?: string;
   closedWidth?: string;
@@ -123,6 +124,7 @@ export const SideBarMobile = ({
   collapsible = true,
   expandHint = false,
   textSX,
+  listIconSx,
   listItemSx,
   defaultOpen = true,
   paperProps,
@@ -337,7 +339,7 @@ export const SideBarMobile = ({
                     ...listItemSx,
                   }}
                 >
-                  <ListItemIcon sx={{ display: 'flex', justifyContent: 'center', color: menuTextColor, ...textSX }}>
+                  <ListItemIcon sx={{ display: 'flex', justifyContent: 'center', color: menuTextColor, ...listIconSx }}>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText
@@ -345,10 +347,7 @@ export const SideBarMobile = ({
                       <Typography
                         variant={textVariant}
                         color={menuTextColor}
-                        sx={[
-                          { textAlign: 'left', color: menuTextColor },
-                          ...(Array.isArray(textSX) ? textSX : [textSX]),
-                        ]}
+                        sx={{ textAlign: 'left', color: menuTextColor, ...textSX }}
                       >
                         {item.text}
                       </Typography>
