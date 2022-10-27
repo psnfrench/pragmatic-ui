@@ -27,7 +27,7 @@ import { Colors } from '../constants/Colors';
 import { ChevronRight } from '@mui/icons-material';
 import debounce from 'lodash/debounce';
 import MenuIcon from '@mui/icons-material/Menu';
-import { getWindowSize } from './WindowSize';
+import useWindowDimensions from './WindowSize';
 
 export type SideBarMobileItem = {
   key: string;
@@ -136,8 +136,8 @@ export const SideBarMobile = ({
   onOpenChanged,
   close,
 }: SideBarMobileProps) => {
-  const [windowSize, setWindowSize] = useState(getWindowSize());
-  const [open, setOpen] = useState(windowSize.innerWidth < 900 ? false : defaultOpen);
+  const { width } = useWindowDimensions();
+  const [open, setOpen] = useState(width < 900 ? false : defaultOpen);
   const isHovering = useRef(false);
   const hasCanceledExpand = useRef(false);
   const [openedByHover, setOpenedByHover] = useState(false);
@@ -147,16 +147,6 @@ export const SideBarMobile = ({
   useEffect(() => {
     if (close) setOpen(false);
   }, [close]);
-
-  useEffect(() => {
-    function handleWindowResize() {
-      setWindowSize(getWindowSize());
-    }
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
 
   useEffect(() => {
     let active = true;
@@ -198,10 +188,10 @@ export const SideBarMobile = ({
       setSelectedKey(item.key);
       if (item.onClick) {
         item.onClick();
-        if (windowSize.innerWidth < 900) setOpen(false);
+        if (width < 900) setOpen(false);
       }
     },
-    [expandOnHoverCancelOnClick, windowSize.innerWidth],
+    [expandOnHoverCancelOnClick, width],
   );
 
   // use debounced open/close functions so that multiple mouseenter/leave events do not trigger lots of actions
@@ -246,8 +236,13 @@ export const SideBarMobile = ({
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: { xs: open ? 'none' : 'block', md: 'none' } }}>
-        <AppBar position="static" sx={{ backgroundColor: 'background.paper', borderRadius: 0 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: { xs: open ? 'none' : 'block', md: 'none', position: 'fixed', zIndex: 100 },
+        }}
+      >
+        <AppBar sx={{ backgroundColor: 'background.paper', borderRadius: 0 }}>
           <Toolbar>
             <IconButton
               size="large"

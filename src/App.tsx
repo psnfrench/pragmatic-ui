@@ -10,9 +10,11 @@ import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './AppRouter';
 import { Box, Typography } from '@mui/material';
 import SidebarDemo from './demo-components/SidebarDemo';
+import useWindowDimensions from './components/WindowSize';
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
+  const { width } = useWindowDimensions();
 
   return (
     <ThemeProvider theme={theme}>
@@ -21,7 +23,7 @@ function App() {
           <ConfirmationServiceProvider>
             <BrowserRouter>
               <SidebarDemo>
-                <Box sx={{ padding: 3, width: '100%' }}>
+                <Box sx={{ padding: 3, width: '100%', paddingTop: width < 900 ? '70px' : 3 }}>
                   <Typography variant="h3">Pragmatic UI Demo</Typography>
                   <br />
                   <Box>

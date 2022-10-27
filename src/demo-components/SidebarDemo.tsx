@@ -11,7 +11,7 @@ import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
 import { Box, Button, createTheme, ThemeProvider, Typography, useTheme } from '@mui/material';
 import { SideBarMobile } from '../components/SideBarMobile';
-import { getWindowSize } from '../components/WindowSize';
+import useWindowDimensions from '../components/WindowSize';
 
 const myTheme = createTheme({
   components: {
@@ -35,7 +35,7 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
-  const [windowSize, setWindowSize] = useState(getWindowSize());
+  const { width } = useWindowDimensions();
   const [smallWindow, setSmallWindow] = useState<boolean>();
 
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
@@ -93,10 +93,10 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
   };
 
   useEffect(() => {
-    if (windowSize.innerWidth < 900) setSmallWindow(true);
-    else if (windowSize.innerWidth >= 900) setSmallWindow(false);
+    if (width < 900) setSmallWindow(true);
+    else if (width >= 900) setSmallWindow(false);
     console.log('smallWindow:', true);
-  }, [smallWindow, windowSize]);
+  }, [smallWindow, width]);
 
   return (
     <Box
