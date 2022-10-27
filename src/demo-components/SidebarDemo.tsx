@@ -123,14 +123,18 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             textVariant="body2"
             expandHint
             selectedMenuKey={location.pathname.substring(1)}
+            // Provides a way to send when the update state changes
             onOpenChanged={handleOpenChanged}
             expandOnHover={true}
             expandOnHoverCancelOnClick={true}
             paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
+            // Used to easily change the sidebar background color
             menuBackgroundColor="Blue"
+            // Changes the color of the text in the sidebar
             menuTextColor="white"
             // Allows changing the potision of the list item (Changing the width caused issues with this)
             listItemSx={{}}
+            // Styling for the hamburger icon in the sidebar
             hamburgerIconSx={{ color: 'white' }}
             // If present, shows logo on app bar on small screens. Menu icon shows if not
             mobileLogo={<DMCollapsed />}
@@ -145,6 +149,8 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
                 </Button>
               </Box>
             }
+            // Allows for content to be placed above the appbar that is fixed to the top
+            headerContent={<Box />}
           >
             <Box p={2}>
               <Typography variant="h6" whiteSpace={'normal'}>

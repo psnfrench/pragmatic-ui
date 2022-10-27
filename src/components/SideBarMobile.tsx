@@ -63,6 +63,7 @@ export type SideBarMobileProps = {
   menuTextColor?: string;
   mobileLogo?: React.ReactNode;
   topNavChildren?: React.ReactNode;
+  headerContent?: React.ReactNode;
   close?: boolean;
 };
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -132,6 +133,7 @@ export const SideBarMobile = ({
   menuBackgroundColor = 'background.paper',
   menuTextColor = 'primary',
   topNavChildren,
+  headerContent,
   mobileLogo,
   onOpenChanged,
   close,
@@ -243,6 +245,7 @@ export const SideBarMobile = ({
         }}
       >
         <AppBar sx={{ backgroundColor: 'background.paper', borderRadius: 0 }}>
+          {headerContent}
           <Toolbar>
             <IconButton
               size="large"
