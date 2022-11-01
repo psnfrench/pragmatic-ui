@@ -120,6 +120,8 @@ export type PComplexFilterProps = {
   setStartDate?: React.Dispatch<React.SetStateAction<number | undefined>>;
   endDate?: number | undefined;
   setEndDate?: React.Dispatch<React.SetStateAction<number | undefined>>;
+  beforeFilterComponent?: React.ReactNode;
+  afterFilterComponent?: React.ReactNode;
 };
 
 export function PComplexFilter({
@@ -155,6 +157,8 @@ export function PComplexFilter({
   setStartDate,
   endDate,
   setEndDate,
+  beforeFilterComponent,
+  afterFilterComponent,
 }: PComplexFilterProps) {
   const [open, setOpen] = useState(Boolean(anchorEl));
   const [mainOpen, setMainOpen] = useState(false);
@@ -500,7 +504,8 @@ export function PComplexFilter({
     <Box display="flex" flexDirection="column" flex={1}>
       <Box display="flex" flexDirection="row" flex={1}>
         <>
-          {handleDisplayedItemsSearch && (
+          {beforeFilterComponent}
+          {handleDisplayedItemsSearch && searchable && (
             <Search
               fullWidth
               placeholderText={searchPlaceholder}
@@ -561,6 +566,7 @@ export function PComplexFilter({
             />
           </Box>
         </ClickAwayListener>
+        <>{afterFilterComponent}</>
       </Box>
       <Box display="flex" flexDirection="row" flex={1}>
         <Box display={currentFilters.length > 0 ? 'none' : 'flex'} paddingTop={2} flex={1} />

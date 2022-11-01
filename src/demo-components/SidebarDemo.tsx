@@ -95,7 +95,6 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
   useEffect(() => {
     if (width < 900) setSmallWindow(true);
     else if (width >= 900) setSmallWindow(false);
-    console.log('smallWindow:', true);
   }, [smallWindow, width]);
 
   return (
