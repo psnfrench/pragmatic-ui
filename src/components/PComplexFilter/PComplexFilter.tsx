@@ -508,7 +508,7 @@ export function PComplexFilter({
           {handleDisplayedItemsSearch && searchable && (
             <Search
               fullWidth
-              placeholderText={searchPlaceholder}
+              defaultValue={searchPlaceholder}
               onChange={handleDisplayedItemsSearch}
               sx={{ paddingRight: 2 }}
             />
