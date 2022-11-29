@@ -22,6 +22,11 @@ const FileDropZoneDemo = () => {
         renderFile={(file, onStarClick, onRemoveFileCLick) => (
           <MyFileRender file={file} onStarClick={onStarClick} onRemoveFileCLick={onRemoveFileCLick} />
         )}
+        containerSx={{
+          '&:hover': {
+            border: 'none',
+          },
+        }}
       />
 
       <br />
@@ -31,9 +36,17 @@ const FileDropZoneDemo = () => {
 
 const MyCustomTitle = () => {
   return (
-    <Typography variant="h6" color="secondary" marginBottom={2}>
-      My Custom Title - Also, check out how files look when they are added
-    </Typography>
+    <>
+      <Typography variant="h6" color="secondary" marginBottom={2}>
+        My Custom Title
+      </Typography>
+      <Typography variant="body1" marginBottom={2}>
+        Also, check out how files look when they are added
+      </Typography>
+      <Typography variant="body1" marginBottom={2}>
+        Lastly, there hover effect has been overridden
+      </Typography>
+    </>
   );
 };
 const MyCustomButton = ({ onClick }: { onClick: () => void }) => {

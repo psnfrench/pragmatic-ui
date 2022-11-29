@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, styled, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, styled, SxProps, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -74,6 +74,7 @@ export type FileUploaderProps = {
   fileFormat?: Accept;
   featured?: boolean;
   onFilesChange?: () => void;
+  containerSx?: SxProps;
   renderTitle?: () => React.ReactNode;
   renderButton?: (openFilePicker: () => void) => React.ReactNode;
   renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode;
@@ -94,8 +95,18 @@ const StyledImg = styled('img')(() => ({
   mask: 'linear-gradient(-45deg, transparent 8px, #ddd 0) bottom right',
 }));
 
-export const FileDropZone = (props: FileUploaderProps) => {
-  const { name, maxFiles = 0, maxSize, fileFormat, featured, awsUrl, renderTitle, renderButton, renderFile } = props;
+export const FileDropZone = ({
+  name,
+  maxFiles = 0,
+  maxSize,
+  fileFormat,
+  featured,
+  awsUrl,
+  containerSx,
+  renderTitle,
+  renderButton,
+  renderFile,
+}: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
   const [files, setFiles] = useState<File[]>([]);
   const [filesSync, setFileSync] = useState<(Image | FileInfo | File | S3Files)[]>(get(values, name, []));
@@ -217,6 +228,7 @@ export const FileDropZone = (props: FileUploaderProps) => {
             background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), #757EF2;',
             padding: '13px',
           },
+          ...containerSx,
         }}
         {...getRootProps({ className: 'dropZone' })}
         alignItems="center"
