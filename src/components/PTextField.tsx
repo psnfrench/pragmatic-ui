@@ -53,6 +53,7 @@ const PTextFieldWithFormikComp = (
     handleChange,
     errors,
     touched,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     error: _error, // do not pass down error, we will determine this ourselves
     ...otherProps
   } = props;

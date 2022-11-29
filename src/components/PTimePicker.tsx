@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import React from 'react';
 import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PTimePickerProps = Omit<TimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> &
   Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
@@ -19,6 +20,7 @@ export const PTimePicker = (props: PTimePickerProps) => {
 };
 
 const PTimePickerWithFormikComp = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Omit<TimePickerProps<any, any>, 'renderInput' | 'onChange'> &
     RequiredFormikTextFields &
     Required<Pick<TextFieldProps, 'value' | 'name'>> &

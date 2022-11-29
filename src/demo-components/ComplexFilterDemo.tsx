@@ -1,5 +1,5 @@
 import { ChevronRight } from '@mui/icons-material';
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { menuItemType, PComplexFilter } from '../components/PComplexFilter/PComplexFilter';
 import PIcon from '../images/PIcon';
@@ -299,6 +299,9 @@ const ComplexFilterDemo = () => {
             setStartDate={setStartDate}
             endDate={endDate}
             setEndDate={setEndDate}
+            // Allows for items to be added inline with the filter toggle
+            beforeFilterComponent={<Button>Before</Button>}
+            afterFilterComponent={<Button>After</Button>}
           />
         </Box>
         <br />

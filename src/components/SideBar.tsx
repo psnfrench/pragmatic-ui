@@ -14,6 +14,7 @@ import {
   SxProps,
   Tooltip,
   PaperProps,
+  useTheme,
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -120,6 +121,8 @@ export const SideBar = ({
   const isHovering = useRef(false);
   const hasCanceledExpand = useRef(false);
   const [openedByHover, setOpenedByHover] = useState(false);
+  const theme = useTheme();
+
   useEffect(() => {
     let active = true;
     if (active) {
@@ -222,7 +225,7 @@ export const SideBar = ({
               <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
                 {collapsible && (
                   <>
-                    <ChevronLeftIcon sx={{ marginRight: '-9px' }} />
+                    <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
                     <MenuIcon />
                   </>
                 )}
@@ -239,9 +242,15 @@ export const SideBar = ({
                 className="poppycock"
                 sx={{ height: '124px' }}
               >
-                <Box display="flex" justifyContent="center" height="100%" marginLeft="6px" sx={{ ...hamburgerIconSx }}>
-                  <MenuIcon sx={{ marginRight: '-4.5px' }} />
-                  <ChevronRightIcon sx={{ marginLeft: '-4.5px' }} />
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  height="100%"
+                  marginLeft={theme.spacing(0.8)}
+                  sx={{ ...hamburgerIconSx }}
+                >
+                  <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
+                  <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
                 </Box>
                 <Box display="flex" justifyContent="center">
                   {logoCollapsed}
