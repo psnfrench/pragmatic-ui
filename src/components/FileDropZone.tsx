@@ -74,6 +74,9 @@ export type FileUploaderProps = {
   fileFormat?: Accept;
   featured?: boolean;
   onFilesChange?: () => void;
+  renderTitle?: () => React.ReactNode;
+  renderButton?: (openFilePicker: () => void) => React.ReactNode;
+  renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode;
 };
 
 export type CurrentFiles = {
@@ -92,7 +95,7 @@ const StyledImg = styled('img')(() => ({
 }));
 
 export const FileDropZone = (props: FileUploaderProps) => {
-  const { name, maxFiles = 0, maxSize, fileFormat, featured, awsUrl } = props;
+  const { name, maxFiles = 0, maxSize, fileFormat, featured, awsUrl, renderTitle, renderButton, renderFile } = props;
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
   const [files, setFiles] = useState<File[]>([]);
   const [filesSync, setFileSync] = useState<(Image | FileInfo | File | S3Files)[]>(get(values, name, []));
@@ -219,59 +222,69 @@ export const FileDropZone = (props: FileUploaderProps) => {
         alignItems="center"
       >
         <input type="file" name={name} {...getInputProps()} />
-        <Typography variant="subtitle2" marginBottom={2}>
-          Drag and drop or upload files from your library
-        </Typography>
+        {renderTitle ? (
+          renderTitle()
+        ) : (
+          <Typography variant="subtitle2" marginBottom={2}>
+            Drag and drop or upload files from your library
+          </Typography>
+        )}
         {currentFiles.length > 0 && (
           <Grid container spacing={2} justifyContent="space-around">
-            {currentFiles.map((file, index) => (
-              <Grid item xs={6} key={index}>
-                <Box className="thumbnailCover">
-                  <Thumbnail file={file} />
-                  <IconButton
-                    onClick={() => {
-                      starFile(index);
-                    }}
-                    sx={{ position: 'absolute' }}
-                    className="iconStarFile"
-                  >
-                    <PIcon
-                      name="starIcon"
-                      sx={{
-                        display: featured ? 'inline-flex' : 'none',
-                        backgroundColor: index ? 'white !important' : '#FFB400 !important',
-                        color: index ? 'currentColor !important' : 'white !important',
-                        borderRadius: '16px !important',
-                        padding: '4px',
-                      }}
-                    />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      removeFile(index);
-                    }}
-                    sx={{ position: 'absolute' }}
-                    className="iconRemoveFile"
-                  >
-                    <PIcon name="closeIcon" />
-                  </IconButton>
-                </Box>
-                <Typography color={Colors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
-                  {currentFiles[index].alteredName ? currentFiles[index].alteredName : file.filename}
-                  {/* {file.filename} */}
-                </Typography>
-              </Grid>
-            ))}
+            {currentFiles.map((file, index) => {
+              const onStarClick = () => starFile(index);
+              const onRemoveFileCLick = () => removeFile(index);
+              return (
+                <Grid item xs={6} key={index}>
+                  {renderFile ? (
+                    renderFile(file, onStarClick, onRemoveFileCLick)
+                  ) : (
+                    <>
+                      <Box className="thumbnailCover">
+                        <Thumbnail file={file} />
+                        <IconButton onClick={onStarClick} sx={{ position: 'absolute' }} className="iconStarFile">
+                          <PIcon
+                            name="starIcon"
+                            sx={{
+                              display: featured ? 'inline-flex' : 'none',
+                              backgroundColor: index ? 'white !important' : '#FFB400 !important',
+                              color: index ? 'currentColor !important' : 'white !important',
+                              borderRadius: '16px !important',
+                              padding: '4px',
+                            }}
+                          />
+                        </IconButton>
+                        <IconButton
+                          onClick={onRemoveFileCLick}
+                          sx={{ position: 'absolute' }}
+                          className="iconRemoveFile"
+                        >
+                          <PIcon name="closeIcon" />
+                        </IconButton>
+                      </Box>
+                      <Typography color={Colors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
+                        {currentFiles[index].alteredName ? currentFiles[index].alteredName : file.filename}
+                        {/* {file.filename} */}
+                      </Typography>
+                    </>
+                  )}
+                </Grid>
+              );
+            })}
           </Grid>
         )}
-        <Button
-          onClick={() => open()}
-          className="buttonUpload"
-          startIcon={<PIcon name="upLoadIcon" />}
-          variant="contained"
-        >
-          Upload
-        </Button>
+        {renderButton ? (
+          renderButton(open)
+        ) : (
+          <Button
+            onClick={() => open()}
+            className="buttonUpload"
+            startIcon={<PIcon name="upLoadIcon" />}
+            variant="contained"
+          >
+            Upload
+          </Button>
+        )}
       </Box>
       {error && <ErrorLabel errorText={error} />}
     </StyledBox>
