@@ -132,7 +132,7 @@ export const FileDropZone = ({
         };
       } else {
         return {
-          imageUrl: awsUrl ? awsUrl + image.path : image.path,
+          imageUrl: image.signedUrl || awsUrl ? awsUrl + image.path : image.path,
           filename: image.filename,
           filePosition: index,
           fileType: 'old',
