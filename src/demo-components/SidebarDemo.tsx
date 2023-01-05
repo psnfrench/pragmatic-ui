@@ -116,11 +116,8 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
           })}
         >
           <SideBarMobile
-            // toggle and close are used to enable altering the open state of the sidebar.
-            // Currently close is a requirement for toggle to function
-            // Can be used when collapsible is set to false
-            toggle={open}
-            close={!open}
+            // state is used to enable altering the open state of the sidebar.
+            state={open}
             logoCollapsed={<DMCollapsed />}
             logoExpanded={<DMExpanded />}
             items={navItems}

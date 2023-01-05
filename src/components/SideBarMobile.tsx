@@ -39,7 +39,7 @@ export type SideBarMobileItem = {
 export type SideBarMobileProps = {
   items: SideBarMobileItem[];
   selectedMenuKey?: string;
-  toggle?: boolean;
+  state?: boolean;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
   expandOnHover?: boolean;
@@ -113,7 +113,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export const SideBarMobile = ({
   items,
-  toggle,
+  state,
   selectedMenuKey,
   logoCollapsed,
   logoExpanded,
@@ -239,8 +239,8 @@ export const SideBarMobile = ({
   }, [delayedClose, expandOnHover, open, openedByHover]);
 
   useEffect(() => {
-    if (toggle) setOpen(toggle);
-  }, [toggle]);
+    if (state !== undefined) setOpen(state);
+  }, [state]);
 
   return (
     <>
