@@ -98,13 +98,14 @@ const ComplexFilterPaper = ({
       {...popperProps}
     >
       <Paper
+        {...paperProps}
         sx={{
           marginTop: '12px',
           borderRadius: 0,
           boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2)',
           filter: 'drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.14)) drop-shadow(0px 1px 10px rgba(0, 0, 0, 0.12))',
+          ...paperProps?.sx,
         }}
-        {...paperProps}
       >
         <Box display="flex" flexDirection="row" alignItems="center" padding={2} flex={1}>
           <Typography variant="h6" flex={1} {...titleProps}>
@@ -177,7 +178,15 @@ const ComplexFilterPaper = ({
                       </Box>
                       <ChevronRight color="action" />
                     </Button>
-                    <Divider sx={{ width: '100%', margin: 0 }} />
+                    <Box marginLeft={2} marginRight={2}>
+                      <Divider
+                        sx={{
+                          width: '100%',
+                          margin: 0,
+                          display: index === filteredItems.length - 1 ? 'none' : 'block',
+                        }}
+                      />
+                    </Box>
                   </React.Fragment>
                 ) : (
                   <FormControlLabel
