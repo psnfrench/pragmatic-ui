@@ -239,8 +239,10 @@ export const SideBarMobile = ({
   }, [delayedClose, expandOnHover, open, openedByHover]);
 
   useEffect(() => {
-    if (state !== undefined) setOpen(state);
-  }, [state]);
+    if (state !== undefined) {
+      setOpen(state);
+    }
+  }, [state, collapsible]);
 
   return (
     <>

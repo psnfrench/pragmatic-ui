@@ -38,6 +38,7 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
   const { width } = useWindowDimensions();
   const [smallWindow, setSmallWindow] = useState<boolean>();
   const [open, setOpen] = useState(true);
+  const [collapsible, setCollapsible] = useState(smallWindow ? true : false);
 
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
@@ -98,6 +99,14 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
     else if (width >= 900) setSmallWindow(false);
   }, [smallWindow, width]);
 
+  useEffect(() => {
+    if (smallWindow) setCollapsible(true);
+    else {
+      setOpen(true);
+      setCollapsible(false);
+    }
+  }, [smallWindow]);
+
   return (
     <Box
       sx={{
@@ -118,6 +127,7 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
           <SideBarMobile
             // state is used to enable altering the open state of the sidebar.
             state={open}
+            collapsible={collapsible}
             logoCollapsed={<DMCollapsed />}
             logoExpanded={<DMExpanded />}
             items={navItems}
