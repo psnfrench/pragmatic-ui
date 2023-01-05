@@ -37,6 +37,7 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
   const theme = useTheme();
   const { width } = useWindowDimensions();
   const [smallWindow, setSmallWindow] = useState<boolean>();
+  const [open, setOpen] = useState(true);
 
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
@@ -115,6 +116,11 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
           })}
         >
           <SideBarMobile
+            // toggle and close are used to enable altering the open state of the sidebar.
+            // Currently close is a requirement for toggle to function
+            // Can be used when collapsible is set to false
+            toggle={open}
+            close={!open}
             logoCollapsed={<DMCollapsed />}
             logoExpanded={<DMExpanded />}
             items={navItems}

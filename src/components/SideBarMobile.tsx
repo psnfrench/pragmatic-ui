@@ -39,6 +39,7 @@ export type SideBarMobileItem = {
 export type SideBarMobileProps = {
   items: SideBarMobileItem[];
   selectedMenuKey?: string;
+  toggle?: boolean;
   logoCollapsed?: React.ReactNode;
   logoExpanded: React.ReactNode;
   expandOnHover?: boolean;
@@ -112,6 +113,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export const SideBarMobile = ({
   items,
+  toggle,
   selectedMenuKey,
   logoCollapsed,
   logoExpanded,
@@ -236,6 +238,10 @@ export const SideBarMobile = ({
     }
   }, [delayedClose, expandOnHover, open, openedByHover]);
 
+  useEffect(() => {
+    if (toggle) setOpen(toggle);
+  }, [toggle]);
+
   return (
     <>
       <Box
@@ -306,16 +312,18 @@ export const SideBarMobile = ({
                   alignContent="space-between"
                   sx={{ height: '124px' }}
                 >
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    height="100%"
-                    marginLeft={theme.spacing(0.8)}
-                    sx={{ ...hamburgerIconSx }}
-                  >
-                    <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
-                    <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
-                  </Box>
+                  {collapsible && (
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      height="100%"
+                      marginLeft={theme.spacing(0.8)}
+                      sx={{ ...hamburgerIconSx }}
+                    >
+                      <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
+                      <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                    </Box>
+                  )}
                   <Box display="flex" justifyContent="center">
                     {logoCollapsed}
                   </Box>
