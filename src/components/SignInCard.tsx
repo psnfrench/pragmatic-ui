@@ -58,7 +58,7 @@ export const SignInCard = ({
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit} validateOnMount={true}>
       {({ values, handleSubmit, isSubmitting, isValid }) => {
         return (
-          <Form onSubmit={handleSubmit} sx={sx}>
+          <Form onSubmit={handleSubmit} sx={{ ...sx }}>
             <PTextField variant={inputVariant} label="Email Address" type="email" name="email" fullWidth />
             <PasswordInput
               variant={inputVariant}

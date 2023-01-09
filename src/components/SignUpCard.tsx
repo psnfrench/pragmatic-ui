@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, styled, Grid } from '@mui/material';
+import { Box, Button, styled, Grid, SxProps } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import useValidators from '../hooks/useValidators';
 import { PTextField } from './PTextField';
@@ -18,6 +18,7 @@ export interface SignUpFormValues {
 export const SignUpCard = ({
   onSubmit,
   onGoToLogin,
+  sx,
   children,
   initialValues = {
     firstName: '',
@@ -28,6 +29,7 @@ export const SignUpCard = ({
   },
 }: {
   initialValues?: SignUpFormValues;
+  sx?: SxProps;
   onSubmit: (values: SignUpFormValues, formikHelpers: FormikHelpers<SignUpFormValues>) => void;
   onGoToLogin: () => void;
   children?: React.ReactNode;
@@ -52,7 +54,7 @@ export const SignUpCard = ({
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit} validateOnMount={true}>
       {({ handleSubmit, isSubmitting, isValid }) => {
         return (
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} sx={{ ...sx }}>
             <Grid container spacing={2}>
               <Grid item xs>
                 <PTextField label="First Name" name="firstName" fullWidth />
