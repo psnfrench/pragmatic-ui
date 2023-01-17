@@ -1,12 +1,13 @@
 /**
  * @jest-environment jsdom
  */
-
+import React from 'react';
 import { Formik } from 'formik';
 
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PTextField } from './PTextField';
+import { Checkbox, MenuItem } from '@mui/material';
 
 describe('Editing the text field', () => {
   it('Changes the value correctly when typing and submitting form', async () => {
@@ -52,6 +53,38 @@ describe('Editing the text field', () => {
     expect(screen.queryByRole('button')).toBeNull(); // should be null until textfield clicked
     userEvent.click(textField);
     const clearButton = screen.getByRole('button');
+    userEvent.click(clearButton);
+    expect(textField).toHaveProperty('value', '');
+  });
+
+  it('Changes clear the value when pressing the clear button on a multiple select', async () => {
+    const handleSubmit = jest.fn();
+    const fieldLabel = 'Tags';
+    const tags = ['music', 'movies', 'funny', 'action', 'comedy'];
+    const { container } = render(
+      <Formik initialValues={{ tags: ['music', 'movies'] } as { tags: string[] }} onSubmit={handleSubmit}>
+        {({ values }) => (
+          <PTextField
+            name="tags"
+            label="Tags"
+            select
+            sx={{ minWidth: 360 }}
+            SelectProps={{ multiple: true, inputProps: { 'data-testid': fieldLabel } }}
+          >
+            {tags.map((tag) => (
+              <MenuItem key={tag} value={tag}>
+                <Checkbox checked={values.tags.includes(tag)} />
+                {tag}
+              </MenuItem>
+            ))}
+          </PTextField>
+        )}
+      </Formik>,
+    );
+    const textField: HTMLInputElement = screen.getByTestId(fieldLabel);
+    userEvent.click(screen.getByRole('button'));
+    const clearButton = container.getElementsByClassName('MuiIconButton-root')[0];
+    expect(textField).toHaveProperty('value', 'music,movies');
     userEvent.click(clearButton);
     expect(textField).toHaveProperty('value', '');
   });
