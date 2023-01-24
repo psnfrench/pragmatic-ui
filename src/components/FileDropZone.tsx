@@ -242,12 +242,12 @@ export const FileDropZone = ({
           </Typography>
         )}
         {currentFiles.length > 0 && (
-          <Grid container spacing={2} justifyContent="space-around">
+          <Grid container spacing={2} justifyContent="space-around" wrap="wrap">
             {currentFiles.map((file, index) => {
               const onStarClick = () => starFile(index);
               const onRemoveFileCLick = () => removeFile(index);
               return (
-                <Grid item xs={6} key={index}>
+                <Box key={index} sx={{ padding: 2 }}>
                   {renderFile ? (
                     renderFile(file, onStarClick, onRemoveFileCLick)
                   ) : (
@@ -280,7 +280,7 @@ export const FileDropZone = ({
                       </Typography>
                     </>
                   )}
-                </Grid>
+                </Box>
               );
             })}
           </Grid>

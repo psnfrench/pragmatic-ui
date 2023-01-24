@@ -3,6 +3,7 @@ import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import './App.css';
 import TextDemo from './demo-components/TextDemo';
+import SelectDemo from './demo-components/SelectDemo';
 import RadioDemo from './demo-components/RadioDemo';
 import SignUpDemo from './demo-components/SignUpDemo';
 import SnackBarDemo from './demo-components/SnackBarDemo';
@@ -20,6 +21,7 @@ import ComplexFilterDemo from './demo-components/ComplexFilterDemo';
 const initialValues = {
   firstName: 'Sally',
   description: 'Works in accounts\nHas the nice office',
+  tags: [],
   gender: 'female',
   date1: new Date(),
   date2: new Date(),
@@ -60,6 +62,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
               {({ handleSubmit, isSubmitting }) => (
                 <form onSubmit={handleSubmit}>
                   <TextDemo />
+                  <SelectDemo />
                   <DateDemo />
                   <RadioDemo />
                   <SearchDemo />

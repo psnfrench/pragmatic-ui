@@ -62,8 +62,13 @@ const PTextFieldWithFormikComp = (
   const isTouched = get(touched, name);
   const error = name && isTouched ? get(errors, name) : undefined;
   const defaultValue = props.select && props.SelectProps?.multiple ? [] : '';
+  const isMultiSelect = !!otherProps.SelectProps?.multiple;
   const handleClear = () => {
-    setFieldValue(name, '', false);
+    if (isMultiSelect) {
+      setFieldValue(name, [], false);
+    } else {
+      setFieldValue(name, '', false);
+    }
   };
   const handleFocus = () => {
     setShowClear(true);
@@ -91,7 +96,7 @@ const PTextFieldWithFormikComp = (
             enableClear && showClear ? (
               <IconButton
                 tabIndex={-1}
-                sx={{ position: 'absolute', right: '15px' }}
+                sx={{ position: 'absolute', right: otherProps.select ? '32px' : '15px' }}
                 onClick={handleClear}
                 onMouseDown={(e) => e.preventDefault()}
               >
