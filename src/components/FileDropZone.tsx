@@ -244,7 +244,7 @@ export const FileDropZone = ({
           </Typography>
         )}
         {currentFiles.length > 0 && (
-          <Grid container spacing={2} justifyContent="space-around" wrap="wrap">
+          <Grid container spacing={2} justifyContent="center" wrap="wrap">
             {currentFiles.map((file, index) => {
               const onStarClick = () => starFile(index);
               const onRemoveFileCLick = () => removeFile(index);
