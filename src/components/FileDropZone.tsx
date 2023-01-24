@@ -78,6 +78,7 @@ export type FileUploaderProps = {
   renderTitle?: () => React.ReactNode;
   renderButton?: (openFilePicker: () => void) => React.ReactNode;
   renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode;
+  addButtonInRender?: (openFilePicker: () => void) => React.ReactNode;
 };
 
 export type CurrentFiles = {
@@ -106,6 +107,7 @@ export const FileDropZone = ({
   renderTitle,
   renderButton,
   renderFile,
+  addButtonInRender,
 }: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
   const [files, setFiles] = useState<File[]>([]);
@@ -283,6 +285,7 @@ export const FileDropZone = ({
                 </Box>
               );
             })}
+            {addButtonInRender && addButtonInRender(open)}
           </Grid>
         )}
         {renderButton ? (
