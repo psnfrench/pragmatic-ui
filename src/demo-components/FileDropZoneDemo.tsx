@@ -72,13 +72,8 @@ const MyFileRender = ({
         <Button onClick={onStarClick}>Star Me</Button>
         <Button onClick={onRemoveFileCLick}>Delete File</Button>
         {file.imageUrl && (
-          <Box
-            sx={{ maxWidth: 100, maxHeight: 100, overflow: 'hidden' }}
-            display="flex"
-            alignContent="center"
-            alignItems="center"
-          >
-            <img src={file.imageUrl} />
+          <Box sx={{ height: 100 }} display="flex" alignContent="center" justifyContent="center" alignItems="center">
+            <img src={file.imageUrl} style={{ maxHeight: 100 }} />
           </Box>
         )}
       </Box>
