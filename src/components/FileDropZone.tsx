@@ -87,6 +87,9 @@ export type CurrentFiles = {
   filename: string;
   filePosition: number;
   fileType: 'new' | 'old';
+  crop?: { x: number; y: number };
+  zoom?: number;
+  croppedImageUrl: string;
 };
 
 const StyledImg = styled('img')(() => ({
