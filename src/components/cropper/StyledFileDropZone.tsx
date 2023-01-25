@@ -31,13 +31,11 @@ export const StyledFileDropZone = ({ name }: { name: string }) => {
       const newImageList = [...values.images];
       const imageIndex = values.images.findIndex((x) => x.path === image);
       const _item = values.images[imageIndex];
-      console.log(_item);
       _item.croppedImageUrl = croppedImageUrl;
       _item.crop = crop;
       _item.zoom = zoom;
       _item.rotation = rotation;
       newImageList[imageIndex] = _item;
-      console.log(_item);
       setFieldValue(`images[${imageIndex}]`, _item);
       setSelectedImage(undefined);
       setUpdate(!update);

@@ -64,7 +64,6 @@ type Props = {
 };
 
 const NewCropper = ({ image, onCancel, setCroppedImageFor }: Props) => {
-  // console.log(image);
   if (image.zoom === undefined) image.zoom = 1;
   if (image.crop === undefined) image.crop = { x: 0, y: 0 };
   if (image.rotation === undefined) image.rotation = 0;
@@ -87,9 +86,7 @@ const NewCropper = ({ image, onCancel, setCroppedImageFor }: Props) => {
   };
 
   const onCrop = async () => {
-    console.log('image:', image);
-    const croppedImageUrl = await getCroppedImg(image, croppedAreaPixels as Area);
-    console.log('croppedImageUrl:', croppedImageUrl);
+    const croppedImageUrl = await getCroppedImg(image, croppedAreaPixels as Area, rotation);
     setCroppedImageFor(image?.filename as string, crop, zoom, rotation, croppedImageUrl as string);
   };
 

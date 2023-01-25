@@ -168,15 +168,10 @@ export const FileDropZone = ({
 
   const updateFieldValues = useCallback(
     (files: (File & CurrentFileImage)[], filesSync: (Image | FileInfo | (File & CurrentFileImage) | S3Files)[]) => {
-      console.log('Hi');
       setFieldValue(name, [...filesSync, ...files]);
     },
     [name, setFieldValue],
   );
-
-  useEffect(() => {
-    console.log('files', files);
-  }, [files]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -220,7 +215,6 @@ export const FileDropZone = ({
           for (const value of values[name]) {
             const isImage: Image | undefined = (value as Image).croppedImageUrl ? (value as Image) : undefined;
             if (isImage && isImage.path === image.path) {
-              console.log('isImage', isImage);
               i = isImage;
             }
           }
@@ -350,7 +344,6 @@ const displayFiles = (
 
           values[name].some((val) => {
             const isImage: Image | undefined = (val as Image).croppedImageUrl ? (val as Image) : undefined;
-            console.log('Hi');
             if (isImage && isImage.path === file.filename) file = { ...file, ...isImage };
           });
 
@@ -396,7 +389,6 @@ const displayFiles = (
 // TODO Find why this is breaking
 const Thumbnail = ({ file }: { file: CurrentFiles }) => {
   if (file.filename) {
-    console.log(file.croppedImageUrl);
     const nameArray = file.filename.split('.');
     const _name = nameArray[nameArray.length - 1];
     if (ImageTypes.includes(_name.toLowerCase()))

@@ -32,7 +32,7 @@ const FileDropZoneDemo = () => {
 
       <br />
 
-      {/* <StyledFileDropZone name="images" /> */}
+      <StyledFileDropZone name="images" />
     </Box>
   );
 };
