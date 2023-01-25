@@ -141,6 +141,9 @@ export const FileDropZone = ({
           filename: image.filename,
           filePosition: index,
           fileType: 'old',
+          crop: image.crop,
+          zoom: image.zoom,
+          croppedImageUrl: image.croppedImageUrl,
         };
       }
     }),

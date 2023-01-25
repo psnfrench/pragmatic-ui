@@ -48,6 +48,9 @@ export type Image = {
   uid: string;
   signedUrl?: string;
   base64?: unknown; // for blob previews
+  crop?: { x: number; y: number }; // for cropping
+  zoom?: number; // for cropping
+  croppedImageUrl?: string; // for cropping
 };
 
 export type S3Files = {
