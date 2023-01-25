@@ -26,6 +26,12 @@ import FilterIcon from './icons/filterIcon';
 import CrossSmallIcon from './icons/crossSmall';
 import StarIcon from './icons/star';
 import BlankFileIcon from './icons/blankFileIcon';
+import Rotate from './icons/rotate';
+import RotateCube from './icons/rotateCube';
+import PlusSmall from './icons/plusSmall';
+import MinusIcon from './icons/minusIcon';
+import Check from './icons/check';
+import Cross from './icons/cross';
 
 export const customIconMap = {
   searchIcon: SearchIcon,
@@ -54,6 +60,12 @@ export const customIconMap = {
   crossSmallIcon: CrossSmallIcon,
   starIcon: StarIcon,
   blankFileIcon: BlankFileIcon,
+  rotate: Rotate,
+  rotateCube: RotateCube,
+  plusSmall: PlusSmall,
+  minusIcon: MinusIcon,
+  check: Check,
+  cross: Cross,
 };
 export const PIcon = ({
   name,

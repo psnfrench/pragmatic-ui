@@ -29,6 +29,7 @@ export type StaffInfo = {
   reasonReplace?: string;
   documents?: FileInfo[];
   files?: File[];
+  images?: Image[];
 };
 
 export type FileInfo = {
@@ -50,6 +51,7 @@ export type Image = {
   base64?: unknown; // for blob previews
   crop?: { x: number; y: number }; // for cropping
   zoom?: number; // for cropping
+  rotation?: number; // for cropping
   croppedImageUrl?: string; // for cropping
 };
 

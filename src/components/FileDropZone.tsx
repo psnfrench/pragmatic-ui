@@ -79,6 +79,11 @@ export type FileUploaderProps = {
   renderButton?: (openFilePicker: () => void) => React.ReactNode;
   renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode;
   addButtonInRender?: (openFilePicker: () => void) => React.ReactNode;
+  update?: boolean;
+};
+
+export type CurrentFileImage = Partial<Pick<Image, 'crop' | 'rotation' | 'zoom' | 'croppedImageUrl'>> & {
+  path?: string;
 };
 
 export type CurrentFiles = {
@@ -89,6 +94,7 @@ export type CurrentFiles = {
   fileType: 'new' | 'old';
   crop?: { x: number; y: number };
   zoom?: number;
+  rotation?: number;
   croppedImageUrl?: string;
 };
 
@@ -111,45 +117,66 @@ export const FileDropZone = ({
   renderButton,
   renderFile,
   addButtonInRender,
+  update,
 }: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
-  const [files, setFiles] = useState<File[]>([]);
-  const [filesSync, setFileSync] = useState<(Image | FileInfo | File | S3Files)[]>(get(values, name, []));
-  const [currentFiles, setCurrentFiles] = useState<CurrentFiles[]>(
-    get(values, name, []).map((value: FileInfo | Image | File | S3Files, index: number) => {
-      const file: FileInfo | undefined = (value as FileInfo).locationUrl ? (value as FileInfo) : undefined;
-      const s3File: S3Files | undefined = (value as S3Files).file ? (value as S3Files) : undefined;
-      const image: Image = value as Image;
-      if (file) {
-        return {
-          imageUrl: file.locationUrl,
-          filename: file.origFileName,
-          filePosition: index,
-          fileType: 'old',
-        };
-      } else if (s3File) {
-        return {
-          imageUrl: awsUrl ? awsUrl + (s3File.file as Image).path : (s3File.file as Image).path,
-          filename: (s3File.file as Image).filename,
-          filePosition: index,
-          fileType: 'old',
-          alteredName: s3File.alteredName,
-        };
-      } else {
-        return {
-          imageUrl: image.signedUrl ? image.signedUrl : awsUrl ? awsUrl + image.path : image.path,
-          filename: image.filename,
-          filePosition: index,
-          fileType: 'old',
-          crop: image.crop,
-          zoom: image.zoom,
-          croppedImageUrl: image.croppedImageUrl,
-        };
-      }
-    }),
+  const [files, setFiles] = useState<(File & CurrentFileImage)[]>([]);
+  const [filesSync, setFileSync] = useState<(Image | FileInfo | (File & CurrentFileImage) | S3Files)[]>(
+    get(values, name, []),
   );
 
+  const getCurrentFiles = useCallback(() => {
+    const files: CurrentFiles[] = get(values, name, []).map(
+      (value: FileInfo | Image | (File & CurrentFileImage) | S3Files, index: number) => {
+        const file: FileInfo | undefined = (value as FileInfo).locationUrl ? (value as FileInfo) : undefined;
+        const s3File: S3Files | undefined = (value as S3Files).file ? (value as S3Files) : undefined;
+        const image: Image = value as Image;
+        if (file) {
+          return {
+            imageUrl: file.locationUrl,
+            filename: file.origFileName,
+            filePosition: index,
+            fileType: 'old',
+          };
+        } else if (s3File) {
+          return {
+            imageUrl: awsUrl ? awsUrl + (s3File.file as Image).path : (s3File.file as Image).path,
+            filename: (s3File.file as Image).filename,
+            filePosition: index,
+            fileType: 'old',
+            alteredName: s3File.alteredName,
+          };
+        } else {
+          return {
+            imageUrl: image.signedUrl ? image.signedUrl : awsUrl ? awsUrl + image.path : image.path,
+            filename: image.filename,
+            filePosition: index,
+            fileType: 'old',
+            crop: image.crop,
+            zoom: image.zoom,
+            rotation: image.rotation,
+            croppedImageUrl: image.croppedImageUrl,
+          };
+        }
+      },
+    );
+    return files;
+  }, [awsUrl, name, values]);
+  const [currentFiles, setCurrentFiles] = useState<CurrentFiles[]>(getCurrentFiles());
+
   const [error, setError] = useState('');
+
+  const updateFieldValues = useCallback(
+    (files: (File & CurrentFileImage)[], filesSync: (Image | FileInfo | (File & CurrentFileImage) | S3Files)[]) => {
+      console.log('Hi');
+      setFieldValue(name, [...filesSync, ...files]);
+    },
+    [name, setFieldValue],
+  );
+
+  useEffect(() => {
+    console.log('files', files);
+  }, [files]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
@@ -165,6 +192,7 @@ export const FileDropZone = ({
         setCurrentFiles([...currentFiles, ...newCurrentFiles]);
         setFiles([...files, ...acceptedFiles]);
         setError('');
+        updateFieldValues([...files, ...acceptedFiles], filesSync);
       } else {
         setError(`The maximum number of files allowed is ${maxFiles}`);
       }
@@ -176,21 +204,52 @@ export const FileDropZone = ({
         }
       }
     },
-    [currentFiles, files, maxFiles],
+    [currentFiles, files, filesSync, maxFiles, updateFieldValues],
   );
 
   useEffect(() => {
-    setFieldValue(name, [...filesSync, ...files]);
-  }, [files, filesSync, name, setFieldValue]);
+    setFileSync((prev) =>
+      prev.map((item) => {
+        const file: FileInfo | undefined = (item as FileInfo).locationUrl ? (item as FileInfo) : undefined;
+        const s3File: S3Files | undefined = (item as S3Files).file ? (item as S3Files) : undefined;
+        const image: Image = item as Image;
+        if (file) return file;
+        if (s3File) return s3File;
+        else {
+          let i = image;
+          for (const value of values[name]) {
+            const isImage: Image | undefined = (value as Image).croppedImageUrl ? (value as Image) : undefined;
+            if (isImage && isImage.path === image.path) {
+              console.log('isImage', isImage);
+              i = isImage;
+            }
+          }
+          return i;
+        }
+      }),
+    );
+    setFiles((prev) =>
+      prev.map((item) => {
+        let i = item;
+        for (const value of values[name]) {
+          const isImage: Image | undefined = (value as Image).croppedImageUrl ? (value as Image) : undefined;
+          if (isImage && isImage.path === item.path) {
+            i = { ...item, ...isImage };
+          }
+        }
+        return i;
+      }),
+    );
+  }, [name, currentFiles, values, update]);
 
   const removeFile = (fileIndex: number) => {
     const fileRemove = currentFiles[fileIndex];
+    const _files = [...files];
+    const _fileSync = [...filesSync];
     if (fileRemove.fileType === 'new') {
-      const _files = [...files];
       _files.splice(fileIndex - currentFiles.length, 1);
       setFiles([..._files]);
     } else {
-      const _fileSync = [...filesSync];
       _fileSync.splice(fileIndex, 1);
       setFileSync([..._fileSync]);
     }
@@ -198,6 +257,7 @@ export const FileDropZone = ({
     _fileSelected.splice(fileIndex, 1);
     setCurrentFiles([..._fileSelected]);
     setError('');
+    updateFieldValues([..._files], [..._fileSync]);
   };
 
   const starFile = (fileIndex: number) => {
@@ -212,6 +272,7 @@ export const FileDropZone = ({
       _fileSelected.splice(fileIndex, 1);
       setCurrentFiles([fileStar, ..._fileSelected]);
       setError('');
+      updateFieldValues(files, [filesSync[fileIndex], ..._fileSync]);
     }
   };
 
@@ -249,51 +310,8 @@ export const FileDropZone = ({
             Drag and drop or upload files from your library
           </Typography>
         )}
-        {currentFiles.length > 0 && (
-          <Grid container spacing={2} justifyContent="center" wrap="wrap">
-            {currentFiles.map((file, index) => {
-              const onStarClick = () => starFile(index);
-              const onRemoveFileCLick = () => removeFile(index);
-              return (
-                <Box key={index} sx={{ padding: 2 }}>
-                  {renderFile ? (
-                    renderFile(file, onStarClick, onRemoveFileCLick)
-                  ) : (
-                    <>
-                      <Box className="thumbnailCover">
-                        <Thumbnail file={file} />
-                        <IconButton onClick={onStarClick} sx={{ position: 'absolute' }} className="iconStarFile">
-                          <PIcon
-                            name="starIcon"
-                            sx={{
-                              display: featured ? 'inline-flex' : 'none',
-                              backgroundColor: index ? 'white !important' : '#FFB400 !important',
-                              color: index ? 'currentColor !important' : 'white !important',
-                              borderRadius: '16px !important',
-                              padding: '4px',
-                            }}
-                          />
-                        </IconButton>
-                        <IconButton
-                          onClick={onRemoveFileCLick}
-                          sx={{ position: 'absolute' }}
-                          className="iconRemoveFile"
-                        >
-                          <PIcon name="closeIcon" />
-                        </IconButton>
-                      </Box>
-                      <Typography color={Colors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
-                        {currentFiles[index].alteredName ? currentFiles[index].alteredName : file.filename}
-                        {/* {file.filename} */}
-                      </Typography>
-                    </>
-                  )}
-                </Box>
-              );
-            })}
-            {addButtonInRender && addButtonInRender(open)}
-          </Grid>
-        )}
+        {displayFiles(name, currentFiles, starFile, removeFile, renderFile, featured, addButtonInRender, open)}
+
         {renderButton ? (
           renderButton(open)
         ) : (
@@ -312,12 +330,77 @@ export const FileDropZone = ({
   );
 };
 
+const displayFiles = (
+  name: string,
+  currentFiles: CurrentFiles[],
+  starFile: (fileIndex: number) => void,
+  removeFile: (fileIndex: number) => void,
+  renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode,
+  featured?: boolean,
+  addButtonInRender?: (openFilePicker: () => void) => React.ReactNode,
+  open?: () => void,
+) => {
+  return (
+    currentFiles.length > 0 && (
+      <Grid container spacing={2} justifyContent="center" wrap="wrap">
+        {currentFiles.map((file, index) => {
+          const onStarClick = () => starFile(index);
+          const onRemoveFileCLick = () => removeFile(index);
+          const { values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
+
+          values[name].some((val) => {
+            const isImage: Image | undefined = (val as Image).croppedImageUrl ? (val as Image) : undefined;
+            console.log('Hi');
+            if (isImage && isImage.path === file.filename) file = { ...file, ...isImage };
+          });
+
+          return (
+            <Box key={index} sx={{ padding: 2 }}>
+              {renderFile ? (
+                renderFile(file, onStarClick, onRemoveFileCLick)
+              ) : (
+                <>
+                  <Box className="thumbnailCover">
+                    <Thumbnail file={file} />
+                    <IconButton onClick={onStarClick} sx={{ position: 'absolute' }} className="iconStarFile">
+                      <PIcon
+                        name="starIcon"
+                        sx={{
+                          display: featured ? 'inline-flex' : 'none',
+                          backgroundColor: index ? 'white !important' : '#FFB400 !important',
+                          color: index ? 'currentColor !important' : 'white !important',
+                          borderRadius: '16px !important',
+                          padding: '4px',
+                        }}
+                      />
+                    </IconButton>
+                    <IconButton onClick={onRemoveFileCLick} sx={{ position: 'absolute' }} className="iconRemoveFile">
+                      <PIcon name="closeIcon" />
+                    </IconButton>
+                  </Box>
+                  <Typography color={Colors.text.primary} sx={{ wordBreak: 'break-all' }} variant="caption">
+                    {currentFiles[index].alteredName ? currentFiles[index].alteredName : file.filename}
+                    {/* {file.filename} */}
+                  </Typography>
+                </>
+              )}
+            </Box>
+          );
+        })}
+        {addButtonInRender && open && addButtonInRender(open)}
+      </Grid>
+    )
+  );
+};
+
 // TODO Find why this is breaking
 const Thumbnail = ({ file }: { file: CurrentFiles }) => {
   if (file.filename) {
+    console.log(file.croppedImageUrl);
     const nameArray = file.filename.split('.');
     const _name = nameArray[nameArray.length - 1];
-    if (ImageTypes.includes(_name.toLowerCase())) return <StyledImg src={file.imageUrl} />;
+    if (ImageTypes.includes(_name.toLowerCase()))
+      return <StyledImg src={file.croppedImageUrl ? file.croppedImageUrl : file.imageUrl} />;
     else
       return (
         <Box position="relative" padding="0px">

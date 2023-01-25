@@ -1,5 +1,6 @@
 import { Box, Divider, Typography, Button } from '@mui/material';
 import React from 'react';
+import { StyledFileDropZone } from '../components/cropper/StyledFileDropZone';
 import { CurrentFiles, FileDropZone } from '../components/FileDropZone';
 
 const FileDropZoneDemo = () => {
@@ -30,6 +31,8 @@ const FileDropZoneDemo = () => {
       />
 
       <br />
+
+      {/* <StyledFileDropZone name="images" /> */}
     </Box>
   );
 };
