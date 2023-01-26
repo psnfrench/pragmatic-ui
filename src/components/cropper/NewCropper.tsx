@@ -86,7 +86,8 @@ const NewCropper = ({ image, onCancel, setCroppedImageFor }: Props) => {
   };
 
   const onCrop = async () => {
-    const croppedImageUrl = await getCroppedImg(image, croppedAreaPixels as Area, rotation);
+    const croppedImageUrl = await getCroppedImg(image, croppedAreaPixels as Area, rotation, true);
+    console.log(croppedImageUrl);
     setCroppedImageFor(image?.filename as string, crop, zoom, rotation, croppedImageUrl as string);
   };
 
