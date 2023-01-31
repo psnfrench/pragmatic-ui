@@ -147,7 +147,6 @@ export const FileDropZone = ({
             alteredName: s3File.alteredName,
           };
         } else {
-          console.log(image);
           return {
             imageUrl: image.signedUrl ? image.signedUrl : awsUrl ? awsUrl + image.path : image.path,
             filename: image.filename,

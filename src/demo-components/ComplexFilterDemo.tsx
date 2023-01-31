@@ -111,10 +111,6 @@ const ComplexFilterDemo = () => {
   const [startDate, setStartDate] = useState<number | undefined>(Date.now());
   const [endDate, setEndDate] = useState<number | undefined>(Date.now());
 
-  useEffect(() => {
-    console.log(returnedFilters);
-  }, [returnedFilters]);
-
   // Maps out all data including children (that are theoretically infinite)
   // function displayData(item: itemType[], child?: boolean) {
   //   return item.map((option, key) => (
