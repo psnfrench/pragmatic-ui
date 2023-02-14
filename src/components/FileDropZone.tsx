@@ -34,6 +34,7 @@ const ImageTypes: string[] = [
 ];
 
 const StyledBox = styled(Box)(({ theme }) => ({
+  width: '100%',
   '& .dropZone': {
     background: '#EFF0F6',
     borderRadius: theme.spacing(2),
