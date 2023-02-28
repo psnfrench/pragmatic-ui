@@ -76,7 +76,7 @@ export type FileUploaderProps = {
   featured?: boolean;
   onFilesChange?: () => void;
   containerSx?: SxProps;
-  renderTitle?: () => React.ReactNode;
+  renderTitle?: (openFilePicker?: () => void) => React.ReactNode;
   renderButton?: (openFilePicker: () => void) => React.ReactNode;
   renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode;
   addButtonInRender?: (openFilePicker: () => void) => React.ReactNode;
@@ -299,7 +299,7 @@ export const FileDropZone = ({
       >
         <input type="file" name={name} {...getInputProps()} />
         {renderTitle ? (
-          renderTitle()
+          renderTitle(open)
         ) : (
           <Typography variant="subtitle2" marginBottom={2}>
             Drag and drop or upload files from your library
@@ -338,7 +338,8 @@ const displayFiles = (
   return (
     currentFiles.length > 0 && (
       <Grid container spacing={2} justifyContent="center" wrap="wrap">
-        {currentFiles.map((file, index) => {
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {currentFiles.map((file: any, index: number) => {
           const onStarClick = () => starFile(index);
           const onRemoveFileCLick = () => removeFile(index);
           const { values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
