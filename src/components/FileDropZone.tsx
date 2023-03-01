@@ -81,6 +81,7 @@ export type FileUploaderProps = {
   renderFile?: (file: CurrentFiles, onStarClick: () => void, onRemoveFileCLick: () => void) => React.ReactNode;
   addButtonInRender?: (openFilePicker: () => void) => React.ReactNode;
   update?: boolean;
+  renderFilesBoxProps?: SxProps;
 };
 
 export type CurrentFileImage = Partial<Pick<Image, 'crop' | 'rotation' | 'zoom' | 'croppedImageUrl'>> & {
@@ -119,6 +120,7 @@ export const FileDropZone = ({
   renderFile,
   addButtonInRender,
   update,
+  renderFilesBoxProps,
 }: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
   const [files, setFiles] = useState<(File & CurrentFileImage)[]>([]);
@@ -305,7 +307,17 @@ export const FileDropZone = ({
             Drag and drop or upload files from your library
           </Typography>
         )}
-        {displayFiles(name, currentFiles, starFile, removeFile, renderFile, featured, addButtonInRender, open)}
+        {displayFiles(
+          name,
+          currentFiles,
+          starFile,
+          removeFile,
+          renderFile,
+          featured,
+          addButtonInRender,
+          open,
+          renderFilesBoxProps,
+        )}
 
         {renderButton ? (
           renderButton(open)
@@ -334,10 +346,11 @@ const displayFiles = (
   featured?: boolean,
   addButtonInRender?: (openFilePicker: () => void) => React.ReactNode,
   open?: () => void,
+  renderFilesBoxProps?: SxProps,
 ) => {
   return (
     currentFiles.length > 0 && (
-      <Grid container spacing={2} justifyContent="center" wrap="wrap">
+      <Grid container spacing={2} justifyContent="center" wrap="wrap" sx={renderFilesBoxProps}>
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {currentFiles.map((file: any, index: number) => {
           const onStarClick = () => starFile(index);
