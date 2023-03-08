@@ -2,7 +2,7 @@ import { Box, Button, Grid, IconButton, styled, SxProps, Typography } from '@mui
 import { useFormikContext } from 'formik';
 import { cloneDeep, get } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Accept, DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone';
+import { Accept, DropzoneOptions, FileRejection, useDropzone, FileWithPath } from 'react-dropzone';
 import { FileInfo, Image, S3Files } from '../types';
 import { PIcon } from '../images/PIcon';
 import { Colors } from '../constants/Colors';
@@ -222,7 +222,7 @@ export const FileDropZone = ({
   );
 
   const onDrop = useCallback(
-    (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+    (acceptedFiles: FileWithPath[], fileRejections: FileRejection[]) => {
       // Do something with the files
       const numberOfFiles = currentFiles.length + acceptedFiles.length;
       if ((numberOfFiles <= maxFiles && maxFiles !== 0) || maxFiles === 0) {
@@ -230,9 +230,15 @@ export const FileDropZone = ({
           const _name = checkFileNameUsed(_file.name, acceptedFiles, currentFiles);
           if (_name !== _file.name) {
             const blob = _file.slice(0, _file.size, _file.type);
-            return new File([blob], checkFileNameUsed(_file.name, acceptedFiles, currentFiles));
+            const _newFile = new File([blob], checkFileNameUsed(_file.name, acceptedFiles, currentFiles));
+            Object.defineProperty(_newFile, 'path', {
+              writable: true,
+              value: _name,
+            });
+            return _newFile;
           } else return _file;
         });
+        console.log(acceptedFiles);
         const newCurrentFiles: CurrentFiles[] = acceptedFiles.map((_file, index) => ({
           imageUrl: URL.createObjectURL(_file),
           filename: _file.name,
@@ -258,6 +264,8 @@ export const FileDropZone = ({
     },
     [currentFiles, files, maxFiles, name, setFieldValue, values],
   );
+
+  // useEffect(() => console.log(values[name]), [name, values]);
 
   useEffect(() => {
     setFileSync((prev) =>
