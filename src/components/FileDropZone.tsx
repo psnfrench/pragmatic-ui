@@ -325,8 +325,6 @@ export const FileDropZone = ({
     setError('');
   };
 
-  useEffect(() => console.log(currentFiles), [currentFiles]);
-
   // eslint-disable-next-line object-shorthand
   const dropZoneConfig: DropzoneOptions = {
     onDrop,
