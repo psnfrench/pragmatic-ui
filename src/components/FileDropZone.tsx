@@ -226,9 +226,16 @@ export const FileDropZone = ({
       // Do something with the files
       const numberOfFiles = currentFiles.length + acceptedFiles.length;
       if ((numberOfFiles <= maxFiles && maxFiles !== 0) || maxFiles === 0) {
+        acceptedFiles = acceptedFiles.map((_file) => {
+          const _name = checkFileNameUsed(_file.name, acceptedFiles, currentFiles);
+          if (_name !== _file.name) {
+            const blob = _file.slice(0, _file.size, _file.type);
+            return new File([blob], checkFileNameUsed(_file.name, acceptedFiles, currentFiles));
+          } else return _file;
+        });
         const newCurrentFiles: CurrentFiles[] = acceptedFiles.map((_file, index) => ({
           imageUrl: URL.createObjectURL(_file),
-          filename: checkFileNameUsed(_file.name, acceptedFiles, currentFiles),
+          filename: _file.name,
           fileType: 'new',
           filePosition: index + files.length,
         }));
