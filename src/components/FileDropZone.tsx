@@ -1,12 +1,22 @@
 import { Box, Button, Grid, IconButton, styled, SxProps, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-import { get } from 'lodash';
+import { cloneDeep, get } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone } from 'react-dropzone';
 import { FileInfo, Image, S3Files } from '../types';
 import { PIcon } from '../images/PIcon';
 import { Colors } from '../constants/Colors';
 import { ErrorLabel } from './ErrorLabel';
+
+const sortFiles = (files: CurrentFiles[]) => {
+  return files.sort((a, b) =>
+    a.filePosition !== undefined && b.filePosition !== undefined && a.filePosition > b.filePosition
+      ? 1
+      : a.filePosition !== undefined && b.filePosition !== undefined && b.filePosition > a.filePosition
+      ? -1
+      : 0,
+  );
+};
 
 const ImageTypes: string[] = [
   '.apng',
@@ -92,12 +102,12 @@ export type CurrentFiles = {
   imageUrl?: string;
   alteredName?: string;
   filename: string;
-  filePosition: number;
   fileType: 'new' | 'old';
   crop?: { x: number; y: number };
   zoom?: number;
   rotation?: number;
   croppedImageUrl?: string;
+  filePosition?: number;
 };
 
 const StyledImg = styled('img')(() => ({
@@ -138,27 +148,27 @@ export const FileDropZone = ({
           return {
             imageUrl: file.locationUrl,
             filename: file.origFileName,
-            filePosition: index,
             fileType: 'old',
+            filePosition: index,
           };
         } else if (s3File) {
           return {
             imageUrl: awsUrl ? awsUrl + (s3File.file as Image).path : (s3File.file as Image).path,
             filename: (s3File.file as Image).filename,
-            filePosition: index,
             fileType: 'old',
             alteredName: s3File.alteredName,
+            filePosition: index,
           };
         } else {
           return {
             imageUrl: image.signedUrl ? image.signedUrl : awsUrl ? awsUrl + image.path : image.path,
             filename: image.filename,
-            filePosition: index,
             fileType: 'old',
             crop: image.crop,
             zoom: image.zoom,
             rotation: image.rotation,
             croppedImageUrl: image.croppedImageUrl,
+            filePosition: index,
           };
         }
       },
@@ -169,11 +179,28 @@ export const FileDropZone = ({
 
   const [error, setError] = useState('');
 
+  // Handles reordering and re-setting items in DropZone
   const updateFieldValues = useCallback(
-    (files: (File & CurrentFileImage)[], filesSync: (Image | FileInfo | (File & CurrentFileImage) | S3Files)[]) => {
-      setFieldValue(name, [...filesSync, ...files]);
+    (sortedFiles: CurrentFiles[]) => {
+      const _filesSync = cloneDeep(filesSync);
+      const _files = cloneDeep(files);
+      const arr: (Image | FileInfo | (File & CurrentFileImage) | S3Files)[] = [];
+      for (const sortedFile of sortedFiles) {
+        _filesSync.forEach((file) => {
+          const _file: FileInfo | undefined = (file as FileInfo).locationUrl ? (file as FileInfo) : undefined;
+          const _s3File: S3Files | undefined = (file as S3Files).file ? (file as S3Files) : undefined;
+          if (_s3File && (_s3File.file as Image).filename === sortedFile.filename) arr.push(file);
+          else if (_file && _file.origFileName === sortedFile.filename) arr.push(file);
+          else if ((file as Image).filename === sortedFile.filename) arr.push(file);
+        });
+        _files.forEach((file) => {
+          if (file.name === sortedFile.filename || file.path === sortedFile.filename) arr.push(file);
+        });
+      }
+      setCurrentFiles(sortedFiles);
+      setFieldValue(name, arr);
     },
-    [name, setFieldValue],
+    [files, filesSync, name, setFieldValue],
   );
 
   const onDrop = useCallback(
@@ -184,13 +211,15 @@ export const FileDropZone = ({
         const newCurrentFiles: CurrentFiles[] = acceptedFiles.map((_file, index) => ({
           imageUrl: URL.createObjectURL(_file),
           filename: _file.name,
-          filePosition: index + files.length,
           fileType: 'new',
+          filePosition: index + files.length,
         }));
         setCurrentFiles([...currentFiles, ...newCurrentFiles]);
         setFiles([...files, ...acceptedFiles]);
         setError('');
-        updateFieldValues([...files, ...acceptedFiles], filesSync);
+        values[name] && values[name].length
+          ? setFieldValue(name, [...values[name], ...acceptedFiles])
+          : setFieldValue(name, acceptedFiles);
       } else {
         setError(`The maximum number of files allowed is ${maxFiles}`);
       }
@@ -202,7 +231,7 @@ export const FileDropZone = ({
         }
       }
     },
-    [currentFiles, files, filesSync, maxFiles, updateFieldValues],
+    [currentFiles, files, maxFiles, name, setFieldValue, values],
   );
 
   useEffect(() => {
@@ -241,6 +270,16 @@ export const FileDropZone = ({
 
   const removeFile = (fileIndex: number) => {
     const fileRemove = currentFiles[fileIndex];
+    const updatedFiles: CurrentFiles[] = [];
+    currentFiles.forEach((file) => {
+      if (file.filename !== fileRemove.filename && file.filePosition !== undefined && file.filePosition < fileIndex)
+        updatedFiles.push(file);
+      else if (file.filename !== fileRemove.filename)
+        updatedFiles.push({
+          ...file,
+          filePosition: file.filePosition !== undefined ? file.filePosition - 1 : undefined,
+        });
+    });
     const _files = [...files];
     const _fileSync = [...filesSync];
     if (fileRemove.fileType === 'new') {
@@ -250,28 +289,25 @@ export const FileDropZone = ({
       _fileSync.splice(fileIndex, 1);
       setFileSync([..._fileSync]);
     }
-    const _fileSelected = [...currentFiles];
-    _fileSelected.splice(fileIndex, 1);
-    setCurrentFiles([..._fileSelected]);
+    updateFieldValues(updatedFiles);
     setError('');
-    updateFieldValues([..._files], [..._fileSync]);
   };
 
   const starFile = (fileIndex: number) => {
     const fileStar = currentFiles[fileIndex];
-    if (fileStar.fileType === 'new') {
-      setError('Can only select existing items to be first. Coming in future update');
-    } else {
-      const _fileSync = [...filesSync];
-      _fileSync.splice(fileIndex, 1);
-      setFileSync([filesSync[fileIndex], ..._fileSync]);
-      const _fileSelected = [...currentFiles];
-      _fileSelected.splice(fileIndex, 1);
-      setCurrentFiles([fileStar, ..._fileSelected]);
-      setError('');
-      updateFieldValues(files, [filesSync[fileIndex], ..._fileSync]);
-    }
+    const updatedFiles = cloneDeep(currentFiles).map((file) => {
+      if (file.filename === fileStar.filename) {
+        return { ...file, filePosition: 0 };
+      } else if (file.filePosition !== undefined && file.filePosition < fileIndex) {
+        return { ...file, filePosition: file.filePosition + 1 };
+      } else return file;
+    });
+    const sortedFiles = sortFiles(updatedFiles);
+    updateFieldValues(sortedFiles);
+    setError('');
   };
+
+  useEffect(() => console.log(currentFiles), [currentFiles]);
 
   // eslint-disable-next-line object-shorthand
   const dropZoneConfig: DropzoneOptions = {
