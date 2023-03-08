@@ -18,6 +18,24 @@ const sortFiles = (files: CurrentFiles[]) => {
   );
 };
 
+const checkFileNameUsed = (name: string, newFiles: File[], oldFiles?: CurrentFiles[]) => {
+  let used = -1;
+  const _name = name.substring(0, name.lastIndexOf('.')) || name;
+
+  for (const file of newFiles) {
+    if (file.name.includes(_name)) used++;
+  }
+  if (oldFiles)
+    for (const file of oldFiles) {
+      if (file.filename.includes(_name)) used++;
+    }
+  if (used) {
+    const newExt = name.substring(name.lastIndexOf('.')) || '';
+    const newName = name.substring(0, name.lastIndexOf('.')) || name;
+    return `${newName}(${used})${newExt}`;
+  } else return name;
+};
+
 const ImageTypes: string[] = [
   '.apng',
   '.avif',
@@ -210,7 +228,7 @@ export const FileDropZone = ({
       if ((numberOfFiles <= maxFiles && maxFiles !== 0) || maxFiles === 0) {
         const newCurrentFiles: CurrentFiles[] = acceptedFiles.map((_file, index) => ({
           imageUrl: URL.createObjectURL(_file),
-          filename: _file.name,
+          filename: checkFileNameUsed(_file.name, acceptedFiles, currentFiles),
           fileType: 'new',
           filePosition: index + files.length,
         }));
