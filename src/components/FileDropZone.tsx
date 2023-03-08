@@ -238,7 +238,6 @@ export const FileDropZone = ({
             return _newFile;
           } else return _file;
         });
-        console.log(acceptedFiles);
         const newCurrentFiles: CurrentFiles[] = acceptedFiles.map((_file, index) => ({
           imageUrl: URL.createObjectURL(_file),
           filename: _file.name,
@@ -264,8 +263,6 @@ export const FileDropZone = ({
     },
     [currentFiles, files, maxFiles, name, setFieldValue, values],
   );
-
-  // useEffect(() => console.log(values[name]), [name, values]);
 
   useEffect(() => {
     setFileSync((prev) =>
