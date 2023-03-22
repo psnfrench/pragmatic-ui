@@ -265,37 +265,43 @@ export const FileDropZone = ({
   );
 
   useEffect(() => {
-    setFileSync((prev) =>
-      prev.map((item) => {
-        const file: FileInfo | undefined = (item as FileInfo).locationUrl ? (item as FileInfo) : undefined;
-        const s3File: S3Files | undefined = (item as S3Files).file ? (item as S3Files) : undefined;
-        const image: Image = item as Image;
-        if (file) return file;
-        if (s3File) return s3File;
-        else {
-          let i = image;
+    if (values[name] === [] || values[name] === undefined) {
+      setFiles([]);
+      setFileSync([]);
+      setCurrentFiles([]);
+    } else {
+      setFileSync((prev) =>
+        prev.map((item) => {
+          const file: FileInfo | undefined = (item as FileInfo).locationUrl ? (item as FileInfo) : undefined;
+          const s3File: S3Files | undefined = (item as S3Files).file ? (item as S3Files) : undefined;
+          const image: Image = item as Image;
+          if (file) return file;
+          if (s3File) return s3File;
+          else {
+            let i = image;
+            for (const value of values[name]) {
+              const isImage: Image | undefined = (value as Image).croppedImageUrl ? (value as Image) : undefined;
+              if (isImage && isImage.path === image.path) {
+                i = isImage;
+              }
+            }
+            return i;
+          }
+        }),
+      );
+      setFiles((prev) =>
+        prev.map((item) => {
+          let i = item;
           for (const value of values[name]) {
             const isImage: Image | undefined = (value as Image).croppedImageUrl ? (value as Image) : undefined;
-            if (isImage && isImage.path === image.path) {
-              i = isImage;
+            if (isImage && isImage.path === item.path) {
+              i = { ...item, ...isImage };
             }
           }
           return i;
-        }
-      }),
-    );
-    setFiles((prev) =>
-      prev.map((item) => {
-        let i = item;
-        for (const value of values[name]) {
-          const isImage: Image | undefined = (value as Image).croppedImageUrl ? (value as Image) : undefined;
-          if (isImage && isImage.path === item.path) {
-            i = { ...item, ...isImage };
-          }
-        }
-        return i;
-      }),
-    );
+        }),
+      );
+    }
   }, [name, currentFiles, values, update]);
 
   const removeFile = (fileIndex: number) => {
