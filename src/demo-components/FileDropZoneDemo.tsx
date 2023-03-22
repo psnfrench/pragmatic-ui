@@ -1,12 +1,25 @@
 import { Box, Divider, Typography, Button } from '@mui/material';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import { StyledFileDropZone } from '../components/cropper/StyledFileDropZone';
 import { CurrentFiles, FileDropZone } from '../components/FileDropZone';
 
 const FileDropZoneDemo = () => {
+  const { setValues } = useFormikContext();
+  const onClick = () => {
+    setValues({
+      firstName: 'Sally',
+      description: 'Works in accounts\nHas the nice office',
+      tags: [],
+      gender: 'female',
+      date1: new Date(),
+      date2: new Date(),
+    });
+  };
   return (
     <Box>
       <Typography variant="h4">Standard File Dropzone</Typography>
+      <Button onClick={onClick}>Reset</Button>
       <Divider />
       <FileDropZone name="downloads" maxFiles={0} featured />
 

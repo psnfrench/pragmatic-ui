@@ -265,11 +265,7 @@ export const FileDropZone = ({
   );
 
   useEffect(() => {
-    if (values[name] === [] || values[name] === undefined) {
-      setFiles([]);
-      setFileSync([]);
-      setCurrentFiles([]);
-    } else {
+    if (values[name] && values[name].length) {
       setFileSync((prev) =>
         prev.map((item) => {
           const file: FileInfo | undefined = (item as FileInfo).locationUrl ? (item as FileInfo) : undefined;
@@ -303,6 +299,14 @@ export const FileDropZone = ({
       );
     }
   }, [name, currentFiles, values, update]);
+
+  useEffect(() => {
+    if (values[name] === [] || values[name] === undefined) {
+      setCurrentFiles([]);
+      setFiles([]);
+      setFileSync([]);
+    }
+  }, [name, values]);
 
   const removeFile = (fileIndex: number) => {
     const fileRemove = currentFiles[fileIndex];
@@ -427,10 +431,11 @@ const displayFiles = (
           const onRemoveFileCLick = () => removeFile(index);
           const { values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
 
-          values[name].some((val) => {
-            const isImage: Image | undefined = (val as Image).croppedImageUrl ? (val as Image) : undefined;
-            if (isImage && isImage.path === file.filename) file = { ...file, ...isImage };
-          });
+          values[name] &&
+            values[name].some((val) => {
+              const isImage: Image | undefined = (val as Image).croppedImageUrl ? (val as Image) : undefined;
+              if (isImage && isImage.path === file.filename) file = { ...file, ...isImage };
+            });
 
           return (
             <Box key={index} sx={{ padding: 2 }}>
