@@ -17,6 +17,7 @@ import SearchDemo from './demo-components/SearchDemo';
 import FileDropZoneDemo from './demo-components/FileDropZoneDemo';
 import { SubmitButton } from './components/SubmitButton';
 import ComplexFilterDemo from './demo-components/ComplexFilterDemo';
+import SwitchDemo from './demo-components/SwitchDemo';
 
 const initialValues = {
   firstName: 'Sally',
@@ -25,6 +26,7 @@ const initialValues = {
   gender: 'female',
   date1: new Date(),
   date2: new Date(),
+  staySignedIn: true,
 };
 
 export type AppRouterProps = {
@@ -65,6 +67,7 @@ export const AppRouter = ({ setTheme }: AppRouterProps) => {
                   <SelectDemo />
                   <DateDemo />
                   <RadioDemo />
+                  <SwitchDemo />
                   <SearchDemo />
                   <FileDropZoneDemo />
                   <SubmitButton text="Submit Button" variant="contained" color="primary" loading={isSubmitting} />
