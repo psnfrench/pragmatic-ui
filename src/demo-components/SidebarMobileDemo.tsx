@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
@@ -9,8 +9,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
-import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
-import { SideBar } from '../components/SideBar';
+import { Box, Button, createTheme, ThemeProvider, Typography, useTheme } from '@mui/material';
+import { SideBarMobile } from '../components/SideBarMobile';
+import useWindowDimensions from '../components/WindowSize';
 
 const myTheme = createTheme({
   components: {
@@ -30,9 +31,14 @@ export type SidebarDemoProps = {
   children: JSX.Element;
 };
 
-const SidebarDemo = ({ children }: SidebarDemoProps) => {
+const SidebarMobileDemo = ({ children }: SidebarDemoProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const { width } = useWindowDimensions();
+  const [smallWindow, setSmallWindow] = useState<boolean>();
+  const [open, setOpen] = useState(true);
+  const [collapsible, setCollapsible] = useState(smallWindow ? true : false);
 
   // ensure that the key matches the pathname so that it can select. Does not need to include '/'
   const navItems = useMemo(
@@ -88,12 +94,27 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
     console.log('handleOpenChanged: ', open);
   };
 
+  useEffect(() => {
+    if (width < 900) setSmallWindow(true);
+    else if (width >= 900) setSmallWindow(false);
+  }, [smallWindow, width]);
+
+  useEffect(() => {
+    if (smallWindow) setCollapsible(true);
+    else {
+      setOpen(true);
+      setCollapsible(false);
+    }
+  }, [smallWindow]);
+
   return (
     <Box
       sx={{
         justifyContent: 'flex-start',
         display: 'inline-flex',
+        flexDirection: smallWindow ? 'column' : 'row',
         alignContent: 'flex-start',
+        width: smallWindow ? '100%' : '80%',
       }}
     >
       <Box flexGrow={1}>
@@ -103,8 +124,10 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             ...myTheme, // override spefiic parts of the Sidebar
           })}
         >
-          <SideBar
-            collapsible={true}
+          <SideBarMobile
+            // state is used to enable altering the open state of the sidebar.
+            state={open}
+            collapsible={collapsible}
             logoCollapsed={<DMCollapsed />}
             logoExpanded={<DMExpanded />}
             items={navItems}
@@ -116,13 +139,37 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             onOpenChanged={handleOpenChanged}
             expandOnHover={true}
             expandOnHoverCancelOnClick={true}
+            paperProps={{ sx: { backgroundColor: 'red', borderRadius: '0px 12px 12px 0px !important' } }}
+            // Used to easily change the sidebar background color
+            menuBackgroundColor="Blue"
+            // Changes the color of the text in the sidebar
+            menuTextColor="white"
+            // Allows changing the potision of the list item (Changing the width caused issues with this)
+            listItemSx={{}}
+            // Styling for the hamburger icon in the sidebar
+            hamburgerIconSx={{ color: 'white' }}
+            // If present, shows logo on app bar on small screens. Menu icon shows if not
+            mobileLogo={<DMCollapsed />}
+            // Data will appear in Appbar on small screens
+            topNavChildren={
+              <Box display="flex" flex={1} flexDirection="row-reverse">
+                <Button size="large" variant="contained" sx={{ margin: theme.spacing(2) }}>
+                  Hi
+                </Button>
+                <Button size="large" variant="contained" sx={{ margin: theme.spacing(2) }}>
+                  Hi
+                </Button>
+              </Box>
+            }
+            // Allows for content to be placed above the appbar that is fixed to the top
+            headerContent={<Box />}
           >
             <Box p={2}>
               <Typography variant="h6" whiteSpace={'normal'}>
                 My Profile Info
               </Typography>
             </Box>
-          </SideBar>
+          </SideBarMobile>
         </ThemeProvider>
       </Box>
       {children}
@@ -138,4 +185,4 @@ const CollapseText = () => {
   );
 };
 
-export default SidebarDemo;
+export default SidebarMobileDemo;
