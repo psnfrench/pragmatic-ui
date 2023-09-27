@@ -7,11 +7,6 @@ const StyledTextField = styled(TextField)(() => ({
   '&.textField': {
     paddingTop: '0px !important',
   },
-  '& .inputRoot': {
-    borderRadius: 12,
-    height: '42px',
-    backgroundColor: '#EDF1F6',
-  },
 }));
 
 export type SearchProps = {
@@ -31,20 +26,30 @@ export const Search = ({ onChange, placeholderText, ...otherProps }: SearchProps
     setSearchValue(event.target.value);
   };
 
+  const InputProps = useMemo(() => {
+    return {
+      disableUnderline: true,
+      startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
+      className: 'inputRoot',
+      placeholder: placeholderText,
+      ...otherProps.InputProps,
+      sx: {
+        borderRadius: '12px',
+        height: '42px',
+        backgroundColor: '#EDF1F6',
+        ...otherProps.InputProps?.sx,
+      },
+    };
+  }, [otherProps.InputProps, placeholderText]);
+
   return (
     <StyledTextField
       className="textField"
       variant="standard"
       value={searchValue}
       onChange={handleSearchChange}
-      InputProps={{
-        disableUnderline: true,
-        startAdornment: <PIcon name="searchIcon" sx={{ marginRight: 1, marginLeft: 2 }} />,
-        className: 'inputRoot',
-        placeholder: placeholderText,
-        ...otherProps.InputProps,
-      }}
       {...otherProps}
+      InputProps={InputProps}
     />
   );
 };

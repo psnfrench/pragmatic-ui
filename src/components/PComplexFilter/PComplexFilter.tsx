@@ -108,7 +108,8 @@ export type PComplexFilterProps = {
   paperProps?: PaperProps;
   listProps?: ListProps;
   listItemProps?: CheckboxProps;
-  searchProps?: Omit<TextFieldProps, 'InputProps'>;
+  paperSearchProps?: Omit<TextFieldProps, 'InputProps'>;
+  searchProps?: TextFieldProps;
   chipProps?: ChipProps;
   chipTextProps?: TypographyProps;
   clearChipProps?: ChipProps;
@@ -146,6 +147,7 @@ export function PComplexFilter({
   paperProps,
   listItemProps,
   searchProps,
+  paperSearchProps,
   chipProps,
   chipTextProps,
   clearChipProps,
@@ -510,7 +512,8 @@ export function PComplexFilter({
               fullWidth
               defaultValue={searchPlaceholder}
               onChange={handleDisplayedItemsSearch}
-              sx={{ paddingRight: 2 }}
+              {...searchProps}
+              sx={{ paddingRight: 2, ...searchProps?.sx }}
             />
           )}
         </>
@@ -561,7 +564,7 @@ export function PComplexFilter({
               itemHeight={itemHeight}
               maxItems={maxItems}
               listItemProps={listItemProps}
-              searchProps={searchProps}
+              searchProps={paperSearchProps ? paperSearchProps : searchProps}
               countSelected={countSelected}
             />
           </Box>
@@ -655,7 +658,7 @@ export function PComplexFilter({
                       itemHeight={itemHeight}
                       maxItems={maxItems}
                       listItemProps={listItemProps}
-                      searchProps={searchProps}
+                      searchProps={paperSearchProps ? paperSearchProps : searchProps}
                       countSelected={countSelected}
                     />
                   </Box>

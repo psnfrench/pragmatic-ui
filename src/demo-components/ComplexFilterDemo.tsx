@@ -298,6 +298,12 @@ const ComplexFilterDemo = () => {
             // Allows for items to be added inline with the filter toggle
             beforeFilterComponent={<Button>Before</Button>}
             afterFilterComponent={<Button>After</Button>}
+            // Sets the props for the search bar
+            searchProps={{
+              placeholder: 'Search',
+              InputProps: { sx: { backgroundColor: 'red' } },
+            }}
+            paperSearchProps={{ sx: { backgroundColor: 'current' } }}
           />
         </Box>
         <br />
