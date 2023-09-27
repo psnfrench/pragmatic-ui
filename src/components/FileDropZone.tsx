@@ -1,7 +1,7 @@
 import { Box, Button, Grid, IconButton, styled, SxProps, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { cloneDeep, get } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone, FileWithPath } from 'react-dropzone';
 import { FileInfo, Image, S3Files } from '../types';
 import { PIcon } from '../images/PIcon';
@@ -110,6 +110,7 @@ export type FileUploaderProps = {
   addButtonInRender?: (openFilePicker: () => void) => React.ReactNode;
   update?: boolean;
   renderFilesBoxProps?: SxProps;
+  fileRejectionHelperText?: string;
 };
 
 export type CurrentFileImage = Partial<Pick<Image, 'crop' | 'rotation' | 'zoom' | 'croppedImageUrl'>> & {
@@ -149,6 +150,7 @@ export const FileDropZone = ({
   addButtonInRender,
   update,
   renderFilesBoxProps,
+  fileRejectionHelperText,
 }: FileUploaderProps) => {
   const { setFieldValue, values } = useFormikContext<{ [name: string]: Image[] | FileInfo[] | S3Files[] }>();
   const [files, setFiles] = useState<(File & CurrentFileImage)[]>([]);
@@ -257,11 +259,11 @@ export const FileDropZone = ({
         if (fileRejections[0].errors[0].code === 'too-many-files') {
           setError(`The maximum number of files allowed is ${maxFiles}`);
         } else {
-          setError(fileRejections[0].errors[0].message);
+          setError(fileRejections[0].errors[0].message + fileRejectionHelperText);
         }
       }
     },
-    [currentFiles, files, maxFiles, name, setFieldValue, values],
+    [currentFiles, fileRejectionHelperText, files, maxFiles, name, setFieldValue, values],
   );
 
   useEffect(() => {

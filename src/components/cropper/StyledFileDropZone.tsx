@@ -7,6 +7,10 @@ import { Camera } from '@mui/icons-material';
 import PIcon from '../../images/PIcon';
 import { CurrentFiles, FileDropZone } from '../FileDropZone';
 import { StaffInfo } from '../../types';
+import { Accept } from 'react-dropzone';
+const ImageTypes: Accept = {
+  'application/images': ['.jpg', '.jpeg', '.png', '.tiff', '.gif', '.webp', '.avif', '.apng', '.svg', '.bmp', '.ico'],
+};
 
 export const StyledFileDropZone = ({ name }: { name: string }) => {
   const theme = useTheme();
@@ -43,6 +47,11 @@ export const StyledFileDropZone = ({ name }: { name: string }) => {
   };
   return (
     <FileDropZone
+      fileFormat={ImageTypes}
+      fileRejectionHelperText={`
+      My app specifc helper text: Only images are allowed
+      Notice how newlines are handled!
+      `}
       update={update}
       renderTitle={() => {
         return (

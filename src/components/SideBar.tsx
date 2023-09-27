@@ -87,6 +87,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
+  '& .MuiButtonBase-root': {
+    justifyContent: 'center',
+  },
   ...(open && {
     ...openedMixin(theme),
     '& .MuiDrawer-paper': openedMixin(theme),
@@ -211,54 +214,52 @@ export const SideBar = ({
   return (
     <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
       <List>
-        <ListItemButton
-          onClick={toggleOpen}
-          sx={{
-            minHeight: 140,
-            justifyContent: open ? 'initial' : 'center',
-            borderRadius: 1,
-            transition: '1s',
-          }}
-        >
-          {open ? (
-            <Box display="flex" flex={1} flexDirection="column">
-              <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
-                {collapsible && (
-                  <>
-                    <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
-                    <MenuIcon />
-                  </>
-                )}
+        {collapsible && (
+          <ListItemButton
+            onClick={toggleOpen}
+            sx={{
+              minHeight: 140,
+              justifyContent: open ? 'initial' : 'center',
+              borderRadius: 1,
+              transition: '1s',
+            }}
+          >
+            {open ? (
+              <Box display="flex" flex={1} flexDirection="column">
+                <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
+                  <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
+                  <MenuIcon />
+                </Box>
+                {logoExpanded}
               </Box>
-              {logoExpanded}
-            </Box>
-          ) : (
-            <Tooltip title={expandHint ? <ChevronRight /> : ''} arrow placement="top">
-              <Box
-                display="flex"
-                justifyContent="center"
-                flexDirection="column"
-                alignContent="space-between"
-                className="poppycock"
-                sx={{ height: '124px' }}
-              >
+            ) : (
+              <Tooltip title={expandHint ? <ChevronRight /> : ''} arrow placement="top">
                 <Box
                   display="flex"
                   justifyContent="center"
-                  height="100%"
-                  marginLeft={theme.spacing(0.8)}
-                  sx={{ ...hamburgerIconSx }}
+                  flexDirection="column"
+                  alignContent="space-between"
+                  className="poppycock"
+                  sx={{ height: '124px' }}
                 >
-                  <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
-                  <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    height="100%"
+                    marginLeft={theme.spacing(0.8)}
+                    sx={{ ...hamburgerIconSx }}
+                  >
+                    <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
+                    <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                  </Box>
+                  <Box display="flex" justifyContent="center">
+                    {logoCollapsed}
+                  </Box>
                 </Box>
-                <Box display="flex" justifyContent="center">
-                  {logoCollapsed}
-                </Box>
-              </Box>
-            </Tooltip>
-          )}
-        </ListItemButton>
+              </Tooltip>
+            )}
+          </ListItemButton>
+        )}
         {items.map((item) => (
           <React.Fragment key={item.key}>
             <ListItem disablePadding>
