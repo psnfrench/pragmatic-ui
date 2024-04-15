@@ -117,7 +117,7 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             expandOnHover={true}
             expandOnHoverCancelOnClick={true}
             defaultOpen={false}
-            expandedWidth="280px"
+            expandedWidth={280}
           >
             <Box p={2}>
               <Typography variant="h6" whiteSpace={'normal'}>
