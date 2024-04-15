@@ -42,6 +42,7 @@ export type SideBarProps = {
   expandOnHoverDelayClose?: number;
   expandOnHoverCancelOnClick?: boolean;
   collapsible?: boolean;
+  showHamburgerIcon?: boolean;
   expandHint?: boolean;
   defaultOpen?: boolean;
   children?: React.ReactNode;
@@ -113,6 +114,7 @@ export const SideBar = ({
   childrenCollapsed,
   textVariant = 'subtitle2',
   collapsible = true,
+  showHamburgerIcon = true,
   expandHint = false,
   textSX,
   defaultOpen = true,
@@ -226,10 +228,12 @@ export const SideBar = ({
           >
             {open ? (
               <Box display="flex" flex={1} flexDirection="column">
-                <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
-                  <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
-                  <MenuIcon />
-                </Box>
+                {showHamburgerIcon && (
+                  <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
+                    <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
+                    <MenuIcon />
+                  </Box>
+                )}
                 {logoExpanded}
               </Box>
             ) : (
@@ -239,19 +243,20 @@ export const SideBar = ({
                   justifyContent="center"
                   flexDirection="column"
                   alignContent="space-between"
-                  className="poppycock"
                   sx={{ height: '124px' }}
                 >
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    height="100%"
-                    marginLeft={theme.spacing(0.8)}
-                    sx={{ ...hamburgerIconSx }}
-                  >
-                    <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
-                    <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
-                  </Box>
+                  {showHamburgerIcon && (
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      height="100%"
+                      marginLeft={theme.spacing(0.8)}
+                      sx={{ ...hamburgerIconSx }}
+                    >
+                      <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
+                      <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                    </Box>
+                  )}
                   <Box display="flex" justifyContent="center">
                     {logoCollapsed}
                   </Box>

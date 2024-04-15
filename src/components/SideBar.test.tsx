@@ -69,6 +69,32 @@ const TestSideBar = ({
   );
 };
 
+describe('Hiding the Hambourger Icon', () => {
+  it('defaults to show the menu icon', async () => {
+    render(
+      <BrowserRouter>
+        <TestSideBar />
+      </BrowserRouter>,
+    );
+
+    const expandedSvg: HTMLElement | null = screen.queryByTestId('expandedSvg');
+    const menuIconSvg: HTMLElement | null = screen.queryByTestId('MenuIcon');
+    expect(expandedSvg).toBeInTheDocument();
+    expect(menuIconSvg).toBeInTheDocument();
+  });
+  it('does not show the menu icon when showHamburgerIcon false prop is passed', async () => {
+    render(
+      <BrowserRouter>
+        <TestSideBar SideBarProps={{ showHamburgerIcon: false }} />
+      </BrowserRouter>,
+    );
+
+    const menuIconSvg: HTMLElement | null = screen.queryByTestId('MenuIcon');
+    const expandedSvg: HTMLElement | null = screen.queryByTestId('expandedSvg');
+    expect(expandedSvg).toBeInTheDocument();
+    expect(menuIconSvg).not.toBeInTheDocument();
+  });
+});
 describe('Togggling the collapsed state', () => {
   it('defaults to expanded, and collapses when clicked', async () => {
     const handleSubmitMock = jest.fn();
