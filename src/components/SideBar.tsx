@@ -49,8 +49,7 @@ export type SideBarProps = {
   childrenCollapsed?: React.ReactNode;
   textVariant?: TypographyTypeMap['props']['variant'];
   textSX?: SxProps<Theme>;
-  expandedWidth?: string;
-  closedWidth?: string;
+  expandedWidth?: number;
   paperProps?: PaperProps;
   hamburgerIconSx?: SxProps<Theme>;
   onOpenChanged?: (open: boolean) => void;
@@ -117,6 +116,7 @@ export const SideBar = ({
   showHamburgerIcon = true,
   expandHint = false,
   textSX,
+  expandedWidth,
   defaultOpen = true,
   paperProps,
   hamburgerIconSx = { color: Colors.greyscale.light },
@@ -214,7 +214,18 @@ export const SideBar = ({
   }, [delayedClose, expandOnHover, open, openedByHover]);
 
   return (
-    <Drawer variant="permanent" open={open} PaperProps={{ ...paperProps }}>
+    <Drawer
+      variant="permanent"
+      open={open}
+      PaperProps={{
+        sx: {
+          '&.MuiPaper-root.MuiDrawer-paper': { width: open && expandedWidth ? expandedWidth : undefined },
+          ...paperProps?.sx,
+        },
+        ...paperProps,
+      }}
+      sx={{ '&.MuiDrawer-docked': { width: open && expandedWidth ? expandedWidth : undefined } }}
+    >
       <List>
         {collapsible && (
           <ListItemButton

@@ -273,6 +273,19 @@ export const createPragmaticTheme = ({
               },
             },
           },
+          MuiDrawer: {
+            styleOverrides: {
+              root: {
+                backgroundColor: 'purple',
+                '&.MuiDrawer-docked': {
+                  backgroundColor: 'purple',
+                },
+              },
+              docked: {
+                backgroundColor: 'purple',
+              },
+            },
+          },
         },
       },
 

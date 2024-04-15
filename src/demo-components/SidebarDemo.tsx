@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import InputIcon from '@mui/icons-material/Input';
 import LoginIcon from '@mui/icons-material/Login';
@@ -116,6 +116,8 @@ const SidebarDemo = ({ children }: SidebarDemoProps) => {
             onOpenChanged={handleOpenChanged}
             expandOnHover={true}
             expandOnHoverCancelOnClick={true}
+            defaultOpen={false}
+            expandedWidth="280px"
           >
             <Box p={2}>
               <Typography variant="h6" whiteSpace={'normal'}>

@@ -55,8 +55,6 @@ export type SideBarMobileProps = {
   textSX?: SxProps<Theme>;
   listIconSx?: SxProps<Theme>;
   listItemSx?: SxProps<Theme>;
-  expandedWidth?: string;
-  closedWidth?: string;
   paperProps?: PaperProps;
   hamburgerIconSx?: SxProps<Theme>;
   onOpenChanged?: (open: boolean) => void;
