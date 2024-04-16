@@ -289,7 +289,7 @@ export const SideBar = ({
                   borderRadius: 0.5,
                 }}
               >
-                <Tooltip title={item.text}>
+                <Tooltip title={item.text} arrow placement="right">
                   <ListItemIcon sx={{ ...textSX, display: 'flex', justifyContent: 'center' }}>{item.icon}</ListItemIcon>
                 </Tooltip>
                 <ListItemText
