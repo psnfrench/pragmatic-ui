@@ -35,7 +35,9 @@ const PDateTimePickerWithFormikComp = (
     <DateTimePicker
       value={value as PickerValidDate}
       onChange={handleDateChange}
-      slotProps={{ textField: { InputProps: { disableUnderline: true }, variant: variant } }}
+      slotProps={{
+        textField: { InputProps: variant === 'outlined' ? undefined : { disableUnderline: true }, variant: variant },
+      }}
       {...otherProps}
     />
   ) : null;

@@ -33,7 +33,9 @@ const PTimePickerWithFormikComp = (
     <TimePicker
       value={value as PickerValidDate}
       onChange={handleTimeChange}
-      slotProps={{ textField: { InputProps: { disableUnderline: true }, variant: variant } }}
+      slotProps={{
+        textField: { InputProps: variant === 'outlined' ? undefined : { disableUnderline: true }, variant: variant },
+      }}
       {...otherProps}
     />
   ) : null;

@@ -8,7 +8,7 @@ For version 2 and below Mui (an its depenedcies) were specifcied as a dependancy
 
 ### Version 3
 
-For version 3 and above, Mui is a peer dependency, so you will have to install it yourself. Version 3 and above uses @mui/x-date-pickers Version 7.
+For version 3 and above, Mui is a peer dependency, so you will may to install it yourself. Version 3 and above uses @mui/x-date-pickers Version 7.
 
 `date-fns` has been upgrade to version 3, so ensure that you are importing the correct AdapterDateFns for your `LocalizationProvider`. See MUI [getting started](https://mui.com/x/react-date-pickers/getting-started/) for more
 
