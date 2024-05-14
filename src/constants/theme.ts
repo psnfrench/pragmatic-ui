@@ -271,6 +271,23 @@ export const createPragmaticTheme = ({
               },
             },
           },
+          MuiMultiSectionDigitalClockSection: {
+            styleOverrides: {
+              root: {
+                '&::-webkit-scrollbar': {
+                  width: '0.4em',
+                },
+                '&::-webkit-scrollbar-track': {
+                  boxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+                  webkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(0,0,0,.1)',
+                },
+              },
+            },
+          },
         },
       },
 
