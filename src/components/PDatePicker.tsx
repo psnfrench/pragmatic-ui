@@ -1,10 +1,9 @@
 import { TextFieldProps } from '@mui/material';
 import { PickerValidDate } from '@mui/x-date-pickers';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
-import { useFormikContext } from 'formik';
-import get from 'lodash/get';
 import React from 'react';
-import { useGetFormikTextFields, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
+import { usePragmaticFormProps, usePickerWithFormikProps } from '../hooks/formHooks';
+import { RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
 export type PDatePickerProps = Omit<DatePickerProps<Date>, 'value' | 'onChange'> & {
   TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
@@ -12,11 +11,7 @@ export type PDatePickerProps = Omit<DatePickerProps<Date>, 'value' | 'onChange'>
   Pick<TextFieldProps, 'variant'>;
 
 export const PDatePicker = (props: PDatePickerProps) => {
-  const getFormikTextFields = useGetFormikTextFields();
-  const _props = useFormikContext();
-  const formikProps = getFormikTextFields(_props);
-  const value = get(_props.values, props.name);
-
+  const { formikProps, value } = usePragmaticFormProps(props.name);
   return <PDatePickerMemo value={value} {...props} {...formikProps} />;
 };
 
@@ -27,20 +22,8 @@ const PDatePickerWithFormikComp = (
     } & Required<Pick<TextFieldProps, 'name' | 'value'>> &
     Pick<TextFieldProps, 'variant'>,
 ) => {
-  const { name, value, setFieldValue, variant, ...otherProps } = props;
-  const handleDateChange = (dateValue: unknown) => {
-    setFieldValue(name, dateValue);
-  };
-  return name ? (
-    <DatePicker
-      value={value as PickerValidDate}
-      onChange={handleDateChange}
-      slotProps={{
-        textField: { InputProps: variant === 'outlined' ? undefined : { disableUnderline: true }, variant: variant },
-      }}
-      {...otherProps}
-    />
-  ) : null;
+  const modifiedProps = usePickerWithFormikProps(props) as DatePickerProps<PickerValidDate>;
+  return props.name ? <DatePicker {...modifiedProps} /> : null;
 };
 
 export const PDatePickerMemo = React.memo(PDatePickerWithFormikComp);

@@ -1,21 +1,18 @@
 import { Box, IconButton, TextField, TextFieldProps, BoxProps, useTheme } from '@mui/material';
-import { FormikContextType, FormikProps, useFormikContext } from 'formik';
+import { FormikContextType, FormikProps } from 'formik';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { ErrorLabel } from './ErrorLabel';
 import { Colors } from '../constants/Colors';
+import { usePragmaticFormProps } from '../hooks/formHooks';
 
 export type ThemedTextFieldProps = TextFieldProps & { BoxProps?: BoxProps; enableClear?: boolean } & Required<
     Pick<TextFieldProps, 'name'>
   >;
 export const PTextField = (props: ThemedTextFieldProps) => {
-  const getFormikTextFields = useGetFormikTextFields();
-  const _props = useFormikContext();
-  const formikProps = getFormikTextFields(_props);
-  const value = get(_props.values, props.name);
-
+  const { formikProps, value } = usePragmaticFormProps(props.name);
   return <PTextFieldMemo value={value} {...props} {...formikProps} />;
 };
 
