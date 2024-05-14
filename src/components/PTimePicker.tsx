@@ -1,12 +1,12 @@
-import { FilledInputProps, TextFieldProps } from '@mui/material';
+import { TextFieldProps } from '@mui/material';
+import { PickerValidDate } from '@mui/x-date-pickers';
 import { TimePicker, TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
-import { useGetFormikTextFields, PTextField, RequiredFormikTextFields } from './PTextField';
+import { useGetFormikTextFields, RequiredFormikTextFields } from './PTextField';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type PTimePickerProps = Omit<TimePickerProps<any, any>, 'renderInput' | 'value' | 'onChange'> &
+export type PTimePickerProps = Omit<TimePickerProps<PickerValidDate>, 'renderInput' | 'value' | 'onChange'> &
   Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
 
@@ -20,8 +20,7 @@ export const PTimePicker = (props: PTimePickerProps) => {
 };
 
 const PTimePickerWithFormikComp = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Omit<TimePickerProps<any, any>, 'renderInput' | 'onChange'> &
+  props: Omit<TimePickerProps<PickerValidDate>, 'onChange'> &
     RequiredFormikTextFields &
     Required<Pick<TextFieldProps, 'value' | 'name'>> &
     Pick<TextFieldProps, 'variant'>,
@@ -32,14 +31,9 @@ const PTimePickerWithFormikComp = (
   };
   return name ? (
     <TimePicker
-      value={value as Date}
+      value={value as PickerValidDate}
       onChange={handleTimeChange}
-      renderInput={({ InputProps, ...params }) => {
-        if (variant !== 'outlined') {
-          (InputProps as Partial<FilledInputProps>).disableUnderline = true;
-        }
-        return <PTextField variant={variant} name={name} InputProps={{ ...InputProps }} {...params} />;
-      }}
+      slotProps={{ textField: { InputProps: { disableUnderline: true }, variant: variant } }}
       {...otherProps}
     />
   ) : null;

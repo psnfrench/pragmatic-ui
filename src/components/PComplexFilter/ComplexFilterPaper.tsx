@@ -5,7 +5,6 @@ import {
   Button,
   ButtonProps,
   Checkbox,
-  CheckboxProps,
   Divider,
   FormControlLabel,
   Paper,
@@ -13,6 +12,7 @@ import {
   Popper,
   PopperProps,
   Radio,
+  RadioProps,
   styled,
   TextFieldProps,
   Typography,
@@ -59,7 +59,7 @@ export type ComplexFilterPaperProps = {
   filteredItems: menuItemType[];
   itemHeight: number;
   maxItems: number;
-  listItemProps?: CheckboxProps;
+  listItemProps?: RadioProps;
   searchProps?: Omit<TextFieldProps, 'InputProps'>;
   filterParent?: menuItemType;
   countSelected: (items: menuItemType[], count?: number) => number;

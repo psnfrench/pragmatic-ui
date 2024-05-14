@@ -82,7 +82,7 @@ describe('Editing the text field', () => {
       </Formik>,
     );
     const textField: HTMLInputElement = screen.getByTestId(fieldLabel);
-    userEvent.click(screen.getByRole('button'));
+    userEvent.click(screen.getByRole('combobox'));
     const clearButton = container.getElementsByClassName('MuiIconButton-root')[0];
     expect(textField).toHaveProperty('value', 'music,movies');
     userEvent.click(clearButton);

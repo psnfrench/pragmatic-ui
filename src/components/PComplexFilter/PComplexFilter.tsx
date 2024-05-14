@@ -11,13 +11,12 @@ import {
   Box,
   ClickAwayListener,
   Chip,
-  CheckboxProps,
   Typography,
   ChipProps,
-  FilledInputProps,
-  TextField,
   IconButton,
+  RadioProps,
 } from '@mui/material';
+import type {} from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import _ from 'lodash';
@@ -107,7 +106,7 @@ export type PComplexFilterProps = {
   popperProps?: PopperProps;
   paperProps?: PaperProps;
   listProps?: ListProps;
-  listItemProps?: CheckboxProps;
+  listItemProps?: RadioProps;
   paperSearchProps?: Omit<TextFieldProps, 'InputProps'>;
   searchProps?: TextFieldProps;
   chipProps?: ChipProps;
@@ -497,7 +496,7 @@ export function PComplexFilter({
   };
 
   // removes the time from the date pickers
-  function removeTime(date: Date | number) {
+  function removeTime(date: Date) {
     const _date = new Date(date);
     return new Date(_date.getFullYear(), _date.getMonth(), _date.getDate());
   }
@@ -692,28 +691,11 @@ export function PComplexFilter({
           <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)} position="relative">
             <DatePicker
               label={<Typography variant="caption">Start Date:</Typography>}
-              value={startDate}
+              value={startDate ? new Date(startDate) : null}
               disabled={startDate ? false : true}
               onChange={(e) => {
-                setStartDate(removeTime(e as number).getTime());
-                setLocalStartDate(removeTime(e as number).getTime());
-              }}
-              renderInput={({ InputProps, ...params }) => {
-                (InputProps as Partial<FilledInputProps>).disableUnderline = true;
-                (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
-                (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
-                return (
-                  <TextField
-                    variant="filled"
-                    value={new Intl.DateTimeFormat('en-NZ', {
-                      year: '2-digit',
-                      month: '2-digit',
-                      day: '2-digit',
-                    }).format(startDate)}
-                    InputProps={{ ...InputProps }}
-                    {...params}
-                  />
-                );
+                setStartDate(e ? removeTime(e).getTime() : undefined);
+                setLocalStartDate(e ? removeTime(e).getTime() : undefined);
               }}
             />
             <StyledIconButton
@@ -734,28 +716,11 @@ export function PComplexFilter({
           <Box display="flex" flexDirection="column" marginLeft={theme.spacing(2)} position="relative">
             <DatePicker
               label={<Typography variant="caption">End Date:</Typography>}
-              value={endDate}
+              value={endDate ? new Date(endDate) : null}
               disabled={endDate ? false : true}
               onChange={(e) => {
-                setEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000 - 1);
-                setLocalEndDate(removeTime(e as number).getTime() + 24 * 60 * 60 * 1000 - 1);
-              }}
-              renderInput={({ InputProps, ...params }) => {
-                (InputProps as Partial<FilledInputProps>).disableUnderline = true;
-                (InputProps as Partial<FilledInputProps>).sx = { width: '140px' };
-                (InputProps as Partial<FilledInputProps>).inputProps = { sx: { padding: '8px' } };
-                return (
-                  <TextField
-                    variant="filled"
-                    value={new Intl.DateTimeFormat('en-NZ', {
-                      year: '2-digit',
-                      month: '2-digit',
-                      day: '2-digit',
-                    }).format(endDate)}
-                    InputProps={{ ...InputProps }}
-                    {...params}
-                  />
-                );
+                setEndDate(e ? removeTime(e).getTime() + 24 * 60 * 60 * 1000 - 1 : undefined);
+                setLocalEndDate(e ? removeTime(e).getTime() + 24 * 60 * 60 * 1000 - 1 : undefined);
               }}
             />
             <StyledIconButton

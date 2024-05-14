@@ -1,11 +1,12 @@
-import { FilledInputProps, TextFieldProps } from '@mui/material';
+import { TextFieldProps } from '@mui/material';
+import { PickerValidDate } from '@mui/x-date-pickers';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';
-import { useGetFormikTextFields, PTextField, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
+import { useGetFormikTextFields, RequiredFormikTextFields, ThemedTextFieldProps } from './PTextField';
 
-export type PDatePickerProps = Omit<DatePickerProps<unknown, unknown>, 'renderInput' | 'value' | 'onChange'> & {
+export type PDatePickerProps = Omit<DatePickerProps<Date>, 'value' | 'onChange'> & {
   TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
 } & Required<Pick<TextFieldProps, 'name'>> &
   Pick<TextFieldProps, 'variant'>;
@@ -20,7 +21,7 @@ export const PDatePicker = (props: PDatePickerProps) => {
 };
 
 const PDatePickerWithFormikComp = (
-  props: Omit<DatePickerProps<unknown, unknown>, 'renderInput' | 'onChange'> &
+  props: Omit<DatePickerProps<PickerValidDate>, 'onChange'> &
     RequiredFormikTextFields & {
       TextFieldProps?: Omit<ThemedTextFieldProps, 'name'>;
     } & Required<Pick<TextFieldProps, 'name' | 'value'>> &
@@ -32,22 +33,9 @@ const PDatePickerWithFormikComp = (
   };
   return name ? (
     <DatePicker
-      value={value as Date}
+      value={value as PickerValidDate}
       onChange={handleDateChange}
-      renderInput={({ InputProps, ...params }) => {
-        if (variant !== 'outlined') {
-          (InputProps as Partial<FilledInputProps>).disableUnderline = true;
-        }
-        return (
-          <PTextField
-            variant={variant}
-            name={name}
-            InputProps={{ ...InputProps }}
-            {...params}
-            {...props.TextFieldProps}
-          />
-        );
-      }}
+      slotProps={{ textField: { InputProps: { disableUnderline: true }, variant: variant } }}
       {...otherProps}
     />
   ) : null;

@@ -1,7 +1,7 @@
 import { Box, Button, Grid, IconButton, styled, SxProps, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { cloneDeep, get } from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Accept, DropzoneOptions, FileRejection, useDropzone, FileWithPath } from 'react-dropzone';
 import { FileInfo, Image, S3Files } from '../types';
 import { PIcon } from '../images/PIcon';
