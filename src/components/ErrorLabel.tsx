@@ -1,4 +1,5 @@
-import { Typography, styled } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 const ErrorLabelComp = ({ errorText }: { errorText: string }) => {

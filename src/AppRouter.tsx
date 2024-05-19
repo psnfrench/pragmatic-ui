@@ -1,4 +1,3 @@
-import { Theme } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import './App.css';
@@ -18,6 +17,7 @@ import FileDropZoneDemo from './demo-components/FileDropZoneDemo';
 import { SubmitButton } from './components/SubmitButton';
 import ComplexFilterDemo from './demo-components/ComplexFilterDemo';
 import SwitchDemo from './demo-components/SwitchDemo';
+import { Theme } from '@mui/material/styles';
 
 const initialValues = {
   firstName: 'Sally',

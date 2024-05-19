@@ -1,5 +1,5 @@
-import { FormControlLabel, CheckboxProps } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { FormikContextType, useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React, { useCallback } from 'react';

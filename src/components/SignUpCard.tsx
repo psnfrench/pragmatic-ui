@@ -1,10 +1,13 @@
 import React from 'react';
-import { Box, Button, styled, Grid, SxProps } from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
 import useValidators from '../hooks/useValidators';
 import { PTextField } from './PTextField';
 import { PasswordInput } from './PasswordInput';
 import RightLink from './RightLink';
+import Box from '@mui/material/Box';
+import { styled, SxProps } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 export interface SignUpFormValues {
   firstName: string;

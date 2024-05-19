@@ -3,8 +3,8 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { PTextField, ThemedTextFieldProps } from './PTextField';
-import { useTheme } from '@mui/material';
 import omit from 'lodash/omit';
+import { useTheme } from '@mui/material/styles';
 
 export function PasswordInput(props: ThemedTextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);

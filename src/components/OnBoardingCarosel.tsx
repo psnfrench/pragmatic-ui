@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, BoxProps, styled } from '@mui/material';
+import Box, { BoxProps } from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import { CustomSlider, CustomSliderProps } from './CustomSlider';
 
 const StyledBox = styled(Box)(() => ({

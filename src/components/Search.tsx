@@ -1,4 +1,5 @@
-import { TextField, TextFieldProps, styled } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import debounce from 'lodash/debounce';
 import React, { useMemo, useState } from 'react';
 import { PIcon } from '../images/PIcon';

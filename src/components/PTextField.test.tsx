@@ -7,7 +7,8 @@ import { Formik } from 'formik';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PTextField } from './PTextField';
-import { Checkbox, MenuItem } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
 
 describe('Editing the text field', () => {
   it('Changes the value correctly when typing and submitting form', async () => {

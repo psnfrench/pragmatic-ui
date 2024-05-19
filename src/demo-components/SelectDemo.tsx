@@ -1,7 +1,11 @@
 import React, { useRef } from 'react';
-import { Box, Divider, Typography, MenuItem, Checkbox } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import { PTextField } from '../components/PTextField';
 import { useFormikContext } from 'formik';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
 
 function SelectDemo() {
   const tags = useRef(['music', 'movies', 'funny', 'action', 'comedy']).current;

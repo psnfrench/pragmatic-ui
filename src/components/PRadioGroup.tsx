@@ -1,12 +1,8 @@
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  RadioGroupProps,
-  FormControlLabelProps,
-} from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup, { RadioGroupProps } from '@mui/material/RadioGroup';
 import { FormikContextType, useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React from 'react';

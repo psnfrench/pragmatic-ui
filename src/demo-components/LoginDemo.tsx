@@ -1,4 +1,5 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import React, { useContext, useEffect, useState } from 'react';
 import { FormikHelpers, useFormikContext } from 'formik';
 import { SignInCard, LoginFormValues } from '../components/SignInCard';
@@ -11,6 +12,8 @@ import OrchidLogo from '../images/OrchidLogo';
 import { items } from '../constants/CarouselItems';
 import { Colors } from '../constants/Colors';
 import RightLink from '../components/RightLink';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 const ImageTopLeft = require('../images/background_img_top_left.png');
 const ImageTopRight = require('../images/background_img_top_right.png');
 const ImageBottomRight = require('../images/background_img_bottom_right.png');

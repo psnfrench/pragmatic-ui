@@ -1,5 +1,5 @@
-import { TextFieldProps } from '@mui/material';
-import { PickerValidDate } from '@mui/x-date-pickers';
+import { TextFieldProps } from '@mui/material/TextField';
+import { PickerValidDate } from '@mui/x-date-pickers/models';
 import { TimePicker, TimePickerProps } from '@mui/x-date-pickers/TimePicker';
 import React from 'react';
 import { usePragmaticFormProps, usePickerWithFormikProps } from '../hooks/formHooks';

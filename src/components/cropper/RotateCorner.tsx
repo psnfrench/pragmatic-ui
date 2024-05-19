@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { Box, styled } from '@mui/material';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import PIcon from '../../images/PIcon';
 type Props = {
   setRotate: React.Dispatch<React.SetStateAction<number>>;

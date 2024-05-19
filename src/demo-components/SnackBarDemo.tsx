@@ -1,7 +1,11 @@
 import React, { useContext, useRef } from 'react';
-import { Box, Divider, Typography, Button, AlertColor } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { SnackBarContext } from '../context/snackbar';
 import startCase from 'lodash/startCase';
+import { AlertColor } from '@mui/material/Alert';
 
 function SnackBarDemo() {
   const severities = useRef<AlertColor[]>(['success', 'info', 'warning', 'error']).current;

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, useTheme, IconButton, styled } from '@mui/material';
+import Box from '@mui/material/Box';
+import { styled, useTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import { useFormikContext } from 'formik';
 import { Point } from 'react-easy-crop';
 import NewCropper from './NewCropper';
@@ -8,6 +10,8 @@ import PIcon from '../../images/PIcon';
 import { CurrentFiles, FileDropZone } from '../FileDropZone';
 import { StaffInfo } from '../../types';
 import { Accept } from 'react-dropzone';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 const ImageTypes: Accept = {
   'application/images': ['.jpg', '.jpeg', '.png', '.tiff', '.gif', '.webp', '.avif', '.apng', '.svg', '.bmp', '.ico'],
 };

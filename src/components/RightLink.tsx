@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
 function RightLink({ onClick, label }: { onClick: (obj: unknown) => void; label: string }) {
   return (

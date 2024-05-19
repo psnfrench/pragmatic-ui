@@ -1,4 +1,6 @@
-import { Box, Button, Grid, IconButton, styled, SxProps, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { styled, SxProps } from '@mui/material/styles';
 import { useFormikContext } from 'formik';
 import { cloneDeep, get } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -7,6 +9,9 @@ import { FileInfo, Image, S3Files } from '../types';
 import { PIcon } from '../images/PIcon';
 import { Colors } from '../constants/Colors';
 import { ErrorLabel } from './ErrorLabel';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 
 const sortFiles = (files: CurrentFiles[]) => {
   return files.sort((a, b) =>

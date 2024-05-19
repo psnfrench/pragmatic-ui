@@ -1,18 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import BlockingDialog from '../components/BlockingDialog';
-import {
-  Button,
-  ButtonProps,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  PaperProps,
-  SxProps,
-  Theme,
-  Typography,
-  TypographyProps,
-} from '@mui/material';
+import Typography, { TypographyProps } from '@mui/material/Typography';
 import { Colors } from '../constants/Colors';
+import Button, { ButtonProps } from '@mui/material/Button';
+import { PaperProps } from '@mui/material/Paper';
+import { SxProps, Theme } from '@mui/material/styles';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 export const ConfirmationServiceContext = React.createContext<{
   showBockingModal: (id: string) => Promise<void>;

@@ -1,9 +1,12 @@
-import { Box, Divider, Typography, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import { SignUpCard } from '../components/SignUpCard';
 import { Colors } from '../constants/Colors';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 import { useNavigate } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
 
 function SignUpDemo() {
   const navigate = useNavigate();

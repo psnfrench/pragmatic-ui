@@ -1,4 +1,4 @@
-import { Dialog, DialogProps } from '@mui/material';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import React, { useContext } from 'react';
 import { ConfirmationServiceContext } from '../context/confirmation';
 

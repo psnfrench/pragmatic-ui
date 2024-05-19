@@ -1,5 +1,5 @@
-import { FormControlLabel, FormControlLabelProps, SwitchProps } from '@mui/material';
-import Switch from '@mui/material/Switch';
+import FormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel';
+import Switch, { SwitchProps } from '@mui/material/Switch';
 import { FormikContextType, useFormikContext } from 'formik';
 import get from 'lodash/get';
 import React, { useCallback } from 'react';

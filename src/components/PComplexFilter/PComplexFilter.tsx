@@ -1,21 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Button,
-  ButtonProps,
-  PaperProps,
-  styled,
-  TextFieldProps,
-  TypographyProps,
-  PopperProps,
-  ListProps,
-  Box,
-  ClickAwayListener,
-  Chip,
-  Typography,
-  ChipProps,
-  IconButton,
-  RadioProps,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography, { TypographyProps } from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import { RadioProps } from '@mui/material/Radio';
+import { PopperProps } from '@mui/material/Popper';
+import { PaperProps } from '@mui/material/Paper';
+import { TextFieldProps } from '@mui/material/TextField';
 import type {} from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
@@ -25,6 +15,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Search } from '../Search';
 import PIcon from '../../images/PIcon';
 import { theme } from '../../constants/theme';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Button, { ButtonProps } from '@mui/material/Button';
+import { ListProps } from '@mui/material/List';
+import Chip, { ChipProps } from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 
 const InitialOptions = [
   { text: 'None', categories: ['1'] },

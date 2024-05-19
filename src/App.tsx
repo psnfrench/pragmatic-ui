@@ -8,11 +8,14 @@ import { SnackBarProvider } from './context/snackbar';
 import { ConfirmationServiceProvider } from './context/confirmation';
 import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './AppRouter';
-import { Box, FormControlLabel, Switch, Typography } from '@mui/material';
 // import SidebarMobileDemo from './demo-components/SidebarMobileDemo';
 import useWindowDimensions from './components/WindowSize';
 import SidebarDemo from './demo-components/SidebarDemo';
 import SidebarMobileDemo from './demo-components/SidebarMobileDemo';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 const SideBarContext = React.createContext<{
   mobileSidebar: boolean;

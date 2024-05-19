@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import { PRadioGroup } from '../components/PRadioGroup';
 
 function RadioDemo() {

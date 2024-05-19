@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Cropper, { Area, Point } from 'react-easy-crop';
-import { styled, Box, Button, Slider, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import { Image } from '../../types';
 import getCroppedImg from './createimage';
 import RotateCorner from './RotateCorner';
 import PIcon from '../../images/PIcon';
 import { CurrentFiles } from '../FileDropZone';
+import Slider from '@mui/material/Slider';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   display: 'flex',

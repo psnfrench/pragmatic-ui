@@ -1,6 +1,8 @@
 import React from 'react';
 import Slider, { Settings } from 'react-slick';
-import { Box, BoxProps, styled, Typography, TypographyTypeMap } from '@mui/material';
+import Box, { BoxProps } from '@mui/material/Box';
+import Typography, { TypographyTypeMap } from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 const StyledBox = styled(Box)(() => ({
   '& .sliderContainer': {

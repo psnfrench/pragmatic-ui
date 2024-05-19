@@ -1,4 +1,7 @@
-import { Box, Divider, Typography, Button } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { StyledFileDropZone } from '../components/cropper/StyledFileDropZone';

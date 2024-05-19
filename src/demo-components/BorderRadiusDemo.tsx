@@ -1,4 +1,8 @@
-import { Box, Divider, TextField, Theme, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import { Theme } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import React, { useEffect, useState } from 'react';
 import { createPragmaticTheme } from '../constants/theme';
 

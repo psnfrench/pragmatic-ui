@@ -9,8 +9,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { ReactComponent as DMExpanded } from '../images/DMExpanded.svg';
 import { ReactComponent as DMCollapsed } from '../images/DMCollapsed.svg';
-import { Box, createTheme, ThemeProvider, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { SideBar } from '../components/SideBar';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const myTheme = createTheme({
   components: {
