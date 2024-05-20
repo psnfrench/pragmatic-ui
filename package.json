@@ -2,7 +2,7 @@
   "name": "pragmatic-ui",
   "version": "3.0.6",
   "description": "A set of themed React components for building beautiful projects",
-  "main": "dist/pragmatic-ui.js",
+  "main": "dist/bundle.js",
   "types": "dist/pragmatic-ui.d.ts",
   "files": [
     "dist/**/*"
