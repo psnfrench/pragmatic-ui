@@ -20,6 +20,6 @@ export * from './components/SideBarMobile';
 export * from './components/SubmitButton';
 export * from './context/snackbar';
 export * from './context/confirmation';
-export * from './constants/Colors';
+export { Colors, hexToRgbA } from './constants/Colors';
 export * from './constants/theme';
 export * from './hooks/useOnTabClose';
