@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { AlertColor } from '@mui/material/Alert';
 import { SnackbarProps } from '@mui/material/Snackbar';
-import SimpleSnackbar from '../components/SimpleSnackbar';
+import { SimpleSnackbar } from '../components/SimpleSnackbar';
 
 export const SnackBarContext = React.createContext<{
   showSnack: (message: string, severity: AlertColor, options?: SnackbarProps) => void;

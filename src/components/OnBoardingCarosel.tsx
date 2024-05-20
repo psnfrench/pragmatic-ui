@@ -70,5 +70,3 @@ export const OnBoardingCarosel = ({
     </StyledBox>
   );
 };
-
-export default OnBoardingCarosel;

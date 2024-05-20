@@ -2,7 +2,7 @@ import React from 'react';
 import Snackbar, { SnackbarCloseReason, SnackbarProps } from '@mui/material/Snackbar';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 
-export default function SimpleSnackbar(
+export function SimpleSnackbar(
   props: { open: boolean; setOpen: (open: boolean) => void; severity?: AlertColor } & SnackbarProps,
 ) {
   const { open, setOpen, message, severity = 'success', onClose, ...otherProps } = props;
