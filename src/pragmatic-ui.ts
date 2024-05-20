@@ -45,3 +45,5 @@ export type { ConfirmationOptions } from './context/confirmation';
 export { Colors, hexToRgbA } from './constants/Colors';
 export { createPragmaticTheme, theme } from './constants/theme';
 export { useOnTabClose } from './hooks/useOnTabClose';
+
+export { SideBar2 } from './components/SideBar2';

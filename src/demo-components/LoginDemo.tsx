@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/user';
 import { SnackBarContext } from '../context/snackbar';
 import { ConfirmationServiceContext } from '../context/confirmation';
-import OnBoardingCarosel from '../components/OnBoardingCarosel';
+import { OnBoardingCarosel } from '../components/OnBoardingCarosel';
 import OrchidLogo from '../images/OrchidLogo';
 import { items } from '../constants/CarouselItems';
 import { Colors } from '../constants/Colors';
