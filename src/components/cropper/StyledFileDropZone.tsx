@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { useFormikContext } from 'formik';
 import { Point } from 'react-easy-crop';
 import NewCropper from './NewCropper';
-import { Camera } from '@mui/icons-material';
+import Camera from '@mui/icons-material/Camera';
 import PIcon from '../../images/PIcon';
 import { CurrentFiles, FileDropZone } from '../FileDropZone';
 import { StaffInfo } from '../../types';

@@ -1,4 +1,3 @@
-// do NOT export * from './components/XXXXX'; as this cause everything to be inported when using this package
 export { ErrorLabel } from './components/ErrorLabel';
 export { FileDropZone } from './components/FileDropZone';
 export type { CurrentFileImage, CurrentFiles, FileUploaderProps } from './components/FileDropZone';
@@ -45,5 +44,3 @@ export type { ConfirmationOptions } from './context/confirmation';
 export { Colors, hexToRgbA } from './constants/Colors';
 export { createPragmaticTheme, theme } from './constants/theme';
 export { useOnTabClose } from './hooks/useOnTabClose';
-
-export { SideBar2 } from './components/SideBar2';

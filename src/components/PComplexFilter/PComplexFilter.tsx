@@ -8,7 +8,9 @@ import { PaperProps } from '@mui/material/Paper';
 import { TextFieldProps } from '@mui/material/TextField';
 import type {} from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+
 import _ from 'lodash';
 import ComplexFilterPaper from './ComplexFilterPaper';
 import React, { useCallback, useEffect, useState } from 'react';

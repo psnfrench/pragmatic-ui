@@ -4,7 +4,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
-import { ChevronRight } from '@mui/icons-material';
 import debounce from 'lodash/debounce';
 import Box from '@mui/material/Box';
 import Typography, { TypographyTypeMap } from '@mui/material/Typography';
@@ -241,7 +240,7 @@ export const SideBar = ({
                 {logoExpanded}
               </Box>
             ) : (
-              <Tooltip title={expandHint ? <ChevronRight /> : ''} arrow placement="top">
+              <Tooltip title={expandHint ? <ChevronRightIcon /> : ''} arrow placement="top">
                 <Box
                   display="flex"
                   justifyContent="center"

@@ -1,4 +1,4 @@
-import { ChevronRight } from '@mui/icons-material';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 import Button, { ButtonProps } from '@mui/material/Button';
 import React from 'react';
 import { menuItemType } from './PComplexFilter';
