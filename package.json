@@ -2,7 +2,7 @@
   "name": "pragmatic-ui",
   "version": "3.0.7",
   "description": "A set of themed React components for building beautiful projects",
-  "main": "dist/bundle.js",
+  "main": "dist/pragmatic-ui.ts",
   "types": "dist/pragmatic-ui.d.ts",
   "files": [
     "dist/**/*"
@@ -11,7 +11,7 @@
     "dev:client": "react-scripts start",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-    "build": "npx webpack --mode production",
+    "build": "tsc",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "npx eslint . --ext .ts,.tsx,.js,.jsx",
     "prepare": "npm run build",
@@ -60,14 +60,11 @@
     "regenerator-runtime": "^0.13.9",
     "svg-url-loader": "^7.1.1",
     "ts-jest": "^27.1.4",
-    "ts-loader": "^9.5.1",
     "ts-node-dev": "^2.0.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.6.2",
-    "web-vitals": "^2.1.4",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4"
+    "web-vitals": "^2.1.4"
   },
   "dependencies": {
     "formik": "^2.2.9",
