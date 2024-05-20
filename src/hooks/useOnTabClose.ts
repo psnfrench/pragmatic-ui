@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-export default function useOnTabClose(onTabClose: () => void) {
+export function useOnTabClose(onTabClose: () => void) {
   /**
    * Accepts a fucntion to run on tab close.
    * Returns a function that sets a boolean flag used to determine if the function should be
