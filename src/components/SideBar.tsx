@@ -230,7 +230,7 @@ export const SideBar = ({
             {open ? (
               <Box display="flex" flex={1} flexDirection="column">
                 {showHamburgerIcon && (
-                  <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
+                  <Box sx={{ textAlign: 'right', ...hamburgerIconSx }} data-testid="HamburgerIcon">
                     <PIcon
                       name="chevronLeft"
                       size={24}

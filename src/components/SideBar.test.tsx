@@ -78,7 +78,7 @@ describe('Hiding the Hambourger Icon', () => {
     );
 
     const expandedSvg: HTMLElement | null = screen.queryByTestId('expandedSvg');
-    const menuIconSvg: HTMLElement | null = screen.queryByTestId('MenuIcon');
+    const menuIconSvg: HTMLElement | null = screen.queryByTestId('HamburgerIcon');
     expect(expandedSvg).toBeInTheDocument();
     expect(menuIconSvg).toBeInTheDocument();
   });
@@ -89,7 +89,7 @@ describe('Hiding the Hambourger Icon', () => {
       </BrowserRouter>,
     );
 
-    const menuIconSvg: HTMLElement | null = screen.queryByTestId('MenuIcon');
+    const menuIconSvg: HTMLElement | null = screen.queryByTestId('HamburgerIcon');
     const expandedSvg: HTMLElement | null = screen.queryByTestId('expandedSvg');
     expect(expandedSvg).toBeInTheDocument();
     expect(menuIconSvg).not.toBeInTheDocument();
