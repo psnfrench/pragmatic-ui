@@ -1,4 +1,3 @@
-import ChevronRight from '@mui/icons-material/ChevronRight';
 import Button, { ButtonProps } from '@mui/material/Button';
 import React from 'react';
 import { menuItemType } from './PComplexFilter';
@@ -14,6 +13,7 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import { TextFieldProps } from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Avatar from '@mui/material/Avatar';
+import PIcon from '../../images/PIcon';
 
 const StyledRadio = styled(Radio)(({ theme }) => ({
   '&.Mui-checked': {
@@ -169,7 +169,7 @@ const ComplexFilterPaper = ({
                           </Typography>
                         </StyledAvatar>
                       </Box>
-                      <ChevronRight color="action" />
+                      <PIcon name="chevronRight" />
                     </Button>
                     <Box marginLeft={2} marginRight={2}>
                       <Divider

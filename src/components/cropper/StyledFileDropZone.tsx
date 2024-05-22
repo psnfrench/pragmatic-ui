@@ -67,7 +67,9 @@ export const StyledFileDropZone = ({ name }: { name: string }) => {
                 setCroppedImageFor={handleCrop}
               />
             ) : (
-              <Camera />
+              <>
+                <Camera />
+              </>
             )}
           </Box>
         );

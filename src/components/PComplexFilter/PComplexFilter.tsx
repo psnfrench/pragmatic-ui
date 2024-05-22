@@ -8,8 +8,6 @@ import { PaperProps } from '@mui/material/Paper';
 import { TextFieldProps } from '@mui/material/TextField';
 import type {} from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import ChevronRight from '@mui/icons-material/ChevronRight';
-import ChevronLeft from '@mui/icons-material/ChevronLeft';
 
 import _ from 'lodash';
 import ComplexFilterPaper from './ComplexFilterPaper';
@@ -136,7 +134,7 @@ export function PComplexFilter({
   activeFilters,
   setActiveFilters,
   buttonProps,
-  backButton = <ChevronLeft />,
+  backButton = <PIcon name="chevronLeft" />,
   backButtonProps,
   titleProps,
   popperProps,
@@ -518,7 +516,8 @@ export function PComplexFilter({
             <Button className="button" onClick={handleClick} {...buttonProps}>
               {buttonIcon}
               {buttonLabel}
-              <ChevronRight
+              <PIcon
+                name="chevronRight"
                 sx={{ transform: open ? 'rotate(270deg)' : 'rotate(90deg)', position: 'absolute', right: '10px' }}
               />
             </Button>
@@ -592,12 +591,8 @@ export function PComplexFilter({
                           >
                             {formatLabel(filter)}
                           </Typography>
-                          {/* <StyledAvatar sx={{ display: returnTree ? 'inline-flex' : 'none' }}>
-                          <Typography variant="body1" color="primary.contrastText">
-                            {countSelected([filter])}
-                          </Typography>
-                        </StyledAvatar> */}
-                          <ChevronRight
+                          <PIcon
+                            name="chevronRight"
                             sx={{
                               transform: index === currentIndex ? 'rotate(270deg)' : 'rotate(90deg)',
                               fontSize: '1.3rem',

@@ -1,8 +1,5 @@
 import MuiDrawer from '@mui/material/Drawer';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Colors } from '../constants/Colors';
 import debounce from 'lodash/debounce';
 import Box from '@mui/material/Box';
@@ -16,6 +13,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import PIcon from '../images/PIcon';
 
 export type SideBarItem = {
   key: string;
@@ -233,14 +231,18 @@ export const SideBar = ({
               <Box display="flex" flex={1} flexDirection="column">
                 {showHamburgerIcon && (
                   <Box sx={{ textAlign: 'right', ...hamburgerIconSx }}>
-                    <ChevronLeftIcon sx={{ marginRight: theme.spacing(-1) }} />
-                    <MenuIcon />
+                    <PIcon
+                      name="chevronLeft"
+                      size={24}
+                      sx={{ marginRight: theme.spacing(-1), display: 'inline-block' }}
+                    />
+                    <PIcon name="menu" size={24} sx={{ display: 'inline-block' }} />
                   </Box>
                 )}
                 {logoExpanded}
               </Box>
             ) : (
-              <Tooltip title={expandHint ? <ChevronRightIcon /> : ''} arrow placement="top">
+              <Tooltip title={expandHint ? <PIcon name="chevronRight" size={24} /> : ''} arrow placement="top">
                 <Box
                   display="flex"
                   justifyContent="center"
@@ -256,8 +258,12 @@ export const SideBar = ({
                       marginLeft={theme.spacing(0.8)}
                       sx={{ ...hamburgerIconSx }}
                     >
-                      <MenuIcon sx={{ marginRight: theme.spacing(-0.5) }} />
-                      <ChevronRightIcon sx={{ marginLeft: theme.spacing(-0.5) }} />
+                      <PIcon name="menu" size={24} sx={{ display: 'inline-block', marginRight: theme.spacing(-0.5) }} />
+                      <PIcon
+                        name="chevronRight"
+                        size={24}
+                        sx={{ marginLeft: theme.spacing(-0.5), display: 'inline-block' }}
+                      />
                     </Box>
                   )}
                   <Box display="flex" justifyContent="center">

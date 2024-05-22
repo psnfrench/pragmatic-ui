@@ -3,13 +3,13 @@ import { FormikContextType, FormikProps } from 'formik';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
 import React, { useState } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 import { ErrorLabel } from './ErrorLabel';
 import { Colors } from '../constants/Colors';
 import { usePragmaticFormProps } from '../hooks/formHooks';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
+import PIcon from '../images/PIcon';
 
 export type ThemedTextFieldProps = TextFieldProps & { BoxProps?: BoxProps; enableClear?: boolean } & Required<
     Pick<TextFieldProps, 'name'>
@@ -100,7 +100,7 @@ const PTextFieldWithFormikComp = (
                 onClick={handleClear}
                 onMouseDown={(e) => e.preventDefault()}
               >
-                <CloseIcon color="disabled" sx={{ color: Colors.greyscale.label }} />
+                <PIcon name="cross" size={22} sx={{ color: Colors.greyscale.label }} />
               </IconButton>
             ) : null,
         }}

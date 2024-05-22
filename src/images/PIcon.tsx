@@ -30,8 +30,11 @@ import Rotate from './icons/rotate';
 import RotateCube from './icons/rotateCube';
 import PlusSmall from './icons/plusSmall';
 import MinusIcon from './icons/minusIcon';
+import MenuIcon from './icons/menu';
 import Check from './icons/check';
 import Cross from './icons/cross';
+import EyeOpen from './icons/eyeOpen';
+import EyeClosed from './icons/eyeClosed';
 
 export const customIconMap = {
   searchIcon: SearchIcon,
@@ -66,11 +69,14 @@ export const customIconMap = {
   minusIcon: MinusIcon,
   check: Check,
   cross: Cross,
+  menu: MenuIcon,
+  eyeOpen: EyeOpen,
+  eyeClosed: EyeClosed,
 };
 export const PIcon = ({
   name,
   sx,
-  size,
+  size = 24,
   className,
 }: {
   name: keyof typeof customIconMap;
